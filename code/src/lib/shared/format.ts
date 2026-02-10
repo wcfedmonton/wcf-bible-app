@@ -1,16 +1,10 @@
-import { bcv_parser } from 'bible-passage-reference-parser/esm/bcv_parser.js';
 import * as lang from 'bible-passage-reference-parser/esm/lang/en.js';
-import bookMap from './books.json' with { type: 'json' };
-import USFM from './USFM.json' with { type: 'json' };
+import { bcv_parser } from 'bible-passage-reference-parser/esm/bcv_parser.js';
 
-/**
- * Represents a biblical reference in OSIS (Open Scripture Information Standard) format.
- *
- * @property {keyof typeof bookMap} book - The book identifier as defined in books.json (e.g., "GEN" for Genesis)
- * @property {number} chapter - The chapter number (1-based indexing)
- * @property {number} verses - The verse number or the last verse number in a range (1-based indexing)
- */
-type OSISReference = {
+import USFMMap from './USFM.json' with { type: 'json' };
+import bookMap from './books.json' with { type: 'json' };
+
+export type OSISReference = {
 	book: keyof typeof bookMap;
 	chapter: number;
 	numVerses: number;
@@ -27,18 +21,22 @@ type OSISReference = {
  * - "1 Cor 13"
  *
  * @param {string} query - A biblical reference string in natural language format
- * @returns {OSISReference} An object containing the parsed book, chapter, and verse number(s)
+ * @returns {OSISReference} An object containing the parsed book, chapter, number of verses, and selected verse.
  *
  * @example
  * const ref = parseQuery("Genesis 1:1");
  * // Returns: { book: "GEN", chapter: 1, numVerses: 31, selectedVerse: 1 }
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function parseQuery(query: string): OSISReference | null {
+export function parseQuery(query: string): OSISReference | null {
+	if (!query) return null; // handle case where there is no input
+
 	const bcv = new bcv_parser(lang);
+
+	if (!bcv.parse(query).entities[0]) return null; // handle case where user's input doesn't map to anything
+
 	const generalResult = bcv.parse(query).entities[0].passages[0];
 
-	// change compaction strategy otherwise only the first verse is returned in the 'start' and 'end' objects of the response
+	// change compaction strategy otherwise only the first verse is returned in the 'start' and 'end' objects of the result
 	bcv.set_options({ osis_compaction_strategy: 'bcv' });
 
 	// handle the case where the chapter hasn't been specified yet or the input is invalid (e.g. out of bounds for chapter)
@@ -57,7 +55,7 @@ function parseQuery(query: string): OSISReference | null {
 		book: generalResult.start.b as keyof typeof bookMap,
 		chapter: generalResult.start.c,
 		numVerses: lastVerseInChapter,
-		selectedVerse: generalResult.start.v ? generalResult.start.v : 1 // start at the first verse if no verse was specified by the user
+		selectedVerse: generalResult.start.v ? generalResult.start.v - 1 : 0 // start at the first verse if no verse was specified by the user. 0-indexing is accounted for
 	};
 }
 
@@ -75,12 +73,11 @@ function parseQuery(query: string): OSISReference | null {
  * const usfm = getUSFMReferences(osis);
  * // Returns: ["GEN.1.1", "GEN.1.2", ... , "GEN.1.31"]
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getUSFMReferences(OSIS: OSISReference): string[] {
-	const bookName = bookMap[OSIS.book] as keyof typeof USFM;
+export function getUSFMReferences(OSIS: OSISReference): string[] {
+	const bookName = bookMap[OSIS.book] as keyof typeof USFMMap;
 
 	const USFMReferences = Array.from({ length: OSIS.numVerses }, (_, i): string => {
-		return `${USFM[bookName]}.${OSIS.chapter}.${i + 1}`;
+		return `${USFMMap[bookName]}.${OSIS.chapter}.${i + 1}`;
 	});
 
 	return USFMReferences;
