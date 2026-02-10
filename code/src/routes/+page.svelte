@@ -14,8 +14,8 @@
 
 	async function getChapter(input: string, translation: BibleTranslation) {
 		osis = parseQuery(input)!;
-		
-		if(!osis) return;
+
+		if (!osis) return;
 
 		const params = new URLSearchParams({
 			query: `${osis.book}.${osis.chapter}`, //normalize the query to increase cache hits
@@ -27,7 +27,7 @@
 		if (res.status === 400) return;
 
 		const resolved = await res.json();
-		
+
 		// before saving the response, verify that something was returned
 		verseData = resolved.verses.length === 0 ? verseData : resolved.verses;
 		verseLimit = resolved.verses.length === 0 ? verseLimit : resolved.numVerses;
