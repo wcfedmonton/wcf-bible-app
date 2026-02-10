@@ -11,6 +11,7 @@ export type BibleTranslation =
 	| keyof typeof APIBibleTranslationsMap;
 
 export type Verse = {
+	id: number;
 	text: string;
 };
 
@@ -29,8 +30,6 @@ export type Verse = {
  * // => [{ verse: 1, text: 'In the beginning...' }, ...]
  */
 export async function getVerses(query: string, translation: BibleTranslation) {
-	if (!query) return [];
-
 	const osis = parseQuery(query);
 
 	if (!osis) return [];
@@ -59,6 +58,7 @@ async function queryYVP(osis: OSISReference, translation: BibleTranslation) {
 	const bibleId = YVTranslationsMap[translation as keyof typeof YVTranslationsMap];
 
 	type YVPVerseResponse = {
+		id: string;
 		content: string;
 	};
 
@@ -69,10 +69,20 @@ async function queryYVP(osis: OSISReference, translation: BibleTranslation) {
 		verseRequests.push(bibleClient.getPassage(bibleId, usfmReference, 'text'));
 	});
 
-	const responses = await Promise.all(verseRequests); // use parallel processing to optimize for speed
+	// use parallel processing to optimize for speed. 
+	//
+	// Promise.allSettled is used instead of Promise.all because if one of the requests using the
+	// latter fails (typically because the verse is not available in the selected translation), 
+	// an error response is returned. the former allows us to verify the result of each request
+	const responses = (await Promise.allSettled(verseRequests))
+		.filter((r) => r.status === 'fulfilled')
+		.map((r) => r.value);
+
 	const verses: Verse[] = Array.from({ length: responses.length }, (_, i) => ({
+		id: parseInt(responses[i].id.split('.')[2]),
 		text: responses[i].content
-	})).filter((v) => v.text !== undefined);
+	}))
+	.filter((v) => v.text !== undefined);
 
 	return verses;
 }
@@ -89,7 +99,6 @@ async function queryYVP(osis: OSISReference, translation: BibleTranslation) {
  * const osis = { book: "JHN", chapter: 3, numVerses: 36, selectedVerse: 15 };
  * const verses = await queryAPIBible(osis, "t_web2ed1nt_tb");
  * // => [{ verse: 1, text: "..." }, { verse: 2, text: "..." }, ...]
- *
  */
 async function queryAPIBible(osis: OSISReference, translation: BibleTranslation) {
 	const verseReferences = getUSFMReferences(osis);
@@ -112,14 +121,17 @@ async function queryAPIBible(osis: OSISReference, translation: BibleTranslation)
 	});
 	const resolved = (await res.json()).data.content;
 
-	// parse each 'verse' object in the verse response
+	// parse the verse number and text from each verse object in the response
 	const verseTextMap = Object.fromEntries(verseReferences.map((key) => [key, '']));
 	resolved.forEach((verseObj: { items: VerseItem[] }) =>
 		processVerseObject(verseObj, verseTextMap)
 	);
-	const verses: Verse[] = Array.from({ length: Object.keys(verseTextMap).length }, (_, i) => ({
+
+	const verses: Verse[] = Array.from({ length: verseReferences.length }, (_, i) => ({
+		id: parseInt(verseReferences[i].split('.')[2]),
 		text: verseTextMap[verseReferences[i]]
-	})).filter((v) => v.text !== 'undefined');
+	}))
+	.filter((v) => v.text !== 'undefined');
 
 	return verses;
 }
@@ -137,14 +149,7 @@ type TagVerseItem = {
 	text: string;
 };
 
-type TextVerseItem = {
-	type?: undefined;
-	attrs: {
-		verseId: string;
-	};
-	text: string;
-};
-
+type TextVerseItem = { type?: undefined; } & VerseInfo;
 type VerseItem = TagVerseItem | TextVerseItem;
 
 /**
@@ -176,7 +181,7 @@ function processVerseObject(
 			});
 
 			// insert newline before any capitalized word (except at start)
-			verseTextMap[verseId] = verseTextMap[verseId]!.replace(/([^\n])([A-Z])/g, '$1\n$2') // add newline before any capital
+			verseTextMap[verseId] = verseTextMap[verseId]!.replace(/([^\n])([A-Z])/g, '$1\n$2')
 				.trim();
 
 			verseTextMap[verseId] = verseTextMap[verseId]
