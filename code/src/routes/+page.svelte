@@ -44,8 +44,12 @@
 		// verse length must be verified since some translations do not have certain verses
 		verseData = resolved.verses.length === 0 ? verseData : resolved.verses;
 		verseLimit = resolved.verses.length === 0 ? verseLimit : resolved.numVerses;
+		selectedVerseIndex =
+			resolved.verses.length === 0
+				? selectedVerseIndex
+				: verseData.findIndex((verse) => verse.id === osis.selectedVerse);
+
 		verseReference = resolved.verses.length === 0 ? verseReference : getVerseReference();
-		selectedVerseIndex = resolved.verses.length === 0 ? selectedVerseIndex : osis.selectedVerse - 1;
 	}
 
 	onMount(() => getChapter('John 1:1', selectedTranslation)); // this will be the default verse
@@ -53,7 +57,7 @@
 	/** Resolves and returns a valid selected verse reference.*/
 	function getVerseReference(): string {
 		const verseNumber = verseData[selectedVerseIndex]?.id ?? verseData[0]?.id;
-
+		
 		return `${bookMap[osis.book]} ${osis.chapter}:${verseNumber}`;
 	}
 
@@ -86,7 +90,7 @@
 			showSuggestions = true;
 			autoSuggestions = autoSuggestions
 				.filter((suggestion) => parseQuery(suggestion) !== null) // verify that the suggestions are valid
-				.sort(); 
+				.sort();
 		}
 	}
 </script>
@@ -104,7 +108,7 @@
 				<option
 					on:click={() => {
 						autoSuggestions = autoSuggestions.filter((option) => option === null); // clear the suggestions
-
+						console.log(suggestion);
 						getChapter(suggestion, selectedTranslation); // update displayed verse
 					}}
 					style="cursor:pointer"
