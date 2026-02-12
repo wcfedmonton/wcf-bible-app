@@ -47,7 +47,7 @@
 		selectedVerseIndex =
 			resolved.verses.length === 0
 				? selectedVerseIndex
-				: verseData.findIndex((verse) => verse.id === osis.selectedVerse);
+				: verseData.findIndex((verse) => `${verse.id}` === `${osis.selectedVerse}`);
 
 		verseReference = resolved.verses.length === 0 ? verseReference : getVerseReference();
 	}
@@ -61,6 +61,7 @@
 		return `${bookMap[osis.book]} ${osis.chapter}:${verseNumber}`;
 	}
 
+	let highlightedIndex = -1;
 	let showSuggestions = false;
 	let autoSuggestions: string[] = [];
 
@@ -87,10 +88,47 @@
 				}
 			});
 
+			highlightedIndex = -1;
 			showSuggestions = true;
 			autoSuggestions = autoSuggestions
 				.filter((suggestion) => parseQuery(suggestion) !== null) // verify that the suggestions are valid
 				.sort();
+		}
+	}
+
+	/**
+	 * Handles selection of an auto-suggestion.
+	 *
+	 * @param {string} suggestion - The selected suggestion value.
+	 */
+	function selectSuggestion(suggestion: string) {
+		autoSuggestions = []; // clear the suggestions
+		highlightedIndex = -1;
+		showSuggestions = false;
+
+		getChapter(suggestion, selectedTranslation);
+	}
+
+	/**
+	 * Handles keyboard navigation for the auto-suggestion dropdown.
+	 *
+	 * @param {KeyboardEvent} event - The keyboard event triggered on key press.
+	 */
+	function handleKeyDown(event: KeyboardEvent) {
+		if (!showSuggestions) return;
+
+		if (event.key === 'ArrowDown') {
+			event.preventDefault();
+
+			highlightedIndex = (highlightedIndex + 1) % autoSuggestions.length;
+		} else if (event.key === 'ArrowUp') {
+			event.preventDefault();
+
+			highlightedIndex = Math.abs((highlightedIndex - 1) % autoSuggestions.length);
+		} else if (event.key === 'Enter') {
+			event.preventDefault();
+
+			selectSuggestion(autoSuggestions[highlightedIndex]);
 		}
 	}
 </script>
@@ -99,19 +137,31 @@
 <p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
 
 <!-- NOTE: THESE ARE TEST COMPONENTS AND CAN BE MODIFIED TO REPRESENT THE REAL COMPONENTS -->
-<div>
-	<input type="text" bind:value={userInput} on:input={generateAutoSuggestions} />
-
+<div
+	style="width: fit-content;"
+	role="combobox"
+	on:keydown={handleKeyDown}
+	tabindex="0"
+	aria-controls="suggestions-list"
+	aria-expanded={showSuggestions}
+>
+	<input
+		type="text"
+		bind:value={userInput}
+		on:input={generateAutoSuggestions}
+		on:keydown={(event: KeyboardEvent) => {
+			if (event.key === 'Enter') {
+				getChapter(userInput, selectedTranslation);
+			}
+		}}
+	/>
 	{#if showSuggestions}
-		<div>
-			{#each autoSuggestions as suggestion (suggestion)}
+		<div id="suggestions-list">
+			{#each autoSuggestions as suggestion, index (suggestion)}
 				<option
-					on:click={() => {
-						autoSuggestions = autoSuggestions.filter((option) => option === null); // clear the suggestions
-
-						getChapter(suggestion, selectedTranslation); // update displayed verse
-					}}
-					style="cursor:pointer"
+					class="option"
+					on:click={() => selectSuggestion(suggestion)}
+					class:selected={index === highlightedIndex}
 				>
 					{suggestion}
 				</option>
@@ -157,3 +207,14 @@
 		<option value={translation}>{translation}</option>
 	{/each}
 </select>
+
+<style>
+	.option {
+		cursor: pointer;
+	}
+
+	.option:hover,
+	.selected {
+		background: #dbeafe;
+	}
+</style>
