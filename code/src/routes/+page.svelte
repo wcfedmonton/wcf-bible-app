@@ -15,7 +15,7 @@
 	let osis: OSISReference;
 	let verseData: Verse[] = [];
 	let selectedVerseIndex: number;
-	let selectedTranslation: BibleTranslation = 'NKJV';
+	let selectedTranslation: BibleTranslation = 'NIV';
 	const translations = [
 		...new Set([...Object.keys(YVTranslations), ...Object.keys(APIBibleTranslations)])
 	].sort();
@@ -57,7 +57,7 @@
 	/** Resolves and returns a valid selected verse reference.*/
 	function getVerseReference(): string {
 		const verseNumber = verseData[selectedVerseIndex]?.id ?? verseData[0]?.id;
-		
+
 		return `${bookMap[osis.book]} ${osis.chapter}:${verseNumber}`;
 	}
 
@@ -108,7 +108,7 @@
 				<option
 					on:click={() => {
 						autoSuggestions = autoSuggestions.filter((option) => option === null); // clear the suggestions
-						console.log(suggestion);
+
 						getChapter(suggestion, selectedTranslation); // update displayed verse
 					}}
 					style="cursor:pointer"
