@@ -69,10 +69,10 @@ async function queryYVP(osis: OSISReference, translation: BibleTranslation) {
 		verseRequests.push(bibleClient.getPassage(bibleId, usfmReference, 'text'));
 	});
 
-	// use parallel processing to optimize for speed. 
+	// use parallel processing to optimize for speed.
 	//
 	// Promise.allSettled is used instead of Promise.all because if one of the requests using the
-	// latter fails (typically because the verse is not available in the selected translation), 
+	// latter fails (typically because the verse is not available in the selected translation),
 	// an error response is returned. the former allows us to verify the result of each request
 	const responses = (await Promise.allSettled(verseRequests))
 		.filter((r) => r.status === 'fulfilled')
@@ -81,10 +81,10 @@ async function queryYVP(osis: OSISReference, translation: BibleTranslation) {
 	const verses: Verse[] = Array.from({ length: responses.length }, (_, i) => ({
 		id: parseInt(responses[i].id.split('.')[2]),
 		text: responses[i].content
-	}))
-	.filter((v) => v.text);
+	})).filter((v) => v.text);
 
-	if(verses.length === 0) { // attempt to fetch data from API.Bible in the case of a failure
+	if (verses.length === 0) {
+		// attempt to fetch data from API.Bible in the case of a failure
 		return queryAPIBible(osis, translation);
 	}
 
@@ -134,8 +134,7 @@ async function queryAPIBible(osis: OSISReference, translation: BibleTranslation)
 	const verses: Verse[] = Array.from({ length: verseReferences.length }, (_, i) => ({
 		id: parseInt(verseReferences[i].split('.')[2]),
 		text: verseTextMap[verseReferences[i]]
-	}))
-	.filter((v) => v.text);
+	})).filter((v) => v.text);
 
 	return verses;
 }
@@ -153,7 +152,7 @@ type TagVerseItem = {
 	text: string;
 };
 
-type TextVerseItem = { type?: undefined; } & VerseInfo;
+type TextVerseItem = { type?: undefined } & VerseInfo;
 type VerseItem = TagVerseItem | TextVerseItem;
 
 /**
@@ -185,8 +184,7 @@ function processVerseObject(
 			});
 
 			// insert newline before any capitalized word (except at start)
-			verseTextMap[verseId] = verseTextMap[verseId]!.replace(/([^\n])([A-Z])/g, '$1\n$2')
-				.trim();
+			verseTextMap[verseId] = verseTextMap[verseId]!.replace(/([^\n])([A-Z])/g, '$1\n$2').trim();
 
 			verseTextMap[verseId] = verseTextMap[verseId]
 				.replace(/\n/g, ' ') // replace all newline characters (\n) with a single space

@@ -2,14 +2,14 @@ import * as lang from 'bible-passage-reference-parser/esm/lang/en.js';
 import { bcv_parser } from 'bible-passage-reference-parser/esm/bcv_parser.js';
 
 import USFMMap from './USFM.json' with { type: 'json' };
-import bookMap from './books.json' with { type: 'json' };
+import bookMap from './OSIS.json' with { type: 'json' };
 
 export type OSISReference = {
 	book: keyof typeof bookMap;
 	chapter: number;
 	numVerses: number;
 	selectedVerse: number;
-	verseProvided: boolean
+	verseProvided: boolean;
 };
 
 /**
@@ -30,7 +30,7 @@ export type OSISReference = {
  */
 export function parseQuery(query: string): OSISReference | null {
 	if (!query) return null; // handle case where there is no input
-	
+
 	const bcv = new bcv_parser(lang);
 
 	if (!bcv.parse(query).entities[0]) return null; // handle case where user's input doesn't map to anything
@@ -55,10 +55,10 @@ export function parseQuery(query: string): OSISReference | null {
 		chapter: generalResult.start.c,
 		numVerses: lastVerseInChapter,
 		selectedVerse: generalResult.start.v ? generalResult.start.v : 1, // start at the first verse if no verse was specified by the user.
-		verseProvided: generalResult.start.v ? true: false
+		verseProvided: generalResult.start.v ? true : false
 	};
 }
-console.log(parseQuery("joh 38"))
+
 /**
  * Converts an OSIS biblical reference into an array of USFM (Unified Standard Format Marker) references.
  *
