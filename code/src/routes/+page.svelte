@@ -1,100 +1,49 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import * as lang from 'bible-passage-reference-parser/esm/lang/en.js';
-	import { bcv_parser } from 'bible-passage-reference-parser/esm/bcv_parser';
-
-	import bookMap from '$lib/shared/OSIS.json';
-	import { parseQuery, type OSISReference } from '$lib/shared/format';
+	
+	import { fetchChapter, getVerseReference } from '$lib/bible/chapterServices';
+	import { generateAutoSuggestions } from '$lib/bible/suggestionUtils';
+	
 	import { type BibleTranslation, type Verse } from '$lib/server/bible';
 	import YVTranslations from '$lib/shared/YVTranslations.json' with { type: 'json' };
 	import APIBibleTranslations from '$lib/shared/APIBibleTranslations.json' with { type: 'json' };
+	import type { OSISReference } from '$lib/shared/format';
 
 	let userInput = '';
 	let verseLimit = 1;
 	let verseReference = '';
 	let osis: OSISReference;
 	let verseData: Verse[] = [];
-	let selectedVerseIndex: number;
+	let selectedVerseIndex: number = 0;
 	let selectedTranslation: BibleTranslation = 'NIV';
 	const translations = [
 		...new Set([...Object.keys(YVTranslations), ...Object.keys(APIBibleTranslations)])
 	].sort();
 
-	/**
-	 * Fetches and initializes chapter verse data for a parsed Bible reference and selected translation.
-	 *
-	 * @param input - A Bible reference string (e.g., "gen 1 1") to be parsed into book and chapter information.
-	 * @param translation - The selected Bible translation identifier used to fetch the corresponding chapter data.
-	 */
-	async function getChapter(input: string, translation: BibleTranslation) {
-		const testOsis = parseQuery(input)!;
+	async function fetchChapterData(query: string) {
+		const updatedData = await fetchChapter({
+			input: query,
+			verseData,
+			verseLimit,
+			verseReference,
+			selectedVerseIndex,
+			selectedTranslation
+		})!;
 
-		if (!testOsis) return;
-
-		osis = testOsis; // we only assign the result of the parsing if it's a valid query
-
-		const params = new URLSearchParams({
-			query: `${osis.book}.${osis.chapter}`, // normalize the query to increase cache hits
-			translation
-		});
-
-		const res = await fetch(`api/verses?${params.toString()}`);
-		const resolved = await res.json();
-
-		// verse length must be verified since some translations do not have certain verses
-		verseData = resolved.verses.length === 0 ? verseData : resolved.verses;
-		verseLimit = resolved.verses.length === 0 ? verseLimit : resolved.numVerses;
-		selectedVerseIndex =
-			resolved.verses.length === 0
-				? selectedVerseIndex
-				: verseData.findIndex((verse) => `${verse.id}` === `${osis.selectedVerse}`);
-
-		verseReference = resolved.verses.length === 0 ? verseReference : getVerseReference();
+		if(updatedData) {
+			osis = updatedData.osis;
+			verseData = updatedData.verseData;
+			verseLimit = updatedData.verseLimit;
+			verseReference = updatedData.verseReference;
+			selectedVerseIndex = updatedData.selectedVerseIndex; 
+		}	
 	}
-
-	onMount(() => getChapter('John 1:1', selectedTranslation)); // this will be the default verse
-
-	/** Resolves and returns a valid selected verse reference.*/
-	function getVerseReference(): string {
-		const verseNumber = verseData[selectedVerseIndex]?.id ?? verseData[0]?.id;
-
-		return `${bookMap[osis.book]} ${osis.chapter}:${verseNumber}`;
-	}
+	
+	onMount(async () => fetchChapterData('John 1:1')); // this will be the default verse
 
 	let highlightedIndex = -1;
 	let showSuggestions = false;
 	let autoSuggestions: string[] = [];
-
-	/** Generates auto-suggestions for Bible verse references based on user input.*/
-	function generateAutoSuggestions() {
-		const bcv = new bcv_parser(lang);
-		const {
-			passage: { books: parsed }
-		} = bcv.parse(userInput);
-		autoSuggestions = []; // clear the previous suggestions
-
-		if (parsed[0]) {
-			const parsedResult = parseQuery(userInput)!;
-			const passageReferences: string[] = parsed[0].parsed;
-
-			// assume every suggested book has the requested chapter/verse
-			passageReferences.forEach((book) => {
-				if (parsedResult && parsedResult.verseProvided) {
-					autoSuggestions.push(
-						`${bookMap[book as keyof typeof bookMap]} ${parsedResult.chapter}:${parsedResult.selectedVerse}`
-					);
-				} else if (parsedResult && !parsedResult.verseProvided) {
-					autoSuggestions.push(`${bookMap[book as keyof typeof bookMap]} ${parsedResult.chapter}`);
-				}
-			});
-
-			highlightedIndex = -1;
-			showSuggestions = true;
-			autoSuggestions = autoSuggestions
-				.filter((suggestion) => parseQuery(suggestion) !== null) // verify that the suggestions are valid
-				.sort();
-		}
-	}
 
 	/**
 	 * Handles selection of an auto-suggestion.
@@ -106,7 +55,7 @@
 		highlightedIndex = -1;
 		showSuggestions = false;
 
-		getChapter(suggestion, selectedTranslation);
+		fetchChapterData(suggestion);
 	}
 
 	/**
@@ -148,10 +97,16 @@
 	<input
 		type="text"
 		bind:value={userInput}
-		on:input={generateAutoSuggestions}
+		on:input={() => {
+			autoSuggestions = generateAutoSuggestions(userInput);
+			
+			if(autoSuggestions.length > 0) {
+				showSuggestions = true
+			}
+		}}
 		on:keydown={(event: KeyboardEvent) => {
 			if (event.key === 'Enter') {
-				getChapter(userInput, selectedTranslation);
+				fetchChapterData(userInput);
 			}
 		}}
 	/>
@@ -170,7 +125,7 @@
 	{/if}
 </div>
 
-<button on:click={() => getChapter(userInput, selectedTranslation)}>Submit</button>
+<button on:click={() => fetchChapterData(userInput)}>Submit</button>
 
 <div>
 	<p>{verseReference}</p>
@@ -181,14 +136,14 @@
 	id="button"
 	on:click={() => {
 		selectedVerseIndex -= 1;
-		verseReference = getVerseReference();
+		verseReference = getVerseReference(verseData, osis, selectedVerseIndex);
 	}}
 	disabled={selectedVerseIndex == 0}>Previous</button
 >
 <button
 	on:click={() => {
 		selectedVerseIndex += 1;
-		verseReference = getVerseReference();
+		verseReference = getVerseReference(verseData, osis, selectedVerseIndex);
 	}}
 	disabled={selectedVerseIndex == verseLimit - 1}>Next</button
 >
@@ -196,11 +151,11 @@
 <select
 	bind:value={selectedTranslation}
 	on:change={() => {
-		getChapter(verseReference, selectedTranslation);
+		fetchChapterData(verseReference);
 
 		// verse reference is updated again to handle the case where the user changes to a translation that
 		// doesn't have the selected verse
-		verseReference = getVerseReference();
+		verseReference = getVerseReference(verseData, osis, selectedVerseIndex);
 	}}
 >
 	{#each translations as translation (translation)}
