@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	
-	import { fetchChapter, getVerseReference } from '$lib/bible/chapterServices';
-	import { generateAutoSuggestions } from '$lib/bible/suggestionUtils';
-	
+	import Input from './Input.svelte';
+
+	import type { OSISReference } from '$lib/shared/format';
 	import { type BibleTranslation, type Verse } from '$lib/server/bible';
+	import { fetchChapter, getVerseReference } from '$lib/bible/chapterServices';
 	import YVTranslations from '$lib/shared/YVTranslations.json' with { type: 'json' };
 	import APIBibleTranslations from '$lib/shared/APIBibleTranslations.json' with { type: 'json' };
-	import type { OSISReference } from '$lib/shared/format';
 
-	let userInput = '';
 	let verseLimit = 1;
 	let verseReference = '';
 	let osis: OSISReference;
@@ -40,92 +39,14 @@
 	}
 	
 	onMount(async () => fetchChapterData('John 1:1')); // this will be the default verse
-
-	let highlightedIndex = -1;
-	let showSuggestions = false;
-	let autoSuggestions: string[] = [];
-
-	/**
-	 * Handles selection of an auto-suggestion.
-	 *
-	 * @param {string} suggestion - The selected suggestion value.
-	 */
-	function selectSuggestion(suggestion: string) {
-		autoSuggestions = []; // clear the suggestions
-		highlightedIndex = -1;
-		showSuggestions = false;
-
-		fetchChapterData(suggestion);
-	}
-
-	/**
-	 * Handles keyboard navigation for the auto-suggestion dropdown.
-	 *
-	 * @param {KeyboardEvent} event - The keyboard event triggered on key press.
-	 */
-	function handleKeyDown(event: KeyboardEvent) {
-		if (!showSuggestions) return;
-
-		if (event.key === 'ArrowDown') {
-			event.preventDefault();
-
-			highlightedIndex = (highlightedIndex + 1) % autoSuggestions.length;
-		} else if (event.key === 'ArrowUp') {
-			event.preventDefault();
-
-			highlightedIndex = Math.abs((highlightedIndex - 1) % autoSuggestions.length);
-		} else if (event.key === 'Enter') {
-			event.preventDefault();
-
-			selectSuggestion(autoSuggestions[highlightedIndex]);
-		}
-	}
 </script>
 
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
 
-<!-- NOTE: THESE ARE TEST COMPONENTS AND CAN BE MODIFIED TO REPRESENT THE REAL COMPONENTS -->
-<div
-	style="width: fit-content;"
-	role="combobox"
-	on:keydown={handleKeyDown}
-	tabindex="0"
-	aria-controls="suggestions-list"
-	aria-expanded={showSuggestions}
->
-	<input
-		type="text"
-		bind:value={userInput}
-		on:input={() => {
-			autoSuggestions = generateAutoSuggestions(userInput);
-			
-			if(autoSuggestions.length > 0) {
-				showSuggestions = true
-			}
-		}}
-		on:keydown={(event: KeyboardEvent) => {
-			if (event.key === 'Enter') {
-				fetchChapterData(userInput);
-			}
-		}}
-	/>
-	{#if showSuggestions}
-		<div id="suggestions-list">
-			{#each autoSuggestions as suggestion, index (suggestion)}
-				<option
-					class="option"
-					on:click={() => selectSuggestion(suggestion)}
-					class:selected={index === highlightedIndex}
-				>
-					{suggestion}
-				</option>
-			{/each}
-		</div>
-	{/if}
-</div>
-
-<button on:click={() => fetchChapterData(userInput)}>Submit</button>
+<Input 
+	fetchChapterData={fetchChapterData}
+/>
 
 <div>
 	<p>{verseReference}</p>
@@ -162,14 +83,3 @@
 		<option value={translation}>{translation}</option>
 	{/each}
 </select>
-
-<style>
-	.option {
-		cursor: pointer;
-	}
-
-	.option:hover,
-	.selected {
-		background: #dbeafe;
-	}
-</style>
