@@ -11,14 +11,15 @@ export async function generateAutoSuggestions(userInput: string): Promise<string
 		passage: { books: parsed }
 	} = bcv.parse(userInput);
 
-	if (!parsed[0]) { // if there is no bible chapter/verse reference in the user input, we perform a phrase search instead
+	if (!parsed[0]) {
+		// if there is no bible chapter/verse reference in the user input, we perform a phrase search instead
 		const params = new URLSearchParams({ query: userInput });
 		const res = await fetch(`api/references?${params.toString()}`);
 		const { suggestions } = await res.json();
 
 		// results must be filtered since sometimes the Bible SDK returns invalid references
-		return suggestions?.filter((suggestion: string)=> parseQuery(suggestion) !== null); 
-	};
+		return suggestions?.filter((suggestion: string) => parseQuery(suggestion) !== null);
+	}
 
 	let autoSuggestions: string[] = []; // clear the previous suggestions
 

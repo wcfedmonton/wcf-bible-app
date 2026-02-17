@@ -24,7 +24,6 @@
 		translation: 'NIV'
 	});
 
-
 	async function fetchChapterData(query: string) {
 		const updatedData = await fetchChapter({
 			input: query,
@@ -48,7 +47,4 @@
 
 <Search {fetchChapterData} />
 
-<Verse
-	bind:state
-	{fetchChapterData}
-/>
+<Verse bind:state {fetchChapterData} />

@@ -16,7 +16,7 @@
 		autoSuggestions = []; // clear the suggestions
 		highlightedIndex = -1;
 		showSuggestions = false;
-		
+
 		fetchChapterData(suggestion);
 	}
 
