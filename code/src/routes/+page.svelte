@@ -1,36 +1,41 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	import Input from './components/home/Input.svelte';
+	import Search from './components/home/Search.svelte';
 	import Verse from './components/home/VerseNavigator.svelte';
 
 	import type { OSISReference } from '$lib/shared/format';
 	import { fetchChapter } from '$lib/bible/chapterServices';
 	import { type BibleTranslation, type Verse as VerseType } from '$lib/server/bible';
 
-	let verseLimit = 1;
-	let verseReference = '';
-	let osis: OSISReference;
-	let verseData: VerseType[] = [];
-	let selectedVerseIndex: number = 0;
-	let selectedTranslation: BibleTranslation = 'NIV';
+	let state: {
+		verseLimit: number;
+		verseReference: string;
+		osis?: OSISReference;
+		verseData: VerseType[];
+		selectedVerseIndex: number;
+		translation: BibleTranslation;
+	} = $state({
+		verseLimit: 1,
+		verseReference: '',
+		osis: undefined,
+		verseData: [],
+		selectedVerseIndex: 0,
+		translation: 'NIV'
+	});
 
 	async function fetchChapterData(query: string) {
 		const updatedData = await fetchChapter({
 			input: query,
-			verseData,
-			verseLimit,
-			verseReference,
-			selectedVerseIndex,
-			selectedTranslation
+			...state
 		})!;
 
 		if (updatedData) {
-			osis = updatedData.osis;
-			verseData = updatedData.verseData;
-			verseLimit = updatedData.verseLimit;
-			verseReference = updatedData.verseReference;
-			selectedVerseIndex = updatedData.selectedVerseIndex;
+			state.osis = updatedData.osis;
+			state.verseData = updatedData.verseData;
+			state.verseLimit = updatedData.verseLimit;
+			state.verseReference = updatedData.verseReference;
+			state.selectedVerseIndex = updatedData.selectedVerseIndex;
 		}
 	}
 
@@ -40,14 +45,6 @@
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
 
-<Input {fetchChapterData} />
+<Search {fetchChapterData} />
 
-<Verse
-	{osis}
-	{verseData}
-	{verseLimit}
-	{verseReference}
-	{fetchChapterData}
-	{selectedVerseIndex}
-	{selectedTranslation}
-/>
+<Verse bind:state {fetchChapterData} />

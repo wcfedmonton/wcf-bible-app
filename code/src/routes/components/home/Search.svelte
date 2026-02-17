@@ -53,8 +53,8 @@
 		type="text"
 		bind:value={userInput}
 		onkeydown={handleKeyDown}
-		oninput={() => {
-			autoSuggestions = generateAutoSuggestions(userInput);
+		oninput={async () => {
+			autoSuggestions = await generateAutoSuggestions(userInput);
 
 			if (autoSuggestions.length > 0) {
 				showSuggestions = true;
