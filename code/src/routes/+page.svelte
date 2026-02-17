@@ -41,58 +41,9 @@
 
 	onMount(async () => fetchChapterData('John 1:1')); // this will be the default verse
 </script>
-<div class="Search_Bar"> <!--Write dropdown menu functionality-->
-	<input type ="text" placeholder="start typing to find verse" bind:value={state.verseReference} oninput={() => fetchChapterData(state.verseReference)} />
-</div>
 
-<div class="Verse_Header">
-	<h1>{state.verseReference}</h1> 
-</div>
-
-<div class="Version_Select">
-	<select bind:value={state.translation} onchange={() => fetchChapterData(state.verseReference)}>
-		<option value="KJV">KJV</option>
-		<option value="ESV">ESV</option>
-	</select>
-</div>
-
-<div class="Verse_Display">
-	<h3>{state.verseData.map(v => v.text).join(' ')}</h3>
-</div>
-
-<div class="Credits">
-	<p>	
-		Built by <a href="https://sites.google.com/view/wcfedmonton/home"> Winners Campus Fellowship Edmonton</a>
-	</p>
-</div>
-
-<style>
-	.Search_Bar {
-		margin: 20px;
-		text-align: right;
-		font-size: small;
-	}
-
-	.Verse_Header {
-		text-align: center;
-	}
-
-	.Version_Select {
-		margin: 20px;
-	}
-
-	.Verse_Display {
-		margin: 20px;
-		font-size: 1.5em;
-	}
-
-	.Credits {
-		text-align: center;
-		margin-top: 40px;
-		font-size: 0.9em;
-		color: #555;
-	}
-</style>
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
 
 <Search {fetchChapterData} />
 
