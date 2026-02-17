@@ -9,7 +9,7 @@ type FetchChapterParams = {
 	verseLimit: number;
 	verseReference: string;
 	selectedVerseIndex: number;
-	selectedTranslation: BibleTranslation;
+	translation: BibleTranslation;
 };
 
 /**
@@ -26,7 +26,7 @@ export async function fetchChapter(options: FetchChapterParams) {
 
 	const params = new URLSearchParams({
 		query: `${osis.book}.${osis.chapter}`, // normalize the query to increase cache hits
-		translation: options.selectedTranslation
+		translation: options.translation
 	});
 
 	const res = await fetch(`api/verses?${params.toString()}`);

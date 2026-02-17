@@ -4,13 +4,8 @@
 	import APIBibleTranslations from '$lib/shared/APIBibleTranslations.json' with { type: 'json' };
 
 	let {
-		osis,
-		verseData,
-		verseLimit,
-		verseReference,
-		fetchChapterData,
-		selectedVerseIndex,
-		selectedTranslation
+		state=$bindable(),
+		fetchChapterData
 	} = $props();
 
 	const translations = [
@@ -19,34 +14,35 @@
 </script>
 
 <div>
-	<p>{verseReference}</p>
-	<p>{verseData[selectedVerseIndex]?.text}</p>
+	<p>{state.verseReference}</p>
+	<p>{state.verseData[state.selectedVerseIndex]?.text}</p>
 </div>
 
 <button
 	id="button"
 	onclick={() => {
-		selectedVerseIndex -= 1;
-		verseReference = getVerseReference(verseData, osis, selectedVerseIndex);
+		state.selectedVerseIndex -= 1;
+		state.verseReference = getVerseReference(state.verseData, state.osis, state.selectedVerseIndex);
 	}}
-	disabled={selectedVerseIndex == 0}>Previous</button
+	disabled={state.selectedVerseIndex == 0}>Previous</button
 >
 <button
 	onclick={() => {
-		selectedVerseIndex += 1;
-		verseReference = getVerseReference(verseData, osis, selectedVerseIndex);
+		state.selectedVerseIndex += 1;
+		state.verseReference = getVerseReference(state.verseData, state.osis, state.selectedVerseIndex);
 	}}
-	disabled={selectedVerseIndex == verseLimit - 1}>Next</button
+	disabled={state.selectedVerseIndex == state.verseLimit - 1}>Next</button
 >
 
 <select
-	bind:value={selectedTranslation}
+	bind:value={state.translation}
 	onchange={() => {
-		fetchChapterData(verseReference);
+		fetchChapterData(state.verseReference, state.selectedTranslation);
 
 		// verse reference is updated again to handle the case where the user changes to a translation that
 		// doesn't have the selected verse
-		verseReference = getVerseReference(verseData, osis, selectedVerseIndex);
+		state.verseReference = getVerseReference(state.verseData, state.osis, state.selectedVerseIndex);
+
 	}}
 >
 	{#each translations as translation (translation)}

@@ -1,17 +1,24 @@
 import * as lang from 'bible-passage-reference-parser/esm/lang/en.js';
 import { bcv_parser } from 'bible-passage-reference-parser/esm/bcv_parser';
 
-import { parseQuery } from '$lib/shared/format';
 import bookMap from '$lib/shared/OSIS.json';
+import { parseQuery } from '$lib/shared/format';
 
 /** Generates auto-suggestions for Bible verse references based on user input.*/
-export function generateAutoSuggestions(userInput: string): string[] {
+export async function generateAutoSuggestions(userInput: string): Promise<string[]> {
 	const bcv = new bcv_parser(lang);
 	const {
 		passage: { books: parsed }
 	} = bcv.parse(userInput);
 
-	if (!parsed[0]) return [];
+	if (!parsed[0]) { // if there is no bible chapter/verse reference in the user input, we perform a phrase search instead
+		const params = new URLSearchParams({ query: userInput });
+		const res = await fetch(`api/references?${params.toString()}`);
+		const { suggestions } = await res.json();
+
+		// results must be filtered since sometimes the Bible SDK returns invalid references
+		return suggestions?.filter((suggestion: string)=> parseQuery(suggestion) !== null); 
+	};
 
 	let autoSuggestions: string[] = []; // clear the previous suggestions
 
