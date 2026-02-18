@@ -34,7 +34,7 @@
 <select
 	bind:value={state.translation}
 	onchange={() => {
-		fetchChapterData(state.verseReference, state.selectedTranslation);
+		fetchChapterData(state.verseReference);
 
 		// verse reference is updated again to handle the case where the user changes to a translation that
 		// doesn't have the selected verse
