@@ -7,7 +7,7 @@
 	import { type BibleTranslation, type Verse as VerseType } from '$lib/server/bible';
 
 	const { data: initialData } = $props(); // initial data is loaded on the server
-	
+
 	let state: {
 		verseLimit: number;
 		osis?: OSISReference;
@@ -15,8 +15,8 @@
 		verseData: VerseType[];
 		selectedVerseIndex: number;
 		translation: BibleTranslation;
-	// svelte-ignore state_referenced_locally
-		} = $state(initialData);
+		// svelte-ignore state_referenced_locally
+	} = $state(initialData);
 
 	async function fetchChapterData(query: string) {
 		const updatedData = await fetchChapter({
