@@ -42,9 +42,36 @@
 	onMount(async () => fetchChapterData('John 1:1')); // this will be the default verse
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<div>
+	<Search {fetchChapterData} />
+</div>
 
-<Search {fetchChapterData} />
+<div class="verse-container">
+	<Verse bind:state {fetchChapterData} />
+</div>
 
-<Verse bind:state {fetchChapterData} />
+<div class="Credits-container">
+	<p>
+		Built by 
+		<a class="credits" href="https://sites.google.com/view/wcfedmonton/home">
+			Winners Campus Fellowship Edmonton
+		</a>
+	</p>
+</div>
+
+<style>
+	.Credits-container {
+		text-align: center;
+		margin-bottom: 10rem;
+	}
+
+	.credits {
+		color: #d3413f;
+		text-decoration: none;
+	}
+
+	.verse-container {
+		display: flex;
+		justify-content: center;
+	}
+</style>
