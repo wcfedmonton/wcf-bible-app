@@ -28,6 +28,7 @@
 		"prettier-plugin-svelte": "^3.4.1",
 		"svelte": "^5.48.2",
 		"svelte-check": "^4.3.5",
+		"tailwindcss": "^4.2.1",
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.53.1",
 		"vite": "^7.3.1"
@@ -38,7 +39,6 @@
 		"amplify-adapter": "^1.3.0",
 		"bible-passage-reference-parser": "^3.2.0",
 		"biblesdk": "^1.0.0",
-		"dotenv": "^17.2.4",
-		"tailwindcss": "^4.2.1"
+		"dotenv": "^17.2.4"
 	}
 }
