@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+body {
+	background-color: #222222;
+}
+
+@theme {
+	--color-accent: #8b3a3a;
+	--color-border: #3c4043;
+	--color-form_title: #9aa0a6;
+	--color-form_input: #2f2f2f;
+
+	--color-accent_btn: #c03a38;
+	--color-input_focus: #d3413f;
+	--color-input_border: #3c4043;
+	--color-google_btn: #9aa0a6;
+	--color-accent_btn_hover: #d3413f;
+	--color-card_grey: rgb(42, 42, 42);
+
+	--text-white: #ffffff;
+	--color-text_icon: #6b7074;
+	--text-default_size: 0.875rem;
+	--font-sans: 'Inter', sans-serif;
+	--font-serif: 'Merriweather', serif;
+}
+
+@layer base {
+	body {
+		@apply font-sans;
+		@apply text-white;
+		@apply text-default_size;
+	}
+}
