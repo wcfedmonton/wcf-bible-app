@@ -17,10 +17,10 @@ body {
 	--color-google_btn: #9aa0a6;
 	--color-accent_btn_hover: #d3413f;
 	--color-card_grey: rgb(42, 42, 42);
-	
+
 	--text-white: #ffffff;
 	--color-text_icon: #6b7074;
-	--text-default_size: .875rem;
+	--text-default_size: 0.875rem;
 	--font-sans: 'Inter', sans-serif;
 	--font-serif: 'Merriweather', serif;
 }
