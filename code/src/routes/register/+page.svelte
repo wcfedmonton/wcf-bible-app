@@ -8,6 +8,7 @@
 	import GoogleButton from '../components/authentication/GoogleButton.svelte';
 
 	import { createForm } from 'felte';
+	import AuthPage from '../components/authentication/AuthPage.svelte';
 
 	type FormState = {
 		full_name: string;
@@ -33,24 +34,22 @@
 	}
 </script>
 
-<div class="mb-5">
-	<Logo />
-</div>
+<AuthPage>
+	<form use:form>
+		<div class="flex items-center">
+			<AuthCard cardTitle={'Create Account'}>
+				<Input title={'Full Name'} bind:value={formState.full_name} />
+				<Input title={'Email Address'} bind:value={formState.email} />
+				<Password bind:value={formState.password} />
+				<Button title={'Register'} bind:state={formState} {disabledCondition} />
+				<Divider />
+				<GoogleButton action={'Sign up'} />
 
-<form use:form>
-	<div class="flex items-center justify-center h-[36rem] pt-15">
-		<AuthCard cardTitle={'Create Account'}>
-			<Input title={'Full Name'} bind:value={formState.full_name} />
-			<Input title={'Email Address'} bind:value={formState.email} />
-			<Password bind:value={formState.password} />
-			<Button title={'Register'} bind:state={formState} {disabledCondition} />
-			<Divider />
-			<GoogleButton action={'Sign up'} />
-
-			<div class="text-center mt-6">
-				Already have an account?
-				<a href="#" class="text-input_focus">Sign In</a>
-			</div>
-		</AuthCard>
-	</div>
-</form>
+				<div class="text-center mt-6">
+					Already have an account?
+					<a href="/login" class="text-input_focus">Sign In</a>
+				</div>
+			</AuthCard>
+		</div>
+	</form>
+</AuthPage>

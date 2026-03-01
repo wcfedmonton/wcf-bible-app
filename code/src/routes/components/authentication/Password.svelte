@@ -15,7 +15,7 @@
 			class="z-0 w-full bg-form_input border border-input_border border-solid rounded py-2 pr-9 px-4 hover:border-input_focus focus:outline-none focus:ring-0 focus:input-focus"
 		/>
 		<button
-			class="z-10 absolute cursor-pointer right-0 top-[0.25rem] p-2 mr-[0.1rem] text-[0.75rem] text-text_icon"
+			class="z-10 absolute cursor-pointer right-0 top-[0.25rem] p-2 mr-[0.1rem] text-[0.75rem] text-light_grey"
 			onclick={() => (showPassword = !showPassword)}
 		>
 			{#if showPassword}
