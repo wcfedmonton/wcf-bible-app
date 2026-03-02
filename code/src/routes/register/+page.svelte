@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Form from '../components/authentication/Form.svelte';
 	import Input from '../components/authentication/Input.svelte';
 	import Button from '../components/authentication/Button.svelte';
 	import Divider from '../components/authentication/Divider.svelte';
@@ -55,20 +56,18 @@
 </script>
 
 <AuthPage>
-	<form use:form>
-		<div class="flex items-center">
-			<AuthCard cardTitle={'Create Account'}>
-				<Input title={'Full Name'} bind:value={formState.full_name} />
-				<Input title={'Email Address'} bind:value={formState.email} bind:error={errorMessage} />
-				<Password bind:value={formState.password} />
-				<Button title={'Register'} bind:state={formState} bind:loading {disabledCondition} />
-				<Divider />
-				<GoogleButton action={'Sign up'} />
-				<div class="text-center mt-6">
-					Already have an account?
-					<a href="/login" class="text-input_focus">Sign In</a>
-				</div>
-			</AuthCard>
-		</div>
-	</form>
+	<Form {form}>
+		<AuthCard cardTitle={'Create Account'}>
+			<Input title={'Full Name'} bind:value={formState.full_name} />
+			<Input title={'Email Address'} bind:value={formState.email} bind:error={errorMessage} />
+			<Password bind:value={formState.password} />
+			<Button title={'Register'} bind:state={formState} bind:loading {disabledCondition} />
+			<Divider />
+			<GoogleButton action={'Sign up'} />
+			<div class="text-center mt-6">
+				Already have an account?
+				<a href="/login" class="text-input_focus">Sign In</a>
+			</div>
+		</AuthCard>
+	</Form>
 </AuthPage>
