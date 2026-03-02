@@ -6,11 +6,11 @@ export async function POST({ url }): Promise<Response> {
 	const email = url.searchParams.get('email')!;
 	const password = url.searchParams.get('password')!;
 
-	let session = '';
+	let code = '';
 
 	try {
 		const { Session } = await signUp({ name, email, password });
-		session = Session ?? '';
+		code = Session ?? '';
 	} catch (error) {
 		if (error instanceof UsernameExistsException) {
 			return new Response(JSON.stringify({ error: 'An account with this email already exists.' }), {
@@ -20,7 +20,7 @@ export async function POST({ url }): Promise<Response> {
 		}
 	}
 
-	return new Response(JSON.stringify({ session }), {
+	return new Response(JSON.stringify({ code }), {
 		status: 201,
 		headers: { 'Content-Type': 'application/json' }
 	});

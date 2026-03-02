@@ -1,13 +1,14 @@
 <script lang="ts">
 	import Form from '../components/authentication/Form.svelte';
 	import Input from '../components/authentication/Input.svelte';
+	import Footer from '../components/authentication/Footer.svelte';
 	import Button from '../components/authentication/Button.svelte';
 	import Divider from '../components/authentication/Divider.svelte';
 	import Password from '../components/authentication/Password.svelte';
 	import AuthCard from '../components/authentication/AuthCard.svelte';
 	import AuthPage from '../components/authentication/AuthPage.svelte';
 	import GoogleButton from '../components/authentication/GoogleButton.svelte';
-
+	
 	import { createForm } from 'felte';
 
 	type FormState = {
@@ -64,10 +65,7 @@
 			<Button title={'Register'} bind:state={formState} bind:loading {disabledCondition} />
 			<Divider />
 			<GoogleButton action={'Sign up'} />
-			<div class="text-center mt-6">
-				Already have an account?
-				<a href="/login" class="text-input_focus">Sign In</a>
-			</div>
+			<Footer prompt={"Already have an account?"} endpoint={"/login"} action={"Sign In"}/>
 		</AuthCard>
 	</Form>
 </AuthPage>
