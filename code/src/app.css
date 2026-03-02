@@ -12,13 +12,15 @@ body {
 	--color-form_input: #2f2f2f;
 
 	--color-accent_btn: #c03a38;
+	--color-google_btn: #9aa0a6;
 	--color-input_focus: #d3413f;
 	--color-input_border: #3c4043;
-	--color-google_btn: #9aa0a6;
 	--color-accent_btn_hover: #d3413f;
 	--color-card_grey: rgb(42, 42, 42);
+	--color-spinner_bg: rgba(240, 235, 227, 0.2);
 
 	--text-white: #ffffff;
+	--color-error_red: #e05250;
 	--color-light_grey: #6b7074;
 	--text-default_size: 0.875rem;
 	--font-sans: 'Inter', sans-serif;
