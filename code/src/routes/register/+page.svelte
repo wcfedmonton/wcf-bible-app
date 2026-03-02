@@ -1,14 +1,13 @@
 <script lang="ts">
-	import Logo from '../components/common/logo.svelte';
 	import Input from '../components/authentication/Input.svelte';
 	import Button from '../components/authentication/Button.svelte';
 	import Divider from '../components/authentication/Divider.svelte';
 	import Password from '../components/authentication/Password.svelte';
 	import AuthCard from '../components/authentication/AuthCard.svelte';
+	import AuthPage from '../components/authentication/AuthPage.svelte';
 	import GoogleButton from '../components/authentication/GoogleButton.svelte';
 
 	import { createForm } from 'felte';
-	import AuthPage from '../components/authentication/AuthPage.svelte';
 
 	type FormState = {
 		full_name: string;
@@ -23,7 +22,15 @@
 	});
 
 	const { form } = createForm({
-		onSubmit: () => {}
+		onSubmit: async (values) => {
+			const params = new URLSearchParams({ 
+				name: values['Full Name'], 
+				email: values['Email Address'],
+				password: values.password
+			});
+
+			await fetch(`api/register?${params.toString()}`, { method: "POST" });
+		}
 	});
 
 	function disabledCondition(state: FormState) {
