@@ -1,8 +1,10 @@
 import { PUBLIC_DOMAIN } from '$env/static/public';
 
-export function GET({ url }) {
+export async function GET({ url }) {
 	const code = url.searchParams.get('code');
-
+    
+    const response = await fetch('https://www.googleapis.com/oauth2/v3/token');
+    
 	const html = `
         <script>
             if (window.opener) {

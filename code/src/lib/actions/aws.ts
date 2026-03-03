@@ -7,6 +7,22 @@ import {
 import crypto from 'crypto';
 import { USER_POOL_CLIENT_ID, USER_POOL_CLIENT_SECRET } from '$env/static/private';
 
+/**
+ * Registers a new user with AWS Cognito and initiates authentication.
+ * 
+ * Creates a new user account with the provided credentials, then performs
+ * the initial authentication flow to obtain access, refresh, and ID tokens.
+ * 
+ * @param {Object} credentials - The user registration credentials
+ * @param {string} credentials.name - The user's full name
+ * @param {string} credentials.email - The user's email address (used as username)
+ * @param {string} credentials.password - The user's password
+ * 
+ * @returns {Promise<{AccessToken: string, RefreshToken: string, IdToken: string}>} 
+ * Authentication tokens for the newly registered user
+ * 
+ * @throws {Error} If SignUp or authentication fails
+ */
 export async function register({
 	name,
 	email,
@@ -52,6 +68,19 @@ export async function register({
 	return { AccessToken, RefreshToken, IdToken };
 }
 
+/**
+ * Computes the SECRET_HASH required for AWS Cognito API requests.
+ * 
+ * Generates an HMAC-SHA256 hash of the concatenated username and client ID,
+ * using the Cognito client secret as the key. This hash is required for
+ * authentication operations with Cognito client secrets.
+ * 
+ * @param {string} username - The username to hash
+ * @param {string} clientId - The Cognito app client ID
+ * @param {string} clientSecret - The Cognito app client secret
+ * 
+ * @returns {string} Base64-encoded HMAC-SHA256 hash
+ */
 function computeSecretHash(username: string, clientId: string, clientSecret: string) {
 	return crypto
 		.createHmac('SHA256', clientSecret)

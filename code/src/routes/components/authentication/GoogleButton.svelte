@@ -6,11 +6,11 @@
 	function loginWithGoogle() {
 		const params = new URLSearchParams({
 			client_id: PUBLIC_GOOGLE_CLIENT_ID,
-			redirect_uri: `${PUBLIC_DOMAIN}/callback`,
+			redirect_uri: `${PUBLIC_DOMAIN}/register/callback`,
 			response_type: 'code',
 			scope: 'openid email profile',
 			prompt: 'select_account',
-			access_type: 'online'
+			access_type: 'offline'
 		});
 
 		const width = 500;
@@ -25,10 +25,13 @@
 		);
 
 		// listen for the popup to send back the auth code
-		window.addEventListener('message', (event) => {
+		window.addEventListener('message', async (event) => {
 			if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
-				const { code } = event.data;
-				console.log(code);
+				const params = new URLSearchParams({
+					code: event.data.code
+				});
+
+				await fetch(`/api/auth/token?${params.toString()}`, { method: "POST" });
 			}
 		});
 	}
