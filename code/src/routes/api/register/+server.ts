@@ -1,4 +1,5 @@
 import { register } from '$lib/actions/aws.js';
+import { saveTokens } from '$lib/server/utils.js';
 import { UsernameExistsException } from '@aws-sdk/client-cognito-identity-provider';
 
 export async function POST({ url, cookies }): Promise<Response> {
@@ -6,15 +7,13 @@ export async function POST({ url, cookies }): Promise<Response> {
 	const email = url.searchParams.get('email')!;
 	const password = url.searchParams.get('password')!;
 
-	let session: { 
-		AccessToken: string | undefined, 
-		RefreshToken: string | undefined, 
-		IdToken: string | undefined
-	} = { AccessToken: '', RefreshToken: '', IdToken: '' };
+	let session: {
+		AccessToken: string | undefined;
+		RefreshToken: string | undefined;
+	} = { AccessToken: '', RefreshToken: '' };
 
 	try {
 		session = await register({ name, email, password });
-
 	} catch (error) {
 		if (error instanceof UsernameExistsException) {
 			return new Response(JSON.stringify({ error: 'An account with this email already exists.' }), {
@@ -24,25 +23,9 @@ export async function POST({ url, cookies }): Promise<Response> {
 		}
 	}
 
-	// store access and refresh tokens -- will be used to verify incoming requests
-	
-	cookies.set("refreshToken", session.RefreshToken!, {
-		httpOnly: true,
-		secure: true,
-		sameSite: "strict",
-		maxAge: 60 * 60 * 24 * 30,
-		path: "/"
-	});
+	saveTokens({ cookieObj: cookies, session });
 
-	cookies.set("accessToken", session.AccessToken!, {
-		httpOnly: true,
-		secure: true,
-		sameSite: "strict",
-		maxAge: 60 * 60 * 24 * 30,
-		path: "/"
-	});
-
-	return new Response(JSON.stringify({ message: "User successfully created."}), {
+	return new Response(JSON.stringify({ message: 'User successfully created.' }), {
 		status: 201,
 		headers: { 'Content-Type': 'application/json' }
 	});

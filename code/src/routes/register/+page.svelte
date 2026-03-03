@@ -8,7 +8,7 @@
 	import AuthCard from '../components/authentication/AuthCard.svelte';
 	import AuthPage from '../components/authentication/AuthPage.svelte';
 	import GoogleButton from '../components/authentication/GoogleButton.svelte';
-	
+
 	import { createForm } from 'felte';
 
 	type FormState = {
@@ -40,15 +40,20 @@
 			const res = await fetch(`api/register?${params.toString()}`, { method: 'POST' });
 			const data = await res.json();
 
-			if (!res.ok) { // the email selected by the user already exists in the system
+			if (!res.ok) { // this is the case where the email entered is already attached to another user
 				errorMessage = data.error;
 			}
 
-			console.log(data);
 			loading = false;
 		}
 	});
 
+	/**
+	 * Determines whether a form submission should be disabled based on the current form state.
+	 * 
+	 * @param {FormState} state - The current state of the form containing validation and submission information
+	 * @returns {boolean} True if the form submission should be disabled, false otherwise
+	 */
 	function disabledCondition(state: FormState) {
 		const invalidEmail = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email);
 		const emptyField = Object.values(state).some((field) => field === '');
@@ -65,8 +70,8 @@
 			<Password bind:value={formState.password} />
 			<Button title={'Register'} bind:state={formState} bind:loading {disabledCondition} />
 			<Divider />
-			<GoogleButton action={'Sign up'} />
-			<Footer prompt={"Already have an account?"} endpoint={"/login"} action={"Sign In"}/>
+			<GoogleButton action={'Sign up'} bind:loading />
+			<Footer prompt={'Already have an account?'} endpoint={'/login'} action={'Sign In'} />
 		</AuthCard>
 	</Form>
 </AuthPage>

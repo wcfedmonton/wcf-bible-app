@@ -1,8 +1,15 @@
 <script lang="ts">
 	import { PUBLIC_GOOGLE_CLIENT_ID, PUBLIC_DOMAIN } from '$env/static/public';
 
-	const { action } = $props();
+	let { action, loading = $bindable() } = $props();
 
+	/**
+	 * Handles Google OAuth authentication flow
+	 * Initiates login process with Google identity provider
+	 * 
+	 * @function loginWithGoogle
+	 * @returns {void}
+	 */
 	function loginWithGoogle() {
 		const params = new URLSearchParams({
 			client_id: PUBLIC_GOOGLE_CLIENT_ID,
@@ -31,7 +38,11 @@
 					code: event.data.code
 				});
 
-				await fetch(`/api/auth/token?${params.toString()}`, { method: "POST" });
+				loading = true; /// update loading state on form
+
+				await fetch(`/api/auth/token?${params.toString()}`, { method: 'POST' });
+
+				loading = false;
 			}
 		});
 	}
