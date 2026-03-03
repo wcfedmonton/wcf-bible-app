@@ -1,4 +1,6 @@
-export const GET = ({ url }) => {
+import { PUBLIC_DOMAIN } from '$env/static/public';
+
+export function GET({ url }) {
 	const code = url.searchParams.get('code');
 
 	const html = `
@@ -6,7 +8,7 @@ export const GET = ({ url }) => {
             if (window.opener) {
                 window.opener.postMessage(
                     { type: "GOOGLE_AUTH_SUCCESS", code: "${code}" },
-                    "http://localhost:5173"
+                    "${PUBLIC_DOMAIN}"
                 );
             }
             window.close();

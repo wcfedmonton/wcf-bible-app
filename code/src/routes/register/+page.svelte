@@ -40,10 +40,11 @@
 			const res = await fetch(`api/register?${params.toString()}`, { method: 'POST' });
 			const data = await res.json();
 
-			if (!res.ok) {
+			if (!res.ok) { // the email selected by the user already exists in the system
 				errorMessage = data.error;
 			}
 
+			console.log(data);
 			loading = false;
 		}
 	});
