@@ -1,9 +1,57 @@
 <script lang="ts">
-	const { action } = $props();
+	import { PUBLIC_GOOGLE_CLIENT_ID, PUBLIC_DOMAIN } from '$env/static/public';
+
+	let { action, loading = $bindable() } = $props();
+
+	/**
+	 * Handles Google OAuth authentication flow
+	 * Initiates login process with Google identity provider
+	 * 
+	 * @function loginWithGoogle
+	 * @returns {void}
+	 */
+	function loginWithGoogle() {
+		const params = new URLSearchParams({
+			client_id: PUBLIC_GOOGLE_CLIENT_ID,
+			redirect_uri: `${PUBLIC_DOMAIN}/register/callback`,
+			response_type: 'code',
+			scope: 'openid email profile',
+			prompt: 'select_account',
+			access_type: 'offline'
+		});
+
+		const width = 500;
+		const height = 600;
+		const left = (screen.width - width) / 2;
+		const top = (screen.height - height) / 2;
+
+		window.open(
+			`https://accounts.google.com/o/oauth2/v2/auth?${params}`,
+			'oauth window',
+			`width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes`
+		);
+
+		// listen for the popup to send back the auth code
+		window.addEventListener('message', async (event) => {
+			if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
+				const params = new URLSearchParams({
+					code: event.data.code
+				});
+
+				loading = true; /// update loading state on form
+
+				await fetch(`/api/auth/token?${params.toString()}`, { method: 'POST' });
+
+				loading = false;
+			}
+		});
+	}
 </script>
 
 <button
+	type="button"
 	class="w-full p-[0.75rem 1rem] flex flex-row items-center justify-center gap-2 cursor-pointer border border-input_border border-solid rounded py-2 px-4 hover:border-google_btn bg-transparent rounded-sm font-medium text-google_btn"
+	onclick={() => loginWithGoogle()}
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

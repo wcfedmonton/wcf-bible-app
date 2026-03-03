@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Form from '../components/authentication/Form.svelte';
 	import Input from '../components/authentication/Input.svelte';
+	import Footer from '../components/authentication/Footer.svelte';
 	import Button from '../components/authentication/Button.svelte';
 	import Divider from '../components/authentication/Divider.svelte';
 	import Password from '../components/authentication/Password.svelte';
@@ -39,7 +40,7 @@
 			const res = await fetch(`api/register?${params.toString()}`, { method: 'POST' });
 			const data = await res.json();
 
-			if (!res.ok) {
+			if (!res.ok) { // this is the case where the email entered is already attached to another user
 				errorMessage = data.error;
 			}
 
@@ -47,6 +48,12 @@
 		}
 	});
 
+	/**
+	 * Determines whether a form submission should be disabled based on the current form state.
+	 * 
+	 * @param {FormState} state - The current state of the form containing validation and submission information
+	 * @returns {boolean} True if the form submission should be disabled, false otherwise
+	 */
 	function disabledCondition(state: FormState) {
 		const invalidEmail = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email);
 		const emptyField = Object.values(state).some((field) => field === '');
@@ -63,11 +70,8 @@
 			<Password bind:value={formState.password} />
 			<Button title={'Register'} bind:state={formState} bind:loading {disabledCondition} />
 			<Divider />
-			<GoogleButton action={'Sign up'} />
-			<div class="text-center mt-6">
-				Already have an account?
-				<a href="/login" class="text-input_focus">Sign In</a>
-			</div>
+			<GoogleButton action={'Sign up'} bind:loading />
+			<Footer prompt={'Already have an account?'} endpoint={'/login'} action={'Sign In'} />
 		</AuthCard>
 	</Form>
 </AuthPage>
