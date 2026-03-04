@@ -1,5 +1,32 @@
 import type { Cookies } from '@sveltejs/kit';
 
+export type FormState = {
+	full_name?: string;
+	email: string;
+	password: string;
+	loading?: boolean;
+};
+
+/**
+ * Determines whether a form submission should be disabled based on the current form state.
+ *
+ * @param {FormState} state - The current state of the form containing validation and submission information
+ * @returns {boolean} True if the form submission should be disabled, false otherwise
+ */
+export function disabledCondition(state: FormState) {
+	const invalidEmail = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email);
+	const emptyField = Object.values(state).some((field) => field === '');
+
+	// the existence of the full_name field is used to verify whether or not the password length
+	// should be verified -- it's verified on the sign up page, but not the sign in page
+	return (
+		invalidEmail ||
+		emptyField ||
+		(state.full_name ? state.password.length < 8 : false) ||
+		state.loading
+	);
+}
+
 type TokenArgs = {
 	cookieObj: Cookies;
 	session: { AccessToken: string | undefined; RefreshToken: string | undefined };
@@ -25,13 +52,12 @@ export function saveTokens({ cookieObj, session }: TokenArgs) {
 		path: '/',
 		httpOnly: true,
 		sameSite: 'strict' as const,
-		secure: false, // will be set to true in production. false is used now because of HTTPS protocols
-		
+		secure: false // will be set to true in production. false is used now because of HTTPS protocols
 	};
-	
-	cookieObj.set('accessToken', session.AccessToken!, { 
+
+	cookieObj.set('accessToken', session.AccessToken!, {
 		...defaultCookieOptions,
-		maxAge: 60 * 60  
+		maxAge: 60 * 60
 	});
 
 	cookieObj.set('refreshToken', session.RefreshToken!, {

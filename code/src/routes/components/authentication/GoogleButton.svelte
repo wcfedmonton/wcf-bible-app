@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { PUBLIC_GOOGLE_CLIENT_ID, PUBLIC_DOMAIN } from '$env/static/public';
 
 	let { action, loading = $bindable() } = $props();
@@ -6,7 +7,7 @@
 	/**
 	 * Handles Google OAuth authentication flow
 	 * Initiates login process with Google identity provider
-	 * 
+	 *
 	 * @function loginWithGoogle
 	 * @returns {void}
 	 */
@@ -34,14 +35,14 @@
 		// listen for the popup to send back the auth code
 		window.addEventListener('message', async (event) => {
 			if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
-				const params = new URLSearchParams({
-					code: event.data.code
-				});
+				const form = new FormData();
+				form.append('code', event.data.code);
 
-				loading = true; /// update loading state on form
+				loading = true; // update loading state on form
 
-				await fetch(`/api/auth/token?${params.toString()}`, { method: 'POST' });
+				await fetch(`/api/auth/token`, { method: 'POST', body: form });
 
+				await goto('/');
 				loading = false;
 			}
 		});

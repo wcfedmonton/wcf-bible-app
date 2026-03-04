@@ -14,30 +14,26 @@
 	import { type FormState, disabledCondition } from '$lib/utils';
 
 	let formState = $state<FormState>({
-		full_name: '',
 		email: '',
-		password: '',
-		loading: false
+		password: ''
 	});
 
-	let errorMessage = $state('');
+	let displayErrorMessage = $state(false);
 
 	const { form } = createForm({
 		onSubmit: async (values) => {
 			formState.loading = true;
-			errorMessage = '';
+			displayErrorMessage = false;
 
 			const form = new FormData();
-			form.append('name', values['Full Name']);
 			form.append('email', values['Email Address']);
 			form.append('password', values.password);
 
-			const res = await fetch(`api/auth/register`, { method: 'POST', body: form });
-			const data = await res.json();
+			const res = await fetch(`api/auth/login`, { method: 'POST', body: form });
 
 			if (!res.ok) {
-				// this is the case where the email entered is already attached to another user
-				errorMessage = data.error;
+				// this is the case where the credentials entered are incorrect
+				displayErrorMessage = true;
 			} else {
 				await goto('/');
 			}
@@ -49,14 +45,13 @@
 
 <AuthPage>
 	<Form {form}>
-		<AuthCard cardTitle="Create Account">
-			<Input title="Full Name" bind:value={formState.full_name!} />
-			<Input title="Email Address" bind:value={formState.email} bind:error={errorMessage} />
-			<Password bind:value={formState.password} />
-			<Button title="Register" bind:state={formState} {disabledCondition} />
+		<AuthCard cardTitle="Welcome Back">
+			<Input title="Email Address" bind:value={formState.email} />
+			<Password bind:value={formState.password} signInScreen={true} bind:displayErrorMessage />
+			<Button title="Sign in" bind:state={formState} {disabledCondition} />
 			<Divider />
-			<GoogleButton action="Sign up" bind:loading={formState.loading} />
-			<Footer prompt="Already have an account?" endpoint="/login" action="Sign In" />
+			<GoogleButton action="Continue" bind:loading={formState.loading} />
+			<Footer prompt="Don't have an account?" endpoint="/register" action="Sign Up" />
 		</AuthCard>
 	</Form>
 </AuthPage>

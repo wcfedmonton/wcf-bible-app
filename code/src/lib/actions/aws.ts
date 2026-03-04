@@ -1,17 +1,27 @@
 import {
 	SignUpCommand,
 	InitiateAuthCommand,
+	AdminInitiateAuthCommand,
 	CognitoIdentityProviderClient
 } from '@aws-sdk/client-cognito-identity-provider';
 
 import crypto from 'crypto';
 import {
+	USER_POOL_ID,
+	_AWS_ACCESS_KEY,
+	_AWS_SECRET_KEY,
 	USER_POOL_CLIENT_ID,
 	USER_POOL_CLIENT_SECRET,
 	GOOGLE_DEFAULT_PASSWORD
 } from '$env/static/private';
 
-const client = new CognitoIdentityProviderClient({ region: 'ca-central-1' });
+const client = new CognitoIdentityProviderClient({
+	region: 'ca-central-1',
+	credentials: {
+		accessKeyId: _AWS_ACCESS_KEY,
+		secretAccessKey: _AWS_SECRET_KEY
+	}
+});
 
 /**
  * Registers a new user with AWS Cognito and initiates authentication.
@@ -38,19 +48,18 @@ export async function register({
 	email: string;
 	password: string;
 }) {
-	const secretHash = computeSecretHash(email, USER_POOL_CLIENT_ID, USER_POOL_CLIENT_SECRET);
 	const baseCommandInput = {
+		Username: email,
 		ClientId: USER_POOL_CLIENT_ID,
-		SecretHash: secretHash,
-		Username: email
+		SecretHash: computeSecretHash(email)
 	};
 
 	const signUpCommand = new SignUpCommand({
 		...baseCommandInput,
 		Password: password,
 		UserAttributes: [
-			{ Name: 'email', Value: email },
-			{ Name: 'name', Value: name }
+			{ Name: 'name', Value: name },
+			{ Name: 'email', Value: email }
 		]
 	});
 
@@ -77,17 +86,15 @@ export async function register({
  * ```
  */
 export async function getTokens(email: string, password: string) {
-	const secretHash = computeSecretHash(email, USER_POOL_CLIENT_ID, USER_POOL_CLIENT_SECRET);
-
 	const authParams = {
 		USERNAME: email,
 		PASSWORD: password,
-		SECRET_HASH: secretHash
+		SECRET_HASH: computeSecretHash(email)
 	};
 
 	const signInCommand = new InitiateAuthCommand({
-		AuthFlow: 'USER_PASSWORD_AUTH',
 		AuthParameters: authParams,
+		AuthFlow: 'USER_PASSWORD_AUTH',
 		ClientId: USER_POOL_CLIENT_ID
 	});
 
@@ -105,23 +112,21 @@ export async function getTokens(email: string, password: string) {
  * authentication operations with Cognito client secrets.
  *
  * @param {string} username - The username to hash
- * @param {string} clientId - The Cognito app client ID
- * @param {string} clientSecret - The Cognito app client secret
  *
  * @returns {string} Base64-encoded HMAC-SHA256 hash
  */
-function computeSecretHash(username: string, clientId: string, clientSecret: string) {
+function computeSecretHash(username: string) {
 	return crypto
-		.createHmac('SHA256', clientSecret)
-		.update(username + clientId)
+		.createHmac('SHA256', USER_POOL_CLIENT_SECRET)
+		.update(username + USER_POOL_CLIENT_ID)
 		.digest('base64');
 }
 
 export async function googleAuthenticate(fullName: string, email: string) {
 	try {
 		const { AccessToken, RefreshToken } = await register({
-			name: fullName,
 			email,
+			name: fullName,
 			// we set a default because of Amazon's API requirements, but the user will be
 			// to change it through the forgot-password option if they ever decide to use the
 			// email-password auth flow
@@ -129,10 +134,22 @@ export async function googleAuthenticate(fullName: string, email: string) {
 		});
 
 		return { AccessToken: AccessToken!, RefreshToken: RefreshToken! };
-	} catch (error) {
-		// if error is thrown, then the user exists
-		// behaviour to handle this case will be implemented in another issue
-		// USER_AUTH flow will be used since there won't be a password
-		console.log(error);
+	} catch {
+		// the admin version version of InitiateAuth must be used otherwise the custom
+		// auth flow is disabled
+		const command = new AdminInitiateAuthCommand({
+			AuthFlow: 'CUSTOM_AUTH',
+			UserPoolId: USER_POOL_ID,
+			ClientId: USER_POOL_CLIENT_ID,
+			AuthParameters: {
+				USERNAME: email,
+				SECRET_HASH: computeSecretHash(email)
+			}
+		});
+
+		const { AuthenticationResult } = (await client.send(command))!;
+		const { AccessToken, RefreshToken } = AuthenticationResult!;
+
+		return { AccessToken, RefreshToken };
 	}
 }

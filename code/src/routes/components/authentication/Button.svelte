@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { title, state = $bindable(), disabledCondition, loading = $bindable() } = $props();
+	let { title, state = $bindable(), disabledCondition } = $props();
 </script>
 
 <button
@@ -7,7 +7,7 @@
 	disabled={disabledCondition(state)}
 	class="w-full flex flex-row p-[0.7rem] justify-center cursor-pointer font-medium bg-accent_btn rounded-sm hover:bg-accent_btn_hover disabled:opacity-50 disabled:pointer-events-none"
 >
-	{#if loading}
+	{#if state.loading}
 		<div role="status">
 			<svg
 				aria-hidden="true"
