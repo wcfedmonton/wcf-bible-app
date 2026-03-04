@@ -17,26 +17,24 @@
 		password: ''
 	});
 
-	let errorMessage = $state('');
+	let displayErrorMessage = $state(false);
 
 	const { form } = createForm({
 		onSubmit: async (values) => {
 			formState.loading = true;
-			errorMessage = '';
+			displayErrorMessage = false;
 			
-			const params = new URLSearchParams({
-				email: values['Email Address'],
-				password: values.password
-			});
+			const form = new FormData();
+			form.append('email', values['Email Address']);
+			form.append('password', values.password);
 
-			/*const res = await fetch(`api/register?${params.toString()}`, { method: 'POST' });
-			const data = await res.json();
+			const res = await fetch(`api/auth/login`, { method: 'POST', body: form });
 
-			if (!res.ok) { // this is the case where the email entered is already attached to another user
-				errorMessage = data.error;
-			}*/
+			if (!res.ok) { // this is the case where the credentials entered are incorrect
+				displayErrorMessage = true;
+			}
 
-			//formState.loading = false;
+			formState.loading = false;
 		}
 	});
 </script>
@@ -45,7 +43,7 @@
 	<Form {form}>
 		<AuthCard cardTitle={'Welcome Back'}>
 			<Input title={'Email Address'} bind:value={formState.email} />
-			<Password bind:value={formState.password} signInScreen={true} displayErrorMessage={true} />
+			<Password bind:value={formState.password} signInScreen={true} bind:displayErrorMessage />
 			<Button title={'Sign in'} bind:state={formState} {disabledCondition} />
 			<Divider />
 			<GoogleButton action={'Continue'} bind:loading={formState.loading} />

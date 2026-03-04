@@ -26,13 +26,12 @@
 			formState.loading = true;
 			errorMessage = '';
 
-			const params = new URLSearchParams({
-				name: values['Full Name'],
-				email: values['Email Address'],
-				password: values.password
-			});
+			const form = new FormData();
+			form.append('name', values['Full Name']);
+			form.append('email', values['Email Address']);
+			form.append('password', values.password);
 
-			const res = await fetch(`api/auth/register?${params.toString()}`, { method: 'POST' });
+			const res = await fetch(`api/auth/register`, { method: 'POST', body: form });
 			const data = await res.json();
 
 			if (!res.ok) { // this is the case where the email entered is already attached to another user

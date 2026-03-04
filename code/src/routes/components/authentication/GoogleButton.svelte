@@ -34,13 +34,12 @@
 		// listen for the popup to send back the auth code
 		window.addEventListener('message', async (event) => {
 			if (event.data.type === 'GOOGLE_AUTH_SUCCESS') {
-				const params = new URLSearchParams({
-					code: event.data.code
-				});
+				const form = new FormData();
+				form.append('code', event.data.code);
 
 				loading = true; /// update loading state on form
 
-				await fetch(`/api/auth/token?${params.toString()}`, { method: 'POST' });
+				await fetch(`/api/auth/token`, { method: 'POST', body: form });
 
 				loading = false;
 			}

@@ -1,19 +1,16 @@
 import { register } from '$lib/actions/aws.js';
-import { saveTokens } from '$lib/server/utils.js';
+import { saveTokens } from '$lib/utils.js';
 import { UsernameExistsException } from '@aws-sdk/client-cognito-identity-provider';
 
-export async function POST({ url, cookies }): Promise<Response> {
-	const name = url.searchParams.get('name')!;
-	const email = url.searchParams.get('email')!;
-	const password = url.searchParams.get('password')!;
-
-	let session: {
-		AccessToken: string | undefined;
-		RefreshToken: string | undefined;
-	} = { AccessToken: '', RefreshToken: '' };
+export async function POST({ request, cookies }): Promise<Response> {
+	const form = await request.formData();
+	const name = form.get('name') as string;
+	const email = form.get('email') as string;
+	const password = form.get('password') as string;
 
 	try {
-		session = await register({ name, email, password });
+		const session = await register({ name, email, password });
+		saveTokens({ cookieObj: cookies, session });
 	} catch (error) {
 		if (error instanceof UsernameExistsException) {
 			return new Response(JSON.stringify({ error: 'An account with this email already exists.' }), {
@@ -22,8 +19,6 @@ export async function POST({ url, cookies }): Promise<Response> {
 			});
 		}
 	}
-
-	saveTokens({ cookieObj: cookies, session });
 
 	return new Response(JSON.stringify({ message: 'User successfully created.' }), {
 		status: 201,
