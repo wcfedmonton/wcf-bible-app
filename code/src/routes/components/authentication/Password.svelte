@@ -2,7 +2,13 @@
 	import Title from './Title.svelte';
 
 	let showPassword = $state(false);
-	let { value = $bindable() } = $props();
+	let { value = $bindable(), signInScreen, displayErrorMessage = $bindable() }: {
+		value: string,
+		// the following props are included for authentication on the login screen.
+		// they can be customized to fit more generally, if need be later down the line
+		signInScreen?: boolean,
+		displayErrorMessage?: boolean
+	} = $props();
 </script>
 
 <div class="mb-5">
@@ -56,5 +62,17 @@
 				</svg>
 			{/if}
 		</button>
+		
+		{#if signInScreen} <!-- these components are only displayed if the user is on the sign in screen -->
+			<div class="flex pt-1 pb-2 mb-[-1rem] text-input_focus text-[0.8rem]">
+				<a href="#">Forgot password?</a>
+			</div>
+
+			{#if displayErrorMessage}
+				<div class="flex pt-8 pb-5 mb-[-1rem] text-error_red text-[0.8rem]">
+					<p>Incorrect email or password.</p>
+				</div>
+			{/if}
+		{/if}
 	</div>
 </div>

@@ -49,7 +49,7 @@
 <AuthPage>
 	<Form {form}>
 		<AuthCard cardTitle={'Create Account'}>
-			<Input title={'Full Name'} bind:value={formState.full_name} />
+			<Input title={'Full Name'} bind:value={formState.full_name! } />
 			<Input title={'Email Address'} bind:value={formState.email} bind:error={errorMessage} />
 			<Password bind:value={formState.password} />
 			<Button title={'Register'} bind:state={formState} {disabledCondition} />

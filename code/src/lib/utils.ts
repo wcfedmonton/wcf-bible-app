@@ -17,5 +17,5 @@ export function disabledCondition(state: FormState) {
 
     // the existence of the full_name field is used to verify whether or not the password length 
     // should be verified -- it's verified on the sign up page, but not the sign in page
-    return invalidEmail || emptyField || state.full_name ? state.password.length < 8 : false || state.loading;
+    return invalidEmail || emptyField || (state.full_name ? state.password.length < 8 : false) || state.loading;
 }

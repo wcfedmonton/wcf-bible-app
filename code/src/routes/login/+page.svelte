@@ -23,7 +23,7 @@
 		onSubmit: async (values) => {
 			formState.loading = true;
 			errorMessage = '';
-
+			
 			const params = new URLSearchParams({
 				email: values['Email Address'],
 				password: values.password
@@ -36,7 +36,7 @@
 				errorMessage = data.error;
 			}*/
 
-			formState.loading = false;
+			//formState.loading = false;
 		}
 	});
 </script>
@@ -45,7 +45,7 @@
 	<Form {form}>
 		<AuthCard cardTitle={'Welcome Back'}>
 			<Input title={'Email Address'} bind:value={formState.email} />
-			<Password bind:value={formState.password} />
+			<Password bind:value={formState.password} signInScreen={true} displayErrorMessage={true} />
 			<Button title={'Sign in'} bind:state={formState} {disabledCondition} />
 			<Divider />
 			<GoogleButton action={'Continue'} bind:loading={formState.loading} />
