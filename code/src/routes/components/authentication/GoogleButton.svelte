@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { PUBLIC_GOOGLE_CLIENT_ID, PUBLIC_DOMAIN } from '$env/static/public';
 
 	let { action, loading = $bindable() } = $props();
@@ -41,6 +42,7 @@
 
 				await fetch(`/api/auth/token`, { method: 'POST', body: form });
 
+				await goto('/');
 				loading = false;
 			}
 		});

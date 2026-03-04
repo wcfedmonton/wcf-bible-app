@@ -10,6 +10,7 @@
 	import GoogleButton from '../components/authentication/GoogleButton.svelte';
 
 	import { createForm } from 'felte';
+	import { goto } from '$app/navigation';
     import { type FormState, disabledCondition } from "$lib/utils";
 
 	let formState = $state<FormState>({
@@ -32,6 +33,8 @@
 
 			if (!res.ok) { // this is the case where the credentials entered are incorrect
 				displayErrorMessage = true;
+			} else {
+				await goto('/');
 			}
 
 			formState.loading = false;
