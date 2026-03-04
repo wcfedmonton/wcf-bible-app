@@ -37,7 +37,7 @@
 				const form = new FormData();
 				form.append('code', event.data.code);
 
-				loading = true; /// update loading state on form
+				loading = true; // update loading state on form
 
 				await fetch(`/api/auth/token`, { method: 'POST', body: form });
 

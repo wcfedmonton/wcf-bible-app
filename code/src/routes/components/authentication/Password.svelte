@@ -65,7 +65,7 @@
 		
 		{#if signInScreen} <!-- these components are only displayed if the user is on the sign in screen -->
 			<div class="flex pt-1 pb-2 mb-[-1rem] text-input_focus text-[0.8rem]">
-				<a href="#">Forgot password?</a>
+				<a class="hover:text-input_focus_hover" href="#">Forgot password?</a>
 			</div>
 
 			{#if displayErrorMessage}
