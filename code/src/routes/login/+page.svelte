@@ -11,7 +11,7 @@
 
 	import { createForm } from 'felte';
 	import { goto } from '$app/navigation';
-    import { type FormState, disabledCondition } from "$lib/utils";
+	import { type FormState, disabledCondition } from '$lib/utils';
 
 	let formState = $state<FormState>({
 		email: '',
@@ -24,14 +24,15 @@
 		onSubmit: async (values) => {
 			formState.loading = true;
 			displayErrorMessage = false;
-			
+
 			const form = new FormData();
 			form.append('email', values['Email Address']);
 			form.append('password', values.password);
 
 			const res = await fetch(`api/auth/login`, { method: 'POST', body: form });
 
-			if (!res.ok) { // this is the case where the credentials entered are incorrect
+			if (!res.ok) {
+				// this is the case where the credentials entered are incorrect
 				displayErrorMessage = true;
 			} else {
 				await goto('/');
@@ -44,13 +45,13 @@
 
 <AuthPage>
 	<Form {form}>
-		<AuthCard cardTitle={'Welcome Back'}>
-			<Input title={'Email Address'} bind:value={formState.email} />
+		<AuthCard cardTitle="Welcome Back">
+			<Input title="Email Address" bind:value={formState.email} />
 			<Password bind:value={formState.password} signInScreen={true} bind:displayErrorMessage />
-			<Button title={'Sign in'} bind:state={formState} {disabledCondition} />
+			<Button title="Sign in" bind:state={formState} {disabledCondition} />
 			<Divider />
-			<GoogleButton action={'Continue'} bind:loading={formState.loading} />
-			<Footer prompt={"Don't have an account?"} endpoint={'/register'} action={'Sign Up'} />
+			<GoogleButton action="Continue" bind:loading={formState.loading} />
+			<Footer prompt="Don't have an account?" endpoint="/register" action="Sign Up" />
 		</AuthCard>
 	</Form>
 </AuthPage>

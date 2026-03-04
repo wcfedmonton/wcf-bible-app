@@ -11,7 +11,7 @@
 
 	import { createForm } from 'felte';
 	import { goto } from '$app/navigation';
-	import { type FormState, disabledCondition } from "$lib/utils";
+	import { type FormState, disabledCondition } from '$lib/utils';
 
 	let formState = $state<FormState>({
 		full_name: '',
@@ -35,7 +35,8 @@
 			const res = await fetch(`api/auth/register`, { method: 'POST', body: form });
 			const data = await res.json();
 
-			if (!res.ok) { // this is the case where the email entered is already attached to another user
+			if (!res.ok) {
+				// this is the case where the email entered is already attached to another user
 				errorMessage = data.error;
 			} else {
 				await goto('/');
@@ -44,20 +45,18 @@
 			formState.loading = false;
 		}
 	});
-
-	
 </script>
 
 <AuthPage>
 	<Form {form}>
-		<AuthCard cardTitle={'Create Account'}>
-			<Input title={'Full Name'} bind:value={formState.full_name! } />
-			<Input title={'Email Address'} bind:value={formState.email} bind:error={errorMessage} />
+		<AuthCard cardTitle="Create Account">
+			<Input title="Full Name" bind:value={formState.full_name!} />
+			<Input title="Email Address" bind:value={formState.email} bind:error={errorMessage} />
 			<Password bind:value={formState.password} />
-			<Button title={'Register'} bind:state={formState} {disabledCondition} />
+			<Button title="Register" bind:state={formState} {disabledCondition} />
 			<Divider />
-			<GoogleButton action={'Sign up'} bind:loading={formState.loading} />
-			<Footer prompt={'Already have an account?'} endpoint={'/login'} action={'Sign In'} />
+			<GoogleButton action="Sign up" bind:loading={formState.loading} />
+			<Footer prompt="Already have an account?" endpoint="/login" action="Sign In" />
 		</AuthCard>
 	</Form>
 </AuthPage>

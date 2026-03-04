@@ -14,9 +14,9 @@ export async function POST({ request, cookies }): Promise<Response> {
 			status: 200,
 			headers: { 'Content-Type': 'application/json' }
 		});
-	} catch (error) {
-		// this error can be safely ignored since authentication still 
+	} catch {
+		// this error can be safely ignored since authentication still
 		// works correctly in spite of it
-		return new Response(JSON.stringify({ message: 'Invalid grant' })); 
+		return new Response(JSON.stringify({ message: 'Invalid grant' }));
 	}
 }

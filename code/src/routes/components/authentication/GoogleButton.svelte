@@ -7,7 +7,7 @@
 	/**
 	 * Handles Google OAuth authentication flow
 	 * Initiates login process with Google identity provider
-	 * 
+	 *
 	 * @function loginWithGoogle
 	 * @returns {void}
 	 */

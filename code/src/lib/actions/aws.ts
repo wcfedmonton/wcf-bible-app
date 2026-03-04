@@ -15,7 +15,7 @@ import {
 	GOOGLE_DEFAULT_PASSWORD
 } from '$env/static/private';
 
-const client = new CognitoIdentityProviderClient({ 
+const client = new CognitoIdentityProviderClient({
 	region: 'ca-central-1',
 	credentials: {
 		accessKeyId: _AWS_ACCESS_KEY,
@@ -134,16 +134,16 @@ export async function googleAuthenticate(fullName: string, email: string) {
 		});
 
 		return { AccessToken: AccessToken!, RefreshToken: RefreshToken! };
-	} catch (error) {
-		// the admin version version of InitiateAuth must be used otherwise the custom 
+	} catch {
+		// the admin version version of InitiateAuth must be used otherwise the custom
 		// auth flow is disabled
-		const command = new AdminInitiateAuthCommand({ 
+		const command = new AdminInitiateAuthCommand({
 			AuthFlow: 'CUSTOM_AUTH',
 			UserPoolId: USER_POOL_ID,
 			ClientId: USER_POOL_CLIENT_ID,
 			AuthParameters: {
 				USERNAME: email,
-				SECRET_HASH: computeSecretHash(email),
+				SECRET_HASH: computeSecretHash(email)
 			}
 		});
 

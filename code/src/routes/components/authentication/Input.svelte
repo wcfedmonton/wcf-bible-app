@@ -1,10 +1,14 @@
 <script lang="ts">
 	import Title from './Title.svelte';
 
-	let { title, value = $bindable(), error = $bindable() }: {
-		title: string,
-		value: string,
-		error?:string
+	let {
+		title,
+		value = $bindable(),
+		error = $bindable()
+	}: {
+		title: string;
+		value: string;
+		error?: string;
 	} = $props();
 </script>
 

@@ -12,7 +12,7 @@ export async function GET({ url }) {
                 );
             }
             window.close();
-        <\/script>
+        </script>
     `;
 
 	return new Response(html, {
