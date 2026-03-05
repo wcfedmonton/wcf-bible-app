@@ -1,7 +1,9 @@
 <script lang="ts">
-    import Sidebar from "../components/common/Sidebar.svelte";
+    import SetsSidebar from "../components/sets/Sidebar.svelte"
+    import GeneralSidebar from "../components/common/Sidebar.svelte";
 </script>
 
-<div class="flex flex-col min-h-dvh">
-    <Sidebar />
+<div class="flex min-h-dvh">
+    <GeneralSidebar />
+    <SetsSidebar />
 </div>
