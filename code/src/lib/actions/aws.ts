@@ -34,7 +34,7 @@ const client = new CognitoIdentityProviderClient({
  * @param {string} credentials.email - The user's email address (used as username)
  * @param {string} credentials.password - The user's password
  *
- * @returns {Promise<{AccessToken: string, RefreshToken: string, IdToken: string}>}
+ * @returns {Promise<{AccessToken: string, RefreshToken: string}>}
  * Authentication tokens for the newly registered user
  *
  * @throws {Error} If SignUp or authentication fails
@@ -122,6 +122,18 @@ function computeSecretHash(username: string) {
 		.digest('base64');
 }
 
+/**
+ * Registers a user using a Google-based flow or falls back to Cognito custom authentication
+ * if the email used in the Google auth flow already exists in the system.
+ *
+ * @param {string} email - The user's email address.
+ * @param {string} fullName - The user's full name.
+ *
+ * @returns {Promise<{
+ *   AccessToken: string;
+ *   RefreshToken: string;
+ * }>} An object containing the Cognito access and refresh tokens.
+ */
 export async function googleAuthenticate(fullName: string, email: string) {
 	try {
 		const { AccessToken, RefreshToken } = await register({
