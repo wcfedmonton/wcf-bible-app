@@ -2,8 +2,8 @@
 	import { getVerseReference } from '$lib/bible/chapterServices';
 	import YVTranslations from '$lib/shared/YVTranslations.json' with { type: 'json' };
 	import APIBibleTranslations from '$lib/shared/APIBibleTranslations.json' with { type: 'json' };
-	import previous_icon from '$lib/assets/left-arrow-svgrepo-com.svg';
-	import next_icon from '$lib/assets/right-arrow-backup-2-svgrepo-com.svg';
+	import previous_icon from '$lib/assets/Arrow-Left-1--Streamline-Ultimate-converted-from-png.svg';
+	import next_icon from '$lib/assets/Arrow-Right-1--Streamline-Ultimate-converted-from-png.svg';
 	let { state = $bindable(), fetchChapterData } = $props();
 
 	const translations = [
@@ -80,9 +80,10 @@
 <style>
 	.nav_button {
 		text-align: center;
-		height: 20%;
-		transform: scale(50%);
-
+		background: transparent;
+		outline: none !important;
+		border: none;
+		opacity: 2.0;
 	}
 	.nav_button:disabled {
 		opacity: 0.5;
@@ -94,8 +95,8 @@
 		flex-direction: column;
 		align-items: left;
 		gap: 1rem;
-		width: 60%;
-		margin-top: 0%;
+		width: 100%;
+		margin-top: 5%;
 		height: 100%;
 	}
 	.verse-header-container {
@@ -105,15 +106,15 @@
 	.nav-button-container {
 		width: 15%; 
 		display: flex;
-		justify-content: flex-end;
-		margin-left: 3rem;
-		margin-top: 30%;
+		justify-content: flex-start;
+		margin-right: 15rem;
+		margin-top: 15%;
 	}
 	.nav-button-container-next {
-		width: 5%; 
+		width: 15%; 
 		display: flex;
-		justify-content: center;
-		margin-left: 3rem;
-		margin-top: 30%;
+		justify-content: flex-end;
+		margin-left: 15rem;
+		margin-top: 15%;
 	}
 </style>

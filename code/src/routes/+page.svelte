@@ -62,7 +62,7 @@
 <style>
 	.Credits-container {
 		text-align: center;
-		margin-bottom: 10rem;
+		margin-top: 20rem;
 	}
 
 	.credits {
