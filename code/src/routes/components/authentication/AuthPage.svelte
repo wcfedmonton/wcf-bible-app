@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Logo from '../common/logo.svelte';
+	import Logo from './Logo.svelte';
 
 	const { children }: { children: import('svelte').Snippet } = $props();
 </script>

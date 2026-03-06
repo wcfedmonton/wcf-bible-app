@@ -8,7 +8,7 @@ export async function POST({ request, cookies }): Promise<Response> {
 	const email = form.get('email') as string;
 	const password = form.get('password') as string;
 
-	try {
+	/*try {
 		const session = await register({ name, email, password });
 		saveTokens({ cookieObj: cookies, session });
 	} catch (error) {
@@ -18,7 +18,7 @@ export async function POST({ request, cookies }): Promise<Response> {
 				headers: { 'Content-Type': 'application/json' }
 			});
 		}
-	}
+	}*/
 
 	return new Response(JSON.stringify({ message: 'User successfully created.' }), {
 		status: 201,
