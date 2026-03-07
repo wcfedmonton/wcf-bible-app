@@ -77,3 +77,7 @@ export type VerseSet = {
 	name: string;
 	verses: Verse[];
 };
+
+export type ContextValue<T> = {
+	value: T;
+};

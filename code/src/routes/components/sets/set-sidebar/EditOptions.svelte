@@ -3,55 +3,55 @@
 
 	import { getContext } from 'svelte';
 	import type { VerseSet } from '$lib/utils';
+	import type { ContextValue } from '$lib/utils';
 
-	const verseSets = getContext<{ value: VerseSet[] }>('verseSets');
-	const lastSetToOpenEdit = getContext<{ value: string }>('lastSetToOpenEdit');
-	const verseSetReference = getContext<{ value: VerseSet }>('verseSetReference');
-	const setNameInputDisabled = getContext<{ value: boolean }>('setNameInputDisabled');
-	const currentlySelectedVerseId = getContext<{ value: string }>('selectedVerseSetId');
-	
-	const rewrite = `
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="ml-2 text-extra_light_grey">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-        </svg>`;
-
-	const trash = `
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="ml-2 text-extra_light_grey">
-            <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
-        </svg>`;
+	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
+	const lastSetToOpenEdit = getContext<ContextValue<string>>('lastSetToOpenEdit');
+	const verseSetReference = getContext<ContextValue<VerseSet>>('verseSetReference');
+	const setNameInputDisabled = getContext<ContextValue<boolean>>('setNameInputDisabled');
+	const currentlySelectedVerseId = getContext<ContextValue<string>>('selectedVerseSetId');
 </script>
 
 <div
-	class="absolute right-0 z-1 w-38 h-15 mt-[-0.5rem] rounded-sm border-solid border-1 border-border_accent bg-[#222222]"
+	class="absolute right-0 z-1 w-[9rem] h-15 mt-[-0.5rem] rounded-sm border-solid border-1 border-border_accent bg-[#222222]"
 >
 	<Option
-		icon={rewrite}
+		title="Rename"
 		eventHandler={() => {
 			lastSetToOpenEdit.value = '';
 			setNameInputDisabled.value = false;
 		}}
-		title="Rename"
 	/>
 	<Option
-		icon={trash}
+		title="Delete"
 		eventHandler={() => {
 			// capture the id of the set to be deleted before mutating the list
 			const verseSetId = verseSetReference.value.id;
 
+			// save the index of the set to be deleted so that we have a reference
+			// to toggle the verse set 'above' to the delete set
+			const deletedVerseIndex = verseSets.value.findIndex((v) => v.id === verseSetId);
+
 			// remove the deleted set from the list
 			verseSets.value = verseSets.value.filter((set) => set.id != verseSetId);
-			
-			// if the deleted set was the selected one, fall back to the first set in the list
-			if (!verseSets.value.find((v) => v.id === verseSetId)) {
+
+			// if the deleted is not the currently selected one, we don't need to make any changes
+			// to the selected set
+			if (currentlySelectedVerseId.value !== verseSetReference.value?.id) {
+				return;
+			}
+
+			if (deletedVerseIndex === 0) {
+				// if the first set is deleted, the one after it becomes selected
 				verseSetReference.value = verseSets.value[0];
-				currentlySelectedVerseId.value = verseSetReference.value?.id;
+				currentlySelectedVerseId.value = verseSets.value[0].id;
 			} else {
-				// otherwise, close the menu
-				lastSetToOpenEdit.value = verseSetReference.value.id;
+				// if any other set is deleted, the one before it becomes selected
+				verseSetReference.value = verseSets.value[deletedVerseIndex - 1];
+
+				// this value will be null in the case where the only set gets deleted
+				currentlySelectedVerseId.value = verseSets.value[deletedVerseIndex - 1]?.id;
 			}
 		}}
-		title="Delete"
 	/>
 </div>

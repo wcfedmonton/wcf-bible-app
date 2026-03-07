@@ -2,9 +2,10 @@
 	import EditOptions from './EditOptions.svelte';
 
 	import { getContext } from 'svelte';
+	import type { ContextValue } from '$lib/utils';
 
 	const { setId } = $props();
-	const lastSetToOpenEdit = getContext<{ value: string }>('lastSetToOpenEdit');
+	const lastSetToOpenEdit = getContext<ContextValue<string>>('lastSetToOpenEdit');
 </script>
 
 <div class="relative">

@@ -2,8 +2,8 @@
 	import Button from './Button.svelte';
 	import VerseSetReference from './set-sidebar/VerseSetReference.svelte';
 
-	import type { VerseSet } from '$lib/utils';
 	import { getContext, setContext } from 'svelte';
+	import type { ContextValue, VerseSet } from '$lib/utils';
 
 	const add = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg w-[0.6rem] text-[#e0e0e0]" viewBox="0 0 16 16">
@@ -15,7 +15,7 @@
             <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
         </svg>`;
 
-	const sets = getContext<{ value: VerseSet[] }>('verseSets');
+	const sets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const selectedVerseSetId = $state({ value: sets.value.length > 0 ? sets.value[0]?.id : '' });
 	setContext('selectedVerseSetId', selectedVerseSetId);
 
@@ -24,18 +24,19 @@
 
 	function addVerseSet() {
 		sets.value.push({
-			id: crypto.randomUUID(), 
+			id: crypto.randomUUID(),
 			name: 'Untitled',
 			verses: []
 		});
 
-		if(sets.value.length === 1) {
+		if (sets.value.length === 1) {
+			// handles the case for selection when the user adds their first verse set
 			selectedVerseSetId.value = sets.value[0].id;
 		}
 	}
 </script>
 
-<div class="w-[28%] min-w-55 min-h-dvh border-solid border-r-1 border-r-border_accent">
+<div class="w-[28%] min-w-55 min-h-dvh max-h-dvh border-solid border-r-1 border-r-border_accent">
 	<div class="w-full h-25 flex justify-center items-center border-b-1 border-b-border_accent">
 		<div class="w-[84%] h-[20%] flex flex-col justify-center">
 			<p class="text-[0.7rem] text-[#777a7d] tracking-wider">ALL SETS</p>
@@ -45,11 +46,11 @@
 				<Button eventHandler={() => {}} prompt="Import Set" icon={download} />
 			</div>
 		</div>
-		<!-- NOTE: component to view verse sets will use 'bind' directive -->
 	</div>
 
-	<!-- implement scroll wheel that activates when lists gets too long -->
-	{#each sets.value as set (set.id)}
-		<VerseSetReference {set} />
-	{/each}
+	<div class="overflow-auto h-[calc(100vh-6.25rem)] scrollbar-black">
+		{#each sets.value as set (set.id)}
+			<VerseSetReference {set} />
+		{/each}
+	</div>
 </div>
