@@ -1,13 +1,9 @@
 <script lang="ts">
+	import { getTranslations } from '$lib/utils';
 	import { getVerseReference } from '$lib/bible/chapterServices';
-	import YVTranslations from '$lib/shared/YVTranslations.json' with { type: 'json' };
-	import APIBibleTranslations from '$lib/shared/APIBibleTranslations.json' with { type: 'json' };
 
+	const translations = getTranslations();
 	let { state = $bindable(), fetchChapterData } = $props();
-
-	const translations = [
-		...new Set([...Object.keys(YVTranslations), ...Object.keys(APIBibleTranslations)])
-	].sort();
 </script>
 
 <div>
