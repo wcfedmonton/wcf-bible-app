@@ -11,6 +11,9 @@
 	const verseSets = $state({ value: data.data });
 	setContext('verseSets', verseSets);
 
+	const selectedVerseSetId = $state({ value: verseSets.value.length > 0 ? verseSets.value[0]?.id : '' });
+	setContext('selectedVerseSetId', selectedVerseSetId);
+
 	const empty = $derived(verseSets.value.length === 0); // will be replaced with a condition checking for the number of verse sets the user has
 </script>
 

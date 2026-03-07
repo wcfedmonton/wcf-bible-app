@@ -3,6 +3,7 @@ export async function load() {
 		{
 			id: 'abc', // a reference to the database id
 			verses: [],
+			lastEdited: 'March 7, 2026',
 			name: 'Sunday Service: Comfort & Hope'
 
 			// update()  will send a request after an update (adding/removing a verse from the set). it will accept

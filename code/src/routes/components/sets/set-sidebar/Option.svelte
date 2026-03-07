@@ -1,9 +1,5 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-	import type { ContextValue } from '$lib/utils';
-
 	const { title, eventHandler } = $props();
-	const showEditOptions = getContext<ContextValue<boolean>>('showEditOptions');
 
 	const rewrite = `
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="ml-2 text-extra_light_grey">
@@ -24,8 +20,6 @@
 	onclick={(e) => {
 		eventHandler();
 		e.stopPropagation();
-
-		showEditOptions.value = !showEditOptions.value;
 	}}
 	class="cursor-pointer w-full h-[50%] flex flex-row items-center gap-3 hover:bg-[#333333]"
 >

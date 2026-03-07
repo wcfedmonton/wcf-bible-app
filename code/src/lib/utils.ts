@@ -76,8 +76,16 @@ export type VerseSet = {
 	id: string;
 	name: string;
 	verses: Verse[];
+	lastEdited: string;
 };
 
 export type ContextValue<T> = {
 	value: T;
 };
+
+export function getDate() {
+	const date = new Date();
+	const [month, day, year] = date.toDateString().split(' ').slice(1);
+
+	return `${month} ${Number(day)}, ${year}`
+}

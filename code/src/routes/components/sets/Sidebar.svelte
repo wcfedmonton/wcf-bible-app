@@ -3,7 +3,7 @@
 	import VerseSetReference from './set-sidebar/VerseSetReference.svelte';
 
 	import { getContext, setContext } from 'svelte';
-	import type { ContextValue, VerseSet } from '$lib/utils';
+	import { getDate, type ContextValue, type VerseSet } from '$lib/utils';
 
 	const add = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg w-[0.6rem] text-[#e0e0e0]" viewBox="0 0 16 16">
@@ -16,17 +16,19 @@
         </svg>`;
 
 	const sets = getContext<ContextValue<VerseSet[]>>('verseSets');
-	const selectedVerseSetId = $state({ value: sets.value.length > 0 ? sets.value[0]?.id : '' });
-	setContext('selectedVerseSetId', selectedVerseSetId);
+	
 
 	const lastSetToOpenEdit = $state({ value: '' });
 	setContext('lastSetToOpenEdit', lastSetToOpenEdit);
 
+	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
+	
 	function addVerseSet() {
 		sets.value.push({
-			id: crypto.randomUUID(),
+			verses: [],
 			name: 'Untitled',
-			verses: []
+			lastEdited: getDate(),
+			id: crypto.randomUUID()
 		});
 
 		if (sets.value.length === 1) {
@@ -36,7 +38,7 @@
 	}
 </script>
 
-<div class="w-[28%] min-w-55 min-h-dvh max-h-dvh border-solid border-r-1 border-r-border_accent">
+<div class="w-[28%] min-w-70 min-h-dvh max-h-dvh border-solid border-r-1 border-r-border_accent">
 	<div class="w-full h-25 flex justify-center items-center border-b-1 border-b-border_accent">
 		<div class="w-[84%] h-[20%] flex flex-col justify-center">
 			<p class="text-[0.7rem] text-[#777a7d] tracking-wider">ALL SETS</p>
@@ -49,8 +51,8 @@
 	</div>
 
 	<div class="overflow-auto h-[calc(100vh-6.25rem)] scrollbar-black">
-		{#each sets.value as set (set.id)}
-			<VerseSetReference {set} />
+		{#each sets.value as set, index}
+			<VerseSetReference bind:set={sets.value[index]} />
 		{/each}
 	</div>
 </div>
