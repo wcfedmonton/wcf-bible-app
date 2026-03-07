@@ -11,7 +11,7 @@
 	const verseSets = $state({ value: data.data });
 	setContext('verseSets', verseSets);
 
-	const empty = verseSets.value.length === 0; // will be replaced with a condition checking for the number of verse sets the user has
+	const empty = $derived(verseSets.value.length === 0); // will be replaced with a condition checking for the number of verse sets the user has
 </script>
 
 <div class="flex min-h-dvh">

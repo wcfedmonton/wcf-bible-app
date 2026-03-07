@@ -21,6 +21,18 @@
 
 	const lastSetToOpenEdit = $state({ value: '' });
 	setContext('lastSetToOpenEdit', lastSetToOpenEdit);
+
+	function addVerseSet() {
+		sets.value.push({
+			id: crypto.randomUUID(), 
+			name: 'Untitled',
+			verses: []
+		});
+
+		if(sets.value.length === 1) {
+			selectedVerseSetId.value = sets.value[0].id;
+		}
+	}
 </script>
 
 <div class="w-[28%] min-w-55 min-h-dvh border-solid border-r-1 border-r-border_accent">
@@ -29,13 +41,14 @@
 			<p class="text-[0.7rem] text-[#777a7d] tracking-wider">ALL SETS</p>
 
 			<div class="flex flex-row justify-between">
-				<Button prompt="New Set" icon={add} />
-				<Button prompt="Import Set" icon={download} />
+				<Button eventHandler={addVerseSet} prompt="New Set" icon={add} />
+				<Button eventHandler={() => {}} prompt="Import Set" icon={download} />
 			</div>
 		</div>
 		<!-- NOTE: component to view verse sets will use 'bind' directive -->
 	</div>
 
+	<!-- implement scroll wheel that activates when lists gets too long -->
 	{#each sets.value as set (set.id)}
 		<VerseSetReference {set} />
 	{/each}
