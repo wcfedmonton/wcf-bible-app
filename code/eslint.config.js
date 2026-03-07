@@ -25,7 +25,8 @@ export default defineConfig(
 			'no-undef': 'off',
 			'svelte/no-unused-svelte-ignore': 'off',
 			'@sveltejs/no-missing-svelte-resolve': 'off',
-			'svelte/no-navigation-without-resolve': 'off'
+			'svelte/no-navigation-without-resolve': 'off',
+			'svelte/no-at-html-tags': 'off' //  we can safely ignore this linter warning because the html is passed from the component, not an external source
 		}
 	},
 	{

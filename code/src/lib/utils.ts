@@ -65,3 +65,15 @@ export function saveTokens({ cookieObj, session }: TokenArgs) {
 		maxAge: 60 * 60 * 24 * 30
 	});
 }
+
+type Verse = {
+	text: string;
+	translation: string;
+	verseReference: string;
+};
+
+export type VerseSet = {
+	id: string;
+	name: string;
+	verses: Verse[];
+};

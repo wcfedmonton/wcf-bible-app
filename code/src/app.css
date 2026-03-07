@@ -17,6 +17,7 @@ body {
 
 	--color-error_red: #f05a58;
 	--color-light_grey: #6b7074;
+	--color-extra_light_grey: #b0b5b1;
 
 	--color-accent: #8b3a3a;
 	--color-accent_btn: #c03a38;
@@ -36,6 +37,10 @@ body {
 	--color-border_accent: rgb(60, 64, 67);
 
 	--color-action_btn_border: #d3413f59;
+
+	--color-verse_set_selected: rgba(211, 65, 63, 0.1);
+
+	--color-option_hover: #333333;
 }
 
 @layer base {
