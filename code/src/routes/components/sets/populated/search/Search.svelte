@@ -1,17 +1,38 @@
 <script lang="ts">
-    import { getTranslations } from "$lib/utils";
+	import { getContext } from "svelte";
+    import { getTranslations, type ContextValue, type Verse } from "$lib/utils";
 
-    let { searchQuery = $bindable() } = $props();
+    let { searchQuery = $bindable(), queryCopy = $bindable() } = $props();
     let selectedTranslation = $state("NIV"); // will be set to user's default translation
     
     let open = $state(false)
     const translations: string[] = $derived(open ? getTranslations() : [selectedTranslation]);
 
     let loading = $state(false);
+
+    const searchResults = getContext<ContextValue<Verse[]>>("searchResults");
+
+    function returnDummyData() {
+        return [
+            {
+            text: "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life. For God so loved the world",
+            verseReference: "John 3:16 (NIV)"
+        },
+        {
+           text: "But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not faint.",
+           verseReference: "Isaiah 40:31 (NIV)"
+        },
+        {
+            text: "I can do all this through him who gives me strength, for I know that nothing is impossible with God, and his grace is sufficient for all who call upon him.",
+            verseReference: "Philippians 4:13 (NIV)"
+        }
+        ];
+    }
 </script>
 
 <div class="flex flex-row justify-center items-start">
     <div class="relative w-[7%] mt-[1.2rem]">
+        <!-- currently selected translation -->
         <div
             role="button"
             tabindex="0"
@@ -19,7 +40,7 @@
             onkeydown={(e) => e.key === 'Enter' || e.key === ' ' ? open = !open : null}
             class="cursor-pointer h-[2.48rem] w-full rounded-tl rounded-bl border-solid border-l border-y border-accent_btn border-r border-r-border_accent outline-none text-sm text-center bg-form_input flex items-center justify-end pr-2"
         >
-            <button class="cursor-pointer flex flex-col justify-center items-center w-full ">
+            <button class="cursor-pointer flex flex-col justify-center items-center w-full outline-none ">
                 <p class="text-center">{selectedTranslation}</p>
             </button>
 
@@ -44,12 +65,14 @@
 
     <input 
         bind:value={searchQuery}
+        disabled={loading} // requests will not be allowed while another request is being resolved to avoid race conditions
         onkeydown={({ key }) => {
-            if(key === "Enter") {
+            if(key === "Enter" && searchQuery.trim() !== "") {
                 loading = true;
-                
+                queryCopy = searchQuery;
                 // POST request will be made here using the search query
                 setTimeout(() => loading = false, 2000)
+                searchResults.value.splice(0, searchResults.value.length, ...returnDummyData());
             }
         }}
         class="w-[87%] h-[2.48rem] mt-[1.2rem] pl-3 pr-7 rounded-tr rounded-br border-y border-r border-solid border-accent_btn outline-none bg-form_input"
