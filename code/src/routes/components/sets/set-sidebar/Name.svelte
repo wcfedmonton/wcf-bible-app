@@ -5,7 +5,6 @@
 	let { set = $bindable() } = $props();
 
 	let newName = $state(set.name);
-	const wildCardDisabled = getContext<ContextValue<boolean>>('wildCardDisabled');
 	const setNameInputDisabled = getContext<ContextValue<boolean>>('setNameInputDisabled');
 </script>
 
@@ -18,12 +17,12 @@
 			maxlength={32}
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={(e) => {
-				if (e.key === 'Enter') {
-					e.stopPropagation();
+				e.stopPropagation();
+
+				if (e.key === 'Enter' && newName.trim() !== '') { // verify that the new name is not an empty string
 					set.name = newName;
 
-					setNameInputDisabled.value = set.name.length > 0 ? true : false;
-					wildCardDisabled.value = setNameInputDisabled.value ? true : false; // prevent an 'empty' name from being saved
+					setNameInputDisabled.value = true;
 					// NOTE: this is where we'll check the value of setInputDisabled before sending a post request
 				}
 			}}

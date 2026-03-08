@@ -14,7 +14,7 @@
 	const selectedVerseSetId = $state({ value: verseSets.value.length > 0 ? verseSets.value[0]?.id : '' });
 	setContext('selectedVerseSetId', selectedVerseSetId);
 
-	const empty = $derived(verseSets.value.length === 0); // will be replaced with a condition checking for the number of verse sets the user has
+	const empty = $derived(verseSets.value.length === 0); 
 </script>
 
 <div class="flex min-h-dvh">

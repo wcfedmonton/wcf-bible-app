@@ -12,11 +12,6 @@
 	let setNameInputDisabled = $state({ value: true });
 	setContext('setNameInputDisabled', setNameInputDisabled);
 
-	// this will be used as a safeguard for any cases where it's not feasible to
-	// keep track of state using props
-	let wildCardDisabled = $state({ value: true });
-	setContext('wildCardDisabled', wildCardDisabled);
-
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 	let selected = $derived(set.id === selectedVerseSetId.value);
 
@@ -27,7 +22,6 @@
 	onclick={() => {
 		lastSetToOpenEdit.value = '';
 		verseSetReference.value = set;
-		setNameInputDisabled.value = wildCardDisabled.value;
 	}}
 />
 

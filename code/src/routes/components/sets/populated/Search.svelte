@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getTranslations } from "$lib/utils";
 
-    let { searchQuery =$bindable() } = $props();
+    let { searchQuery = $bindable() } = $props();
     let selectedTranslation = $state("NIV"); // will be set to user's default translation
     
     let open = $state(false)
@@ -10,11 +10,6 @@
     let loading = $state(false);
 </script>
 
-<svelte:window 
-    onclick={() => {
-        //open = !open;
-    }}
-/>
 <div class="flex flex-row justify-center items-start">
     <div class="relative w-[7%] mt-[1.2rem]">
         <div
@@ -34,7 +29,7 @@
         </div>
 
         {#if open} <!-- display dropdown -->
-            <div class="absolute top-full left-0 w-full h-60 overflow-y-auto scrollbar-black border border-solid border-accent_btn bg-form_input text-sm text-center z-50">
+            <div class="absolute top-full left-0 w-full h-60 overflow-y-auto scrollbar-black border border-solid border-border_accent bg-form_input text-sm text-center z-50">
                 {#each translations as translation}
                     <button
                         onclick={() => { selectedTranslation = translation; open = false }}
