@@ -7,7 +7,7 @@
     const { searchResult, index }: { searchResult: Verse, index: number } = $props();
     
     const searchResults = getContext<ContextValue<VerseSet[]>>("searchResults");    
-    const showBottomBorder = $derived(index <= searchResults.value.length);
+    const showBottomBorder = $derived(index < searchResults.value.length - 1);
 
     const add = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg w-[0.6rem] text-[#e0e0e0]" viewBox="0 0 16 16">
@@ -17,13 +17,19 @@
 
 <div class="flex flex-between px-4 justify-center items-center w-full h-[4.7rem] {showBottomBorder ? "border-b border-b-border_accent": ""}">
     <div class="w-[97%]">
-        <p class="text-[0.9rem] text-[#e05250] font-medium font-serif italic">{searchResult.verseReference}</p>
-        <p class="w-[113%] text-[.82rem] text-[#f0e6e6] font-serif">
+        <p class="text-[0.9rem] text-[#e05250] font-medium font-serif italic">{searchResult.verseReference + ` (${searchResult.translation})`}</p>
+        <p class="w-[97%] text-[.82rem] text-[#f0e6e6] font-serif">
             {searchResult.text.slice(0, 145).trim() + "..."}
         </p>
     </div>
 
-    <div class="flex flex-row justify-end items-center w-[15rem] h-[2.6rem]">
-        <Button prompt="Add" eventHandler={() => {}} icon={add}/>
+    <div class="flex flex-row justify-end items-center h-[2.6rem]">
+        <Button 
+            icon={add}
+            prompt="Add" 
+            eventHandler={() => {
+                console.log(searchResult); // this is where we'll add the verse to the set. think about integration w db
+            }} 
+        />
     </div>
 </div>

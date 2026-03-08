@@ -70,6 +70,7 @@ export function saveTokens({ cookieObj, session }: TokenArgs) {
 
 export type Verse = {
 	text: string;
+	translation: string;
 	verseReference: string;
 };
 

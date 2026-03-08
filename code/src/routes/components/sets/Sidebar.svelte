@@ -40,7 +40,7 @@
 
 <div class="w-[28%] min-w-70 min-h-dvh max-h-dvh border-solid border-r-1 border-r-border_accent">
 	<div class="w-full h-25 flex justify-center items-center border-b-1 border-b-border_accent">
-		<div class="w-[84%] h-[20%] flex flex-col justify-center">
+		<div class="w-[91%] h-[20%] flex flex-col justify-center">
 			<p class="text-[0.7rem] text-[#777a7d] tracking-wider">ALL SETS</p>
 
 			<div class="flex flex-row justify-between">

@@ -19,7 +19,7 @@
             <p class="text-[0.8rem] text-light_grey">Last edited {selectedVerseSet?.lastEdited}</p>
         </div>
 
-        <div class="flex flex-row justify-end w-[15rem] h-[2.6rem]">
+        <div class="flex flex-row justify-end h-[2.6rem]">
             <Button prompt="Export" icon={arrowUp} eventHandler={() => {}}/>
         </div>
     </div>

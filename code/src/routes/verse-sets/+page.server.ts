@@ -2,7 +2,12 @@ export async function load() {
 	const data = [
 		{
 			id: 'abc', // a reference to the database id
-			verses: [],
+			verses: [{
+				verseSetId: "abc",
+				translation: "NIV", // translation is kept seperate from reference for integration with the home page
+				verseReference: "John 14:27",
+				text: "Peace I leave with you; my peace I give you."
+			}],
 			lastEdited: 'Mar 7, 2026',
 			name: 'New Verse Set'
 
