@@ -1,31 +1,58 @@
 <script lang="ts">
-    import Button from "./Button.svelte";
+	import Button from './Button.svelte';
+	import VerseSetReference from './set-sidebar/VerseSetReference.svelte';
 
-    const add = `
+	import { getContext, setContext } from 'svelte';
+	import { getDate, type ContextValue, type VerseSet } from '$lib/utils';
+
+	const add = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg w-[0.6rem] text-[#e0e0e0]" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
         </svg>`;
 
-    const download = 
-        `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-lg w-[0.6rem] text-[#e0e0e0]" viewBox="0 0 16 16">
+	const download = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-lg w-[0.6rem] text-[#e0e0e0]" viewBox="0 0 16 16">
             <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
             <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
         </svg>`;
+
+	const sets = getContext<ContextValue<VerseSet[]>>('verseSets');
+	
+
+	const lastSetToOpenEdit = $state({ value: '' });
+	setContext('lastSetToOpenEdit', lastSetToOpenEdit);
+
+	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
+	
+	function addVerseSet() {
+		sets.value.push({
+			verses: [],
+			name: 'Untitled',
+			lastEdited: getDate(),
+			id: crypto.randomUUID()
+		});
+
+		if (sets.value.length === 1) {
+			// handles the case for selection when the user adds their first verse set
+			selectedVerseSetId.value = sets.value[0].id;
+		}
+	}
 </script>
 
-<div class="w-80 min-h-dvh border-solid border-r-1 border-r-border_accent">
-    <div class="w-full h-20 flex justify-center items-center border-b-1 border-b-border_accent">
-        <!-- Header -->
-        <div class="w-[84%] h-13">
-            <p class="text-[0.7rem] text-[#777a7d] tracking-wider">ALL SETS</p>
-            
-            <div class="flex flex-row justify-between">
-                <Button prompt="New Set" icon={add} />
-                <Button prompt="Import Set" icon={download}/>
-            </div>
-        </div>
+<div class="w-[28%] min-w-70 min-h-dvh max-h-dvh border-solid border-r-1 border-r-border_accent">
+	<div class="w-full h-25 flex justify-center items-center border-b-1 border-b-border_accent">
+		<div class="w-[84%] h-[20%] flex flex-col justify-center">
+			<p class="text-[0.7rem] text-[#777a7d] tracking-wider">ALL SETS</p>
 
-        <!-- NOTE: component that lists verse sets will accept a VerseSet object array as a prop -->
-        <!-- NOTE: component to view verse sets will use 'bind' directive -->
-    </div>
+			<div class="flex flex-row justify-between">
+				<Button eventHandler={addVerseSet} prompt="New Set" icon={add} />
+				<Button eventHandler={() => {}} prompt="Import Set" icon={download} />
+			</div>
+		</div>
+	</div>
+
+	<div class="overflow-auto h-[calc(100vh-6.25rem)] scrollbar-black">
+		{#each sets.value as _, index}
+			<VerseSetReference bind:set={sets.value[index]} />
+		{/each}
+	</div>
 </div>

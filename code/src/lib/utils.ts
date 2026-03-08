@@ -1,4 +1,6 @@
 import type { Cookies } from '@sveltejs/kit';
+import YVTranslations from '$lib/shared/YVTranslations.json' with { type: 'json' };
+import APIBibleTranslations from '$lib/shared/APIBibleTranslations.json' with { type: 'json' };
 
 export type FormState = {
 	full_name?: string;
@@ -64,4 +66,47 @@ export function saveTokens({ cookieObj, session }: TokenArgs) {
 		...defaultCookieOptions,
 		maxAge: 60 * 60 * 24 * 30
 	});
+}
+
+type Verse = {
+	text: string;
+	translation: string;
+	verseReference: string;
+};
+
+export type VerseSet = {
+	id: string;
+	name: string;
+	verses: Verse[];
+	lastEdited: string;
+};
+
+export type ContextValue<T> = {
+	value: T;
+};
+
+/**
+ * Gets the current date formatted as a readable string.
+ *
+ * @returns {string} The current date in "Mon D, YYYY" format (e.g. "Mar 7, 2026")
+ */
+export function getDate() {
+	const date = new Date();
+	const [month, day, year] = date.toDateString().split(' ').slice(1);
+
+	return `${month} ${Number(day)}, ${year}`
+}
+
+/**
+ * Gets a sorted, deduplicated list of all available Bible translations
+ * from both YouVersion and API Bible sources.
+ *
+ * @returns {string[]} Sorted array of unique translation keys
+ */
+export function getTranslations() {
+	const translations = [
+		...new Set([...Object.keys(YVTranslations), ...Object.keys(APIBibleTranslations)])
+	].sort();
+
+	return translations;
 }
