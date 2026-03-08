@@ -3,7 +3,7 @@
 	import Name from './Name.svelte';
 
 	import { getContext, setContext } from 'svelte';
-	import type { ContextValue, VerseSet } from '$lib/utils';
+	import type { ContextValue, VerseSet, Verse } from '$lib/utils';
 
 	let { set = $bindable() } = $props<{ set: VerseSet }>();
 	setContext('verseSetReference', { value: set });
@@ -16,6 +16,10 @@
 	let selected = $derived(set.id === selectedVerseSetId.value);
 
 	const lastSetToOpenEdit = getContext<{ value: any }>('lastSetToOpenEdit');
+
+	const searchResults = getContext<ContextValue<Verse[]>>("searchResults");
+
+	const searchQuery = getContext<ContextValue<string>>("searchQuery");
 </script>
 
 <svelte:window
@@ -30,6 +34,10 @@
 	tabindex="0"
 	onclick={() => {
 		selectedVerseSetId.value = set.id;
+		// clear the search results shown (if any), so that they don't interfere with the new verse set's state
+		searchResults.value = []; 
+		
+		searchQuery.value = ""; // clear the search query
 	}}
 	onkeydown={(e) => e.key === 'Enter' && (selected = !selected)}
 	class:border-l-2={selected}

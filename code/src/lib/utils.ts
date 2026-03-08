@@ -68,9 +68,8 @@ export function saveTokens({ cookieObj, session }: TokenArgs) {
 	});
 }
 
-type Verse = {
+export type Verse = {
 	text: string;
-	translation: string;
 	verseReference: string;
 };
 
