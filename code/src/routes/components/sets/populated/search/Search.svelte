@@ -11,6 +11,7 @@
 	let loading = $state(false);
 
 	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');
+	const viewingSearchResults = $state(getContext<ContextValue<boolean>>('viewingSearchResults'));
 
 	function returnDummyData() {
 		return [
@@ -79,7 +80,7 @@
 							selectedTranslation = translation;
 							open = false;
 						}}
-						class="cursor-pointer flex flex-col justify-center items-center h-[2.48rem] w-full border-b border-b-4 border-b-border_accent hover:bg-[#444444]"
+						class="cursor-pointer flex flex-col justify-center items-center h-[2.48rem] w-full border-b border-b-border_accent hover:bg-[#444444]"
 					>
 						{translation}
 					</button>
@@ -97,7 +98,10 @@
 				queryCopy = searchQuery; // make a shallow copy of the query so that changes to the original one are not propagated
 				// POST request will be made here using the search query
 				setTimeout(() => {
-					searchResults.value.splice(0, searchResults.value.length, ...returnDummyData());
+					//searchResults.value.splice(0, searchResults.value.length, ...returnDummyData());
+					
+					// these should only be set after the request resolves
+					viewingSearchResults.value = true; 
 					loading = false;
 				}, 2000);
 			}

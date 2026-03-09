@@ -18,6 +18,7 @@
 	const searchQuery = getContext<ContextValue<string>>('searchQuery');
 	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');
 	const lastSetToOpenEdit = getContext<ContextValue<string>>('lastSetToOpenEdit');
+	const viewingSearchResults = getContext<ContextValue<boolean>>('viewingSearchResults');
 </script>
 
 <svelte:window
@@ -27,6 +28,7 @@
 		lastSetToOpenEdit.value = '';
 		verseSetReference.value = set;
 		setNameInputDisabled.value = true;
+		viewingSearchResults.value = false;
 	}}
 />
 

@@ -74,7 +74,7 @@ export async function load() {
 					verseReference: 'Romans 12:12',
 					text: 'Be joyful in hope, patient in affliction, faithful in prayer.'
 
-					// NOTE: any call to update or delete should automatically edit the lastEdited field of the parent verse set
+					// NOTE: any call to update or delete should automatically edit the lastEdited field of the parent verse set (updated on the client, then we call update() for the parent verse set)
 					// update() will send a request to change the verses ordering
 					// delete() will send a request to delete the verse from the set
 				}

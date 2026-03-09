@@ -23,6 +23,9 @@
 	setContext('searchQuery', searchQuery);
 
 	const empty = $derived(verseSets.value.length === 0);
+
+	const viewingSearchResults = $state({ value: false });
+	setContext("viewingSearchResults", viewingSearchResults);
 </script>
 
 <div class="flex min-h-dvh min-w-[60rem]">
