@@ -11,7 +11,7 @@
 <div class="flex flex-col items-start w-[88%] min-w-55 h-10">
 	{#if !setNameInputDisabled.value}
 		<input
-			class={` font-serif w-[92%] h-7 mx-1 px-1 rounded-sm outline-none ${!setNameInputDisabled.value ? 'bg-[#222222] border border-solid border-input_focus focus:border-input_focus' : ''}`}
+			class={` font-serif w-[94%] h-7 mx-1 px-1 rounded-sm outline-none ${!setNameInputDisabled.value ? 'bg-[#222222] border border-solid border-input_focus focus:border-input_focus' : ''}`}
 			bind:value={newName}
 			minlength={1}
 			maxlength={35}

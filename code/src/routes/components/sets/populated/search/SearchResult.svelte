@@ -6,6 +6,10 @@
 
     const { searchResult, index }: { searchResult: Verse, index: number } = $props();
     
+    const verseSets = getContext<ContextValue<VerseSet[]>>("verseSets");
+    const selectedVerseSetId = getContext<ContextValue<string>>("selectedVerseSetId");
+    let selectedVerseSet = $derived(verseSets.value.find(set => set.id === selectedVerseSetId.value));
+
     const searchResults = getContext<ContextValue<VerseSet[]>>("searchResults");    
     const showBottomBorder = $derived(index < searchResults.value.length - 1);
 
@@ -28,7 +32,12 @@
             icon={add}
             prompt="Add" 
             eventHandler={() => {
-                console.log(searchResult); // this is where we'll add the verse to the set. think about integration w db
+                // duplicates are not allowed
+                if(!selectedVerseSet?.verses.find(verse => verse.text === searchResult.text && verse.translation === searchResult.translation)) {
+                    selectedVerseSet?.verses.push(searchResult);
+                    
+                    // this is where we'll add the verse to the set. think about integration w db
+                }
             }} 
         />
     </div>

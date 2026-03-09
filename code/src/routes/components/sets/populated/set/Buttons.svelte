@@ -20,7 +20,7 @@
     `;
 </script>
 
-<div class="flex flex-row gap-1">
+<div class="flex flex-row gap-1 pb-2 ml-5">
     {#each [upArrow, downArrow, trashCan] as icon} <!-- onclick event handler will be passed in as a object that we can cycle through -->
         <button aria-label="verse set action" class="group cursor-pointer flex flex-row justify-center items-center w-7 h-5 border rounded-sm border-border_accent hover:border-accent_btn">
             {@html icon}

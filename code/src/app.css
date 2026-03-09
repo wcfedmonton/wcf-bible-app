@@ -55,4 +55,15 @@ body {
 	.scrollbar-black::-webkit-scrollbar { width: 0.5rem; }
   	.scrollbar-black::-webkit-scrollbar-track { background: #201f1f; }
   	.scrollbar-black::-webkit-scrollbar-thumb { background: #333; border-radius: 50rem; }
+
+	.scrollbar-white {
+		scrollbar-gutter: stable both-edges;
+	}
+	.scrollbar-white::-webkit-scrollbar { width: 0.75rem; }
+  	.scrollbar-white::-webkit-scrollbar-track { background: #201f1f; }
+  	.scrollbar-white::-webkit-scrollbar-thumb { 
+		background: #333; 
+		border-radius: 50rem; 
+		border: 2px solid #201f1f; /* fake inset using border matching track color */
+	}
 }

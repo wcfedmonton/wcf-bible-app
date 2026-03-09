@@ -18,7 +18,7 @@
     let queryCopy = $state(""); // we use a copy of the string so that the search results header stays consistent with the results
 </script>
 
-<div class="class=flex flex-col justify-center items-center w-full h-screen">
+<div class="w-full h-screen">
     <Header bind:selectedVerseSet />
     <Search bind:searchQuery={searchQuery.value} bind:queryCopy verseSetId={selectedVerseSetId.value} />
     
