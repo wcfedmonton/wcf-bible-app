@@ -19,7 +19,8 @@
 			onkeydown={(e) => {
 				e.stopPropagation();
 
-				if (e.key === 'Enter' && newName.trim() !== '') { // verify that the new name is not an empty string
+				if (e.key === 'Enter' && newName.trim() !== '') {
+					// verify that the new name is not an empty string
 					set.name = newName;
 
 					setNameInputDisabled.value = true;
@@ -34,5 +35,7 @@
 			{set.name}
 		</p>
 	{/if}
-	<p class="pl-1 text-[0.7rem] text-light_grey">{set.verses.length + `${set.verses.length === 1 ? " verse": " verses"}`}</p>
+	<p class="pl-1 text-[0.7rem] text-light_grey">
+		{set.verses.length + `${set.verses.length === 1 ? ' verse' : ' verses'}`}
+	</p>
 </div>

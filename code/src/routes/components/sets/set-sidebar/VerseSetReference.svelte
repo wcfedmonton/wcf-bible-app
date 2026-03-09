@@ -15,9 +15,9 @@
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 	let selected = $derived(set.id === selectedVerseSetId.value);
 
-	const searchQuery = getContext<ContextValue<string>>("searchQuery");
-	const searchResults = getContext<ContextValue<Verse[]>>("searchResults");
-	const lastSetToOpenEdit = getContext<{ value: any }>('lastSetToOpenEdit');
+	const searchQuery = getContext<ContextValue<string>>('searchQuery');
+	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');
+	const lastSetToOpenEdit = getContext<ContextValue<string>>('lastSetToOpenEdit');
 </script>
 
 <svelte:window
@@ -36,9 +36,9 @@
 	onclick={() => {
 		selectedVerseSetId.value = set.id;
 		// clear the search results shown (if any), so that they don't interfere with the new verse set's state
-		searchResults.value = []; 
-		
-		searchQuery.value = ""; // clear the search query
+		searchResults.value = [];
+
+		searchQuery.value = ''; // clear the search query
 	}}
 	onkeydown={(e) => e.key === 'Enter' && (selected = !selected)}
 	class:border-l-2={selected}

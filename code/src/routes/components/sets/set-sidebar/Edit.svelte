@@ -6,7 +6,7 @@
 
 	const { setId } = $props();
 	const lastSetToOpenEdit = getContext<ContextValue<string>>('lastSetToOpenEdit');
-	const setNameInputDisabled = getContext<ContextValue<boolean>>('setNameInputDisabled')
+	const setNameInputDisabled = getContext<ContextValue<boolean>>('setNameInputDisabled');
 </script>
 
 <div class="relative">
@@ -19,7 +19,7 @@
 			setNameInputDisabled.value = true;
 
 			// clear the edit options for the current verse, if the user selects options for another verse
-			lastSetToOpenEdit.value = setId; 
+			lastSetToOpenEdit.value = setId;
 		}}
 	>
 		<svg
