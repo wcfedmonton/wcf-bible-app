@@ -70,6 +70,8 @@ export function saveTokens({ cookieObj, session }: TokenArgs) {
 
 export type Verse = {
 	text: string;
+	orderId: number;
+	translation: string;
 	verseReference: string;
 };
 
@@ -93,7 +95,7 @@ export function getDate() {
 	const date = new Date();
 	const [month, day, year] = date.toDateString().split(' ').slice(1);
 
-	return `${month} ${Number(day)}, ${year}`
+	return `${month} ${Number(day)}, ${year}`;
 }
 
 /**

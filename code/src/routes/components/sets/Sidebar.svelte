@@ -16,13 +16,12 @@
         </svg>`;
 
 	const sets = getContext<ContextValue<VerseSet[]>>('verseSets');
-	
 
 	const lastSetToOpenEdit = $state({ value: '' });
 	setContext('lastSetToOpenEdit', lastSetToOpenEdit);
 
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
-	
+
 	function addVerseSet() {
 		sets.value.push({
 			verses: [],
@@ -40,7 +39,7 @@
 
 <div class="w-[28%] min-w-70 min-h-dvh max-h-dvh border-solid border-r-1 border-r-border_accent">
 	<div class="w-full h-25 flex justify-center items-center border-b-1 border-b-border_accent">
-		<div class="w-[84%] h-[20%] flex flex-col justify-center">
+		<div class="w-[91%] h-[20%] flex flex-col justify-center">
 			<p class="text-[0.7rem] text-[#777a7d] tracking-wider">ALL SETS</p>
 
 			<div class="flex flex-row justify-between">
@@ -51,7 +50,7 @@
 	</div>
 
 	<div class="overflow-auto h-[calc(100vh-6.25rem)] scrollbar-black">
-		{#each sets.value as _, index}
+		{#each sets.value as set, index (set)}
 			<VerseSetReference bind:set={sets.value[index]} />
 		{/each}
 	</div>

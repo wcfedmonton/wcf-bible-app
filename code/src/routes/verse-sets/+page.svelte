@@ -11,19 +11,21 @@
 	const verseSets = $state({ value: data.data });
 	setContext('verseSets', verseSets);
 
-	const selectedVerseSetId = $state({ value: verseSets.value.length > 0 ? verseSets.value[0]?.id : '' });
+	const selectedVerseSetId = $state({
+		value: verseSets.value.length > 0 ? verseSets.value[0]?.id : ''
+	});
 	setContext('selectedVerseSetId', selectedVerseSetId);
 
 	const searchResults = $state({ value: [] });
-	setContext("searchResults", searchResults);
+	setContext('searchResults', searchResults);
 
-	const searchQuery = $state({ value: "" });
-	setContext("searchQuery", searchQuery);
+	const searchQuery = $state({ value: '' });
+	setContext('searchQuery', searchQuery);
 
-	const empty = $derived(verseSets.value.length === 0); 
+	const empty = $derived(verseSets.value.length === 0);
 </script>
 
-<div class="flex min-h-dvh">
+<div class="flex min-h-dvh min-w-[60rem]">
 	<GeneralSidebar />
 	<SetsSidebar />
 

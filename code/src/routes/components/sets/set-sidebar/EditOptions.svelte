@@ -30,7 +30,7 @@
 
 			// save the index of the set to be deleted so that we have a reference
 			// to toggle the verse set 'above' to the delete set
-			const deletedVerseIndex = verseSets.value.findIndex((v) => v.id === verseSetId);
+			const deletedVerseIndex = verseSets.value.findIndex((v) => v.id === lastSetToOpenEdit.value);
 
 			// remove the deleted set from the list
 			verseSets.value = verseSets.value.filter((set) => set.id != verseSetId);
@@ -41,10 +41,11 @@
 				return;
 			}
 
-			if (deletedVerseIndex === 0) {
+			if (deletedVerseIndex === 0 && verseSets.value.length >= 1) {
 				// if the first set is deleted, the one after it becomes selected
+				lastSetToOpenEdit.value = verseSetId;
 				verseSetReference.value = verseSets.value[0];
-				currentlySelectedVerseId.value = verseSets.value[0].id;
+				currentlySelectedVerseId.value = verseSets.value[0]?.id;
 			} else {
 				// if any other set is deleted, the one before it becomes selected
 				verseSetReference.value = verseSets.value[deletedVerseIndex - 1];
