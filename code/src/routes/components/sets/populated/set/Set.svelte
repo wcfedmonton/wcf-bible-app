@@ -1,10 +1,36 @@
 <script lang="ts">
-	import type { VerseSet } from "$lib/utils";
+    import { getContext } from "svelte";
+	import type { VerseSet, ContextValue, Verse } from "$lib/utils";
     import Buttons from "./Buttons.svelte";
 
     const { selectedVerseSet = $bindable() }: { selectedVerseSet: VerseSet } = $props();
     
-    const noResultsHeight = ""; // test out the heights for each number of search results and then decide which to use using $derived
+    const searchResults = getContext<ContextValue<Verse[]>>("searchResults");
+
+    /**
+     * Calculates the Tailwind CSS height class for a set display container
+     * based on the number of search results visible.
+     *
+     * As more search results appear, they push the container down,
+     * so the available viewport height is reduced accordingly.
+     *
+     * @param {number} searchResultsLength - The number of search results currently displayed.
+     * @returns {string} A Tailwind arbitrary height class string
+     */
+    function calculateSetDisplayHeight(searchResultsLength: number) {
+        if(searchResultsLength === 0) {
+            return "[calc(100vh-13rem)]";
+        } else if(searchResultsLength === 1) {
+            return "[calc(100vh-21rem)]";
+        } else if(searchResultsLength === 2) {
+            return "[calc(100vh-26rem)]";
+        } else {
+            return "[calc(100vh-31rem)]";
+        }
+    }
+
+    const containerHeight = $derived(calculateSetDisplayHeight(searchResults.value.length));
+    const cssString = $derived(`flex flex-col items-center w-full h-${containerHeight} pt-3`);
 </script>
 
 <div class="flex flex-col items-center pt-3">
@@ -13,7 +39,7 @@
     </div>
 </div>
 
-<div class="flex flex-col items-center w-full h-[calc(100vh-13rem)] pt-3 "> <!-- fixed height doesn't work for bigger screens -->
+<div class={cssString}> <!-- fixed height doesn't work for bigger screens -->
     <div class="flex-1 w-[94%] border-b-border_accent overflow-auto scrollbar-black">
         {#each selectedVerseSet.verses as verse, index }
             <div class="grid grid-cols-[auto_1fr_auto] w-full gap-x-2">
