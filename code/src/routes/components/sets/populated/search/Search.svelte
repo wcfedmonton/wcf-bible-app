@@ -2,8 +2,7 @@
 	import { getContext } from 'svelte';
 	import { getTranslations, type ContextValue, type Verse } from '$lib/utils';
 
-	let { searchQuery = $bindable(), queryCopy = $bindable(), verseSet } = $props();
-	let selectedTranslation = $state('NIV'); // will be set to user's default translation
+	let { searchQuery = $bindable(), queryCopy = $bindable(), verseSet, selectedTranslation = $bindable() } = $props();
 
 	let open = $state(false);
 	const translations: string[] = $derived(open ? getTranslations() : [selectedTranslation]);
@@ -11,7 +10,7 @@
 	let loading = $state(false);
 
 	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');
-	const viewingSearchResults = $state(getContext<ContextValue<boolean>>('viewingSearchResults'));
+	const viewingSearchResults = $derived(getContext<ContextValue<boolean>>('viewingSearchResults'));
 
 	function returnDummyData() {
 		return [
@@ -39,6 +38,16 @@
 		];
 	}
 </script>
+
+<svelte:window 
+	onclick={(event) => {
+		if (!(event.target instanceof HTMLInputElement)) {
+			searchResults.value = [];
+			searchQuery.value = '';
+			viewingSearchResults.value = false;
+		}
+	}}	
+/>
 
 <div class="relative flex flex-row justify-center items-start">
 	<div class="relative w-[7%] mt-[1.2rem]">
@@ -98,7 +107,7 @@
 				queryCopy = searchQuery; // make a shallow copy of the query so that changes to the original one are not propagated
 				// POST request will be made here using the search query
 				setTimeout(() => {
-					//searchResults.value.splice(0, searchResults.value.length, ...returnDummyData());
+					searchResults.value.splice(0, searchResults.value.length, ...returnDummyData());
 					
 					// these should only be set after the request resolves
 					viewingSearchResults.value = true; 

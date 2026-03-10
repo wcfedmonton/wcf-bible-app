@@ -45,12 +45,11 @@
 </div>
 
 <div class={cssString}>
-	<!-- fixed height doesn't work for bigger screens -->
 	<div class="flex-1 w-[94%] border-b-border_accent overflow-auto scrollbar-black">
-		{#each selectedVerseSet.verses as verse (verse)}
+		{#each selectedVerseSet.verses as verse, index (verse)}
 			<div class="grid grid-cols-[auto_1fr_auto] w-full gap-x-2">
 				<p class="text-light_grey row-start-1">
-					{selectedVerseSet.verses.indexOf(verse) + 1 + '.'}
+					{index + 1 + '.'}
 				</p>
 				<p class="text-[0.9rem] text-[#e05250] font-medium font-serif italic row-start-1">
 					{`${verse.verseReference} (${verse.translation})`}

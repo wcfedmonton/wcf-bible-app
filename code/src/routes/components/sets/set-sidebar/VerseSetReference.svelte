@@ -23,8 +23,6 @@
 
 <svelte:window
 	onclick={() => {
-		searchQuery.value = '';
-		searchResults.value = [];
 		lastSetToOpenEdit.value = '';
 		verseSetReference.value = set;
 		setNameInputDisabled.value = true;
