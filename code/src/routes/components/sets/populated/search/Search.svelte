@@ -2,15 +2,17 @@
 	import { getContext } from 'svelte';
 	import { getTranslations, type ContextValue, type Verse } from '$lib/utils';
 
-	let { searchQuery = $bindable(), queryCopy = $bindable(), verseSet } = $props();
-	let selectedTranslation = $state('NIV'); // will be set to user's default translation
+	let { verseSet, selectedTranslation = $bindable() } = $props();
 
 	let open = $state(false);
 	const translations: string[] = $derived(open ? getTranslations() : [selectedTranslation]);
 
 	let loading = $state(false);
 
+	const queryCopy = getContext<ContextValue<string>>('queryCopy');
+	const searchQuery = getContext<ContextValue<string>>('searchQuery');
 	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');
+	const viewingSearchResults = $derived(getContext<ContextValue<boolean>>('viewingSearchResults'));
 
 	function returnDummyData() {
 		return [
@@ -38,6 +40,16 @@
 		];
 	}
 </script>
+
+<svelte:window 
+	onclick={(event) => {
+		if (!(event.target instanceof HTMLInputElement)) {
+			searchQuery.value = '';
+			searchResults.value = [];
+			viewingSearchResults.value = false;
+		}
+	}}	
+/>
 
 <div class="relative flex flex-row justify-center items-start">
 	<div class="relative w-[7%] mt-[1.2rem]">
@@ -79,7 +91,7 @@
 							selectedTranslation = translation;
 							open = false;
 						}}
-						class="cursor-pointer flex flex-col justify-center items-center h-[2.48rem] w-full border-b border-b-4 border-b-border_accent hover:bg-[#444444]"
+						class="cursor-pointer flex flex-col justify-center items-center h-[2.48rem] w-full border-b border-b-border_accent hover:bg-[#444444]"
 					>
 						{translation}
 					</button>
@@ -89,15 +101,18 @@
 	</div>
 
 	<input
-		bind:value={searchQuery}
+		bind:value={searchQuery.value}
 		disabled={loading}
 		onkeydown={({ key }) => {
-			if (key === 'Enter' && searchQuery.trim() !== '') {
+			if (key === 'Enter' && searchQuery.value.trim() !== '') {
 				loading = true;
-				queryCopy = searchQuery; // make a shallow copy of the query so that changes to the original one are not propagated
 				// POST request will be made here using the search query
 				setTimeout(() => {
 					searchResults.value.splice(0, searchResults.value.length, ...returnDummyData());
+					
+					// these should only be set after the request resolves
+					queryCopy.value = searchQuery.value; // make a shallow copy of the query so that changes to the original one are not propagated
+					viewingSearchResults.value = true; 
 					loading = false;
 				}, 2000);
 			}

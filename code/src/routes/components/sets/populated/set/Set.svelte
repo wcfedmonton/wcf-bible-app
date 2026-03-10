@@ -6,6 +6,7 @@
 	let { selectedVerseSet = $bindable() }: { selectedVerseSet: VerseSet } = $props();
 
 	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');
+	const viewingSearchResults = getContext<ContextValue<string>>('viewingSearchResults');
 
 	/**
 	 * Calculates the Tailwind CSS height class for a set display container
@@ -18,19 +19,23 @@
 	 * @returns {string} A Tailwind arbitrary height class string
 	 */
 	function calculateSetDisplayHeight(searchResultsLength: number) {
-		if (searchResultsLength === 0) {
-			return '[calc(100vh-13rem)]';
+		if (searchResultsLength === 0) { // and extra check should be done here so there is a difference between when the user searches and there's no results and when the search results component is being displayed
+			if(viewingSearchResults.value) {
+				return 'h-[calc(100vh-30rem)]';
+			} else {
+				return 'h-[calc(100vh-13rem)]';
+			}
 		} else if (searchResultsLength === 1) {
-			return '[calc(100vh-21rem)]';
+			return 'h-[calc(100vh-21rem)]';
 		} else if (searchResultsLength === 2) {
-			return '[calc(100vh-26rem)]';
+			return 'h-[calc(100vh-26rem)]';
 		} else {
-			return '[calc(100vh-31rem)]';
+			return 'h-[calc(100vh-31rem)]';
 		}
 	}
 
 	const containerHeight = $derived(calculateSetDisplayHeight(searchResults.value.length));
-	const cssString = $derived(`flex flex-col items-center w-full h-${containerHeight} pt-3`);
+	const cssString = $derived(`flex flex-col items-center w-full ${containerHeight} pt-3`);
 </script>
 
 <div class="flex flex-col items-center pt-3">
@@ -40,12 +45,11 @@
 </div>
 
 <div class={cssString}>
-	<!-- fixed height doesn't work for bigger screens -->
 	<div class="flex-1 w-[94%] border-b-border_accent overflow-auto scrollbar-black">
-		{#each selectedVerseSet.verses as verse (verse)}
+		{#each selectedVerseSet.verses as verse, index (verse)}
 			<div class="grid grid-cols-[auto_1fr_auto] w-full gap-x-2">
 				<p class="text-light_grey row-start-1">
-					{selectedVerseSet.verses.indexOf(verse) + 1 + '.'}
+					{index + 1 + '.'}
 				</p>
 				<p class="text-[0.9rem] text-[#e05250] font-medium font-serif italic row-start-1">
 					{`${verse.verseReference} (${verse.translation})`}
