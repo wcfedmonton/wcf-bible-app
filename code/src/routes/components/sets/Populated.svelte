@@ -7,10 +7,7 @@
 
 	import { getContext } from 'svelte';
 	import type { ContextValue, Verse, VerseSet } from '$lib/utils';
-
-	const searchQuery = getContext<ContextValue<string>>('searchQuery');
-	let queryCopy = $state(''); // we use a copy of the string so that the search results header stays consistent with the results
-
+		
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 	let selectedVerseSet = $derived(
@@ -28,14 +25,14 @@
 
 <div class="w-full h-screen">
 	<Header bind:selectedVerseSet />
-	<Search bind:searchQuery={searchQuery.value} bind:queryCopy verseSet={selectedVerseSet} bind:selectedTranslation />
+	<Search verseSet={selectedVerseSet} bind:selectedTranslation />
 
 	{#if selectedVerseSet?.verses.length === 0 && searchResults.value.length === 0 && !viewingSearchResults.value}
 		<!-- the second check is to ensure the two screens don't show at the same time -->
 		<Empty />
 	{:else if searchResults.value.length > 0 || viewingSearchResults.value} 
 		<!-- the second condition allows the display of a message in the panel even when there's no results -->
-		<SearchResults searchQuery={queryCopy} selectedTranslation={translationCopy}/>
+		<SearchResults selectedTranslation={translationCopy}/>
 	{/if}
 
 	{#if selectedVerseSet?.verses.length && selectedVerseSet?.verses.length > 0}
