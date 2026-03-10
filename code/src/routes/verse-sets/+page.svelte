@@ -1,0 +1,43 @@
+<script lang="ts">
+	import Empty from '../components/sets/Empty.svelte';
+	import Populated from '../components/sets/Populated.svelte';
+	import SetsSidebar from '../components/sets/Sidebar.svelte';
+	import GeneralSidebar from '../components/common/Sidebar.svelte';
+
+	import { setContext } from 'svelte';
+
+	const { data } = $props();
+	// svelte-ignore state_referenced_locally
+	const verseSets = $state({ value: data.data });
+	setContext('verseSets', verseSets);
+
+	const selectedVerseSetId = $state({
+		value: verseSets.value.length > 0 ? verseSets.value[0]?.id : ''
+	});
+	setContext('selectedVerseSetId', selectedVerseSetId);
+
+	const searchResults = $state({ value: [] });
+	setContext('searchResults', searchResults);
+
+	const searchQuery = $state({ value: '' });
+	setContext('searchQuery', searchQuery);
+
+	const queryCopy = $state({ value: "" });
+	setContext("queryCopy", queryCopy);
+
+	const empty = $derived(verseSets.value.length === 0);
+
+	const viewingSearchResults = $state({ value: false });
+	setContext("viewingSearchResults", viewingSearchResults);
+</script>
+
+<div class="flex min-h-dvh min-w-[60rem]">
+	<GeneralSidebar />
+	<SetsSidebar />
+
+	{#if empty}
+		<Empty />
+	{:else}
+		<Populated />
+	{/if}
+</div>

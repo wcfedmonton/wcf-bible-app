@@ -1,14 +1,11 @@
 <script lang="ts">
+	import { getTranslations } from '$lib/utils';
 	import { getVerseReference } from '$lib/bible/chapterServices';
 	import YVTranslations from '$lib/shared/YVTranslations.json' with { type: 'json' };
 	import APIBibleTranslations from '$lib/shared/APIBibleTranslations.json' with { type: 'json' };
 	import previous_icon from '$lib/assets/Arrow-Left-1--Streamline-Ultimate-converted-from-png.svg';
 	import next_icon from '$lib/assets/Arrow-Right-1--Streamline-Ultimate-converted-from-png.svg';
 	let { state = $bindable(), fetchChapterData } = $props();
-
-	const translations = [
-		...new Set([...Object.keys(YVTranslations), ...Object.keys(APIBibleTranslations)])
-	].sort();
 </script>
 
 
@@ -74,8 +71,6 @@
 		>
 	</div>
 </div>
-
-
 
 <style>
 	.nav_button {

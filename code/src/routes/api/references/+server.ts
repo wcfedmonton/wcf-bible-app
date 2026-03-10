@@ -5,7 +5,10 @@ export async function GET({ url }): Promise<Response> {
 	const query = url.searchParams.get('query')!;
 	const suggestions = await getResults(query);
 
-	return new Response(JSON.stringify({ suggestions }));
+	return new Response(JSON.stringify({ suggestions }), {
+		headers: { 'Content-Type': 'application/json' },
+		status: 200
+	});
 }
 
 /**
