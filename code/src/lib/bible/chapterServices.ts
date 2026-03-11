@@ -56,6 +56,30 @@ export async function fetchChapter(options: FetchChapterParams) {
 	};
 }
 
+/**
+ * Fetches a specific verse based on a user query and translation.
+ *
+ * @param {string} query - A verse query string (e.g., "John 3:16").
+ * @param {string} translation - The Bible translation identifier to fetch from the API.
+ * @returns {Promise<{ id: number, text: string } | undefined>}
+ * A promise resolving to the matching verse object if found, otherwise `undefined`.
+ */
+export async function fetchVerse(query: string, translation: string) {
+	const osis = parseQuery(query)!;
+
+	if (!osis) return;
+
+	const params = new URLSearchParams({
+		query: `${osis.book}.${osis.chapter}`, // normalize the query to increase cache hits
+		translation: translation
+	});
+
+	const res = await fetch(`api/verses?${params.toString()}`);
+	const { verses } = await res.json();
+
+	return verses.find((verse: { id: Number; text: string }) => verse.id === osis.selectedVerse);
+}
+
 /** Resolves and returns a valid selected verse reference.*/
 export function getVerseReference(
 	verseData: Verse[],
