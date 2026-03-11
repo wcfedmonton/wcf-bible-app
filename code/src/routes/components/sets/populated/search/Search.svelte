@@ -53,7 +53,7 @@
 			};
 		});
 
-		searchResults.value.slice(0, suggestions.length); // exclude any old results
+		searchResults.value = searchResults.value.slice(0, suggestions.length); // exclude any old results
 	}
 </script>
 

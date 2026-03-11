@@ -31,7 +31,7 @@
 			{searchResult.verseReference + ` (${searchResult.translation})`}
 		</p>
 		<p class="w-[97%] text-[.82rem] text-[#f0e6e6] font-serif">
-			{searchResult.text.slice(0, 145).trim() + '...'}
+			{searchResult.text.length > 145 ? searchResult.text.slice(0, 145).trim() + '...':searchResult.text}
 		</p>
 	</div>
 
