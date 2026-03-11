@@ -19,8 +19,9 @@
 	 * @returns {string} A Tailwind arbitrary height class string
 	 */
 	function calculateSetDisplayHeight(searchResultsLength: number) {
-		if (searchResultsLength === 0) { // and extra check should be done here so there is a difference between when the user searches and there's no results and when the search results component is being displayed
-			if(viewingSearchResults.value) {
+		if (searchResultsLength === 0) {
+			// and extra check should be done here so there is a difference between when the user searches and there's no results and when the search results component is being displayed
+			if (viewingSearchResults.value) {
 				return 'h-[calc(100vh-30rem)]';
 			} else {
 				return 'h-[calc(100vh-13rem)]';

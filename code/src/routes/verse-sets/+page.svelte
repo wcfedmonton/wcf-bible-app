@@ -22,13 +22,13 @@
 	const searchQuery = $state({ value: '' });
 	setContext('searchQuery', searchQuery);
 
-	const queryCopy = $state({ value: "" });
-	setContext("queryCopy", queryCopy);
+	const queryCopy = $state({ value: '' });
+	setContext('queryCopy', queryCopy);
 
 	const empty = $derived(verseSets.value.length === 0);
 
 	const viewingSearchResults = $state({ value: false });
-	setContext("viewingSearchResults", viewingSearchResults);
+	setContext('viewingSearchResults', viewingSearchResults);
 </script>
 
 <div class="flex min-h-dvh min-w-[60rem]">

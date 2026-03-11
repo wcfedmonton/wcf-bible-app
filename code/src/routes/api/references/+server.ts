@@ -3,12 +3,20 @@ import USFM from '$lib/shared/USFM.json' with { type: 'json' };
 
 export async function GET({ url }): Promise<Response> {
 	const query = url.searchParams.get('query')!;
-	const suggestions = await getResults(query);
 
-	return new Response(JSON.stringify({ suggestions }), {
-		headers: { 'Content-Type': 'application/json' },
-		status: 200
-	});
+	try {
+		const suggestions = await getResults(query);
+
+		return new Response(JSON.stringify({ suggestions }), {
+			headers: { 'Content-Type': 'application/json' },
+			status: 200
+		});
+	} catch {
+		return new Response(JSON.stringify({ suggestions: [] }), {
+			headers: { 'Content-Type': 'application/json' },
+			status: 200
+		});
+	}
 }
 
 /**
