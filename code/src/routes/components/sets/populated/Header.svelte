@@ -5,11 +5,8 @@
 
 	import type { ContextValue } from '$lib/utils';
 	import { VerseSet } from '$lib/shared/VerseSet';
-
-	const { set = $bindable() } = $props();
-
-	const id = getContext<ContextValue<string>>('selectedVerseSetId');
 	
+	const id = getContext<ContextValue<string>>('selectedVerseSetId');
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const selectedVerseSet = $derived(verseSets.value.find(set => set.id === id.value));
 

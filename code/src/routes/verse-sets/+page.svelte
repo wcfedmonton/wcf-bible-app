@@ -30,7 +30,7 @@
 	});
 	setContext('selectedVerseSetId', selectedVerseSetId);
 
-	const selectedVerseSet = $state({ value: verseSets.value.find(set => set.id === selectedVerseSetId.value) });
+	const selectedVerseSet = $derived({ value: verseSets.value.find(set => set.id === selectedVerseSetId.value) ?? [] });
 	setContext('selectedVerseSet', selectedVerseSet);
 
 	const searchResults = $state({ value: [] });

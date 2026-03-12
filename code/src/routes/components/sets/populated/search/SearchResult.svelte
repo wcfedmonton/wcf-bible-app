@@ -2,8 +2,9 @@
 	import Button from '../../Button.svelte';
 
 	import { getContext } from 'svelte';
-	import type { ContextValue, VerseSet } from '$lib/utils';
 	import { Verse } from '$lib/shared/Verse';
+	import type { ContextValue } from '$lib/utils';
+	import { VerseSet } from "$lib/shared/VerseSet";
 
 	const { searchResult, index }: { searchResult: Verse; index: number } = $props();
 
@@ -49,7 +50,14 @@
 							verse.text === searchResult.text && verse.translation === searchResult.translation
 					)
 				) {
-					selectedVerseSet.value.verses.push(new Verse(searchResult));
+					// reassign the context object, so it tracks the new values
+					const index = verseSets.value.findIndex(set => set.id === selectedVerseSetId.value);
+					verseSets.value[index] = new VerseSet(
+						verseSets.value[index].id, 
+						verseSets.value[index].name, 
+						verseSets.value[index].lastEdited, 
+						[...selectedVerseSet.value.verses, new Verse(searchResult)]
+					);
 					
 					// this is where we'll add the verse to the set. think about integration w db
 					console.log(verseSets.value[selectedVerseSetIndex])

@@ -9,8 +9,9 @@
 	import { VerseSet } from '$lib/shared/VerseSet';
 	import type { ContextValue, Verse } from '$lib/utils';
 
-	const selectedVerseSetCtx = getContext<ContextValue<VerseSet>>('selectedVerseSet');
-	let selectedVerseSet = $derived(selectedVerseSetCtx.value);
+	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
+	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
+	const selectedVerseSet = $derived(verseSets.value.find(set => set.id === selectedVerseSetId.value));
 
 	const searchResults = $derived(getContext<ContextValue<Verse[]>>('searchResults'));
 
@@ -21,8 +22,8 @@
 </script>
 
 <div class="w-full h-screen">
-	<Header bind:set={selectedVerseSet} />
-	<Search verseSet={selectedVerseSet} bind:selectedTranslation />
+	<Header />
+	<Search verseSet={selectedVerseSet!} bind:selectedTranslation />
 
 	{#if selectedVerseSet?.verses.length === 0 && searchResults.value.length === 0 && !viewingSearchResults.value}
 		<!-- the second check is to ensure the two screens don't show at the same time -->
