@@ -4,7 +4,7 @@
 	import { getContext } from 'svelte';
 	import { Verse } from '$lib/shared/Verse';
 	import type { ContextValue } from '$lib/utils';
-	import { VerseSet } from "$lib/shared/VerseSet";
+	import { VerseSet } from '$lib/shared/VerseSet';
 
 	const { searchResult, index }: { searchResult: Verse; index: number } = $props();
 
@@ -14,7 +14,6 @@
 		verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value)
 	);
 
-	const selectedVerseSet = getContext<ContextValue<VerseSet>>('selectedVerseSet');
 	const searchResults = getContext<ContextValue<VerseSet[]>>('searchResults');
 	const showBottomBorder = $derived(index < searchResults.value.length - 1);
 
@@ -34,7 +33,9 @@
 			{searchResult.verseReference + ` (${searchResult.translation})`}
 		</p>
 		<p class="w-[97%] text-[.82rem] text-[#f0e6e6] font-serif">
-			{searchResult.text.length > 145 ? searchResult.text.slice(0, 145).trim() + '...':searchResult.text}
+			{searchResult.text.length > 145
+				? searchResult.text.slice(0, 145).trim() + '...'
+				: searchResult.text}
 		</p>
 	</div>
 
@@ -51,15 +52,15 @@
 					)
 				) {
 					// reassign the context object, so it tracks the new values
-					const index = verseSets.value.findIndex(set => set.id === selectedVerseSetId.value);
+					const index = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
 					const verseToAdd = new Verse(searchResult);
 					verseSets.value[index] = new VerseSet(
-						verseSets.value[index].id, 
-						verseSets.value[index].name, 
-						verseSets.value[index].lastEdited, 
+						verseSets.value[index].id,
+						verseSets.value[index].name,
+						verseSets.value[index].lastEdited,
 						[...verseSets.value[index].verses, new Verse(searchResult)]
 					);
-					
+
 					// this is where we'll add the verse to the set. think about integration w db
 					verseToAdd.addToSet();
 				}

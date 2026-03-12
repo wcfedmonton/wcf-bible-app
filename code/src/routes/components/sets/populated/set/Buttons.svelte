@@ -45,7 +45,7 @@
 
 	/** Reassigns the 'verseSets' context variable to trigger a re-render. */
 	function updateUIVerseOrder() {
-		const i = verseSets.value.findIndex(set => set.id === selectedVerseSetId.value);
+		const i = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
 		const current = verseSets.value[i];
 		verseSets.value[i] = new VerseSet(
 			current.id,
@@ -93,7 +93,7 @@
 		if (index < verses.length - 1) {
 			const currentVerse = verses[index];
 			const nextVerse = verses[index + 1];
-			
+
 			currentVerse.updateOrder(nextVerse.orderId);
 			nextVerse.updateOrder(currentVerse.orderId - 1);
 
@@ -110,13 +110,13 @@
 	function deleteVerse() {
 		verse.deleteFromSet();
 
-		const i = verseSets.value.findIndex(set => set.id === selectedVerseSetId.value);
+		const i = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
 		const current = verseSets.value[i];
 		verseSets.value[i] = new VerseSet(
 			current.id,
 			current.name,
 			current.lastEdited,
-			current.verses.filter(v => v.text !== verse.text || v.translation !== verse.translation)
+			current.verses.filter((v) => v.text !== verse.text || v.translation !== verse.translation)
 		);
 	}
 

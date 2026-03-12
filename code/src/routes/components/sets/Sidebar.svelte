@@ -25,7 +25,7 @@
 
 	function addVerseSet() {
 		// request to send a new verse will be created here
-		console.log('sending request to create new verse set')
+		console.log('sending request to create new verse set');
 
 		sets.value.push(new VerseSet(crypto.randomUUID(), 'Untitled', getDate(), []));
 

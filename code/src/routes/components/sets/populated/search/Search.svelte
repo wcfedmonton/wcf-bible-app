@@ -5,7 +5,7 @@
 	import { getTranslations, type ContextValue, type Verse } from '$lib/utils';
 	import { VerseSet } from '$lib/shared/VerseSet';
 
-	let {  selectedTranslation = $bindable() }: { verseSet: VerseSet, selectedTranslation: string  } = $props();
+	let { selectedTranslation = $bindable() }: { selectedTranslation: string } = $props();
 
 	let open = $state(false);
 	const translations: string[] = $derived(open ? getTranslations() : [selectedTranslation]);
@@ -52,7 +52,7 @@
 				text: resolved[index].text,
 				verseReference: suggestion,
 				translation: selectedTranslation,
-				orderId: selectedVerseSet.value.verses.length + 1,
+				orderId: selectedVerseSet.value.verses.length + 1
 			};
 		});
 

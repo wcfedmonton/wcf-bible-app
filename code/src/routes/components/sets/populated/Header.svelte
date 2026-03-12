@@ -5,18 +5,18 @@
 
 	import type { ContextValue } from '$lib/utils';
 	import { VerseSet } from '$lib/shared/VerseSet';
-	
+
 	const id = getContext<ContextValue<string>>('selectedVerseSetId');
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
-	const selectedVerseSet = $derived(verseSets.value.find(set => set.id === id.value));
+	const selectedVerseSet = $derived(verseSets.value.find((set) => set.id === id.value));
 
 	//  svelte/state_referenced_locally
-	let name = $state(selectedVerseSet?.name!);
-	let lastEdited = $state(selectedVerseSet?.lastEdited);
+	let name = $state(selectedVerseSet?.name ?? '');
+	let lastEdited = $state(selectedVerseSet?.lastEdited ?? '');
 
 	$effect(() => {
-		name = selectedVerseSet?.name!;
-		lastEdited = selectedVerseSet?.lastEdited;
+		name = selectedVerseSet?.name ?? '';
+		lastEdited = selectedVerseSet?.lastEdited ?? '';
 	});
 
 	const arrowUp = `

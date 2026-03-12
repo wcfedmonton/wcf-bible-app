@@ -26,31 +26,22 @@
 			onkeydown={(e) => {
 				e.stopPropagation();
 
-				if (e.key === 'Enter' && newName.trim() !== '') { // verify that the new name is not an empty string
-					
+				if (e.key === 'Enter' && newName.trim() !== '') {
+					// verify that the new name is not an empty string
+
 					// reassign the context object, so it tracks the new values
-					const index = verseSets.value.findIndex(set => set.id === selectedVerseSetId.value);
-					verseSets.value[index] = new VerseSet(
-						set.id, 
-						newName, 
-						set.lastEdited, 
-						set.verses
-					);
+					const index = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
+					verseSets.value[index] = new VerseSet(set.id, newName, set.lastEdited, set.verses);
 
 					// we have to reassing the object to trigger a re-render
-					selectedVerseSet.value = new VerseSet(
-						set.id, 
-						newName, 
-						set.lastEdited, 
-						set.verses
-					);
-					
+					selectedVerseSet.value = new VerseSet(set.id, newName, set.lastEdited, set.verses);
+
 					setNameInputDisabled.value = true;
 					// NOTE: this is where we'll check the value of setInputDisabled before sending a post request
-				
-					set.rename(newName)
+
+					set.rename(newName);
 					setNameInputDisabled.value = true;
-				}	
+				}
 			}}
 		/>
 	{:else}
@@ -61,6 +52,7 @@
 		</p>
 	{/if}
 	<p class="pl-1 text-[0.7rem] text-light_grey">
-		{selectedVerseSet.value.verses.length + `${selectedVerseSet.value.verses.length === 1 ? ' verse' : ' verses'}`}
+		{selectedVerseSet.value.verses.length +
+			`${selectedVerseSet.value.verses.length === 1 ? ' verse' : ' verses'}`}
 	</p>
 </div>

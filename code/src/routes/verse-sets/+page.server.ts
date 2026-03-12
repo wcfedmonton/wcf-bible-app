@@ -1,4 +1,4 @@
-import type { VerseSet } from "$lib/utils";
+import type { VerseSet } from '$lib/utils';
 
 export async function load() {
 	const sets: VerseSet[] = [
@@ -7,7 +7,7 @@ export async function load() {
 			id: 'v001', // a reference to the database id,
 			name: 'New Verse Set',
 			lastEdited: 'Mar 7, 2026',
-			
+
 			verses: [
 				{
 					orderId: 1,
@@ -83,7 +83,7 @@ export async function load() {
 					// update() will send a request to change the verses ordering
 					// delete() will send a request to delete the verse from the set
 				}
-			],
+			]
 
 			// NOTE: any call to update or delete should automatically edit the lastEdited field
 			// update()  will send a request after an update (changing the name of the set). it will accept

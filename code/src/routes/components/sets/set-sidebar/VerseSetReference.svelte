@@ -6,7 +6,7 @@
 	import { VerseSet } from '$lib/shared/VerseSet';
 	import type { ContextValue, Verse } from '$lib/utils';
 
-	let { set = $bindable() } = $props<{ set: VerseSet}>();
+	let { set = $bindable() } = $props<{ set: VerseSet }>();
 	setContext('verseSetReference', { value: set });
 	const verseSetReference = getContext<ContextValue<VerseSet>>('verseSetReference');
 
@@ -39,7 +39,7 @@
 	tabindex="0"
 	onclick={() => {
 		selectedVerseSetId.value = set.id;
-		selectedVerseSet.value = verseSets.value.find(set => set.id === selectedVerseSetId.value)!;
+		selectedVerseSet.value = verseSets.value.find((set) => set.id === selectedVerseSetId.value)!;
 
 		// clear the search results shown (if any), so that they don't interfere with the new verse set's state
 		searchResults.value = [];

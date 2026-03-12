@@ -11,13 +11,13 @@
 
 	const { data } = $props();
 	// svelte-ignore state_referenced_locally
-		
+
 	const sets: VerseSet[] = [];
 
 	// initialize data classes so that user's updates can persist
-	data.data.forEach((set) => { 
+	data.data.forEach((set) => {
 		const versesInSet: Verse[] = [];
-		set.verses.forEach(verseData => versesInSet.push(new Verse(verseData)));
+		set.verses.forEach((verseData) => versesInSet.push(new Verse(verseData)));
 
 		sets.push(new VerseSet(set.id, set.name, set.lastEdited, versesInSet));
 	});
@@ -30,7 +30,9 @@
 	});
 	setContext('selectedVerseSetId', selectedVerseSetId);
 
-	const selectedVerseSet = $derived({ value: verseSets.value.find(set => set.id === selectedVerseSetId.value) ?? [] });
+	const selectedVerseSet = $derived({
+		value: verseSets.value.find((set) => set.id === selectedVerseSetId.value) ?? []
+	});
 	setContext('selectedVerseSet', selectedVerseSet);
 
 	const searchResults = $state({ value: [] });
