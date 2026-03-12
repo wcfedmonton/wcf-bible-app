@@ -6,7 +6,7 @@
 	import { VerseSet } from '$lib/shared/VerseSet';
 	import type { ContextValue, Verse } from '$lib/utils';
 
-	let { set = $bindable() } = $props<{ set: VerseSet }>();
+	let { set = $bindable() } = $props<{ set: VerseSet}>();
 	setContext('verseSetReference', { value: set });
 	const verseSetReference = getContext<ContextValue<VerseSet>>('verseSetReference');
 
@@ -15,6 +15,9 @@
 
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 	let selected = $derived(set.id === selectedVerseSetId.value);
+
+	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
+	const selectedVerseSet = getContext<ContextValue<VerseSet>>('selectedVerseSet');
 
 	const searchQuery = getContext<ContextValue<string>>('searchQuery');
 	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');
@@ -36,6 +39,8 @@
 	tabindex="0"
 	onclick={() => {
 		selectedVerseSetId.value = set.id;
+		selectedVerseSet.value = verseSets.value.find(set => set.id === selectedVerseSetId.value)!;
+
 		// clear the search results shown (if any), so that they don't interfere with the new verse set's state
 		searchResults.value = [];
 

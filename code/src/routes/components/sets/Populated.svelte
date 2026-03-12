@@ -9,14 +9,10 @@
 	import { VerseSet } from '$lib/shared/VerseSet';
 	import type { ContextValue, Verse } from '$lib/utils';
 
-	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
-	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
-	let selectedVerseSet = $derived(
-		verseSets.value.find((set) => set.id === selectedVerseSetId.value)
-	);
+	const selectedVerseSetCtx = getContext<ContextValue<VerseSet>>('selectedVerseSet');
+	let selectedVerseSet = $derived(selectedVerseSetCtx.value);
 
 	const searchResults = $derived(getContext<ContextValue<Verse[]>>('searchResults'));
-	//  svelte/state_referenced_locally
 
 	let selectedTranslation = $state('NIV'); // will be set to user's default translation
 	const translationCopy = $derived(selectedTranslation);
@@ -25,7 +21,7 @@
 </script>
 
 <div class="w-full h-screen">
-	<Header bind:selectedVerseSet />
+	<Header bind:set={selectedVerseSet} />
 	<Search verseSet={selectedVerseSet} bind:selectedTranslation />
 
 	{#if selectedVerseSet?.verses.length === 0 && searchResults.value.length === 0 && !viewingSearchResults.value}
@@ -37,6 +33,6 @@
 	{/if}
 
 	{#if selectedVerseSet?.verses.length && selectedVerseSet?.verses.length > 0}
-		<Set bind:selectedVerseSet />
+		<Set />
 	{/if}
 </div>

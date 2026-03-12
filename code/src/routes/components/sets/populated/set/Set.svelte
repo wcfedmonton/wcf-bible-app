@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-	import type { VerseSet, ContextValue, Verse } from '$lib/utils';
 	import Buttons from './Buttons.svelte';
 
-	let { selectedVerseSet = $bindable() }: { selectedVerseSet: VerseSet } = $props();
+	import { getContext } from 'svelte';
+	import { VerseSet } from '$lib/shared/VerseSet';
+	import type { ContextValue, Verse } from '$lib/utils';
 
 	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');
+	const selectedVerseSet = getContext<ContextValue<VerseSet>>('selectedVerseSet');
 	const viewingSearchResults = getContext<ContextValue<string>>('viewingSearchResults');
 
 	/**
@@ -47,7 +48,7 @@
 
 <div class={cssString}>
 	<div class="flex-1 w-[94%] border-b-border_accent overflow-auto scrollbar-black">
-		{#each selectedVerseSet.verses as verse, index (verse)}
+		{#each selectedVerseSet.value.verses as verse, index (verse)}
 			<div class="grid grid-cols-[auto_1fr_auto] w-full gap-x-2">
 				<p class="text-light_grey row-start-1">
 					{index + 1 + '.'}
@@ -55,7 +56,7 @@
 				<p class="text-[0.9rem] text-[#e05250] font-medium font-serif italic row-start-1">
 					{`${verse.verseReference} (${verse.translation})`}
 				</p>
-				<div class="row-start-1"><Buttons bind:verses={selectedVerseSet.verses} {verse} /></div>
+				<div class="row-start-1"><Buttons bind:verses={selectedVerseSet.value.verses} {verse} /></div>
 
 				<!-- empty cell for number column, verse text aligns with col 2 -->
 				<span></span>

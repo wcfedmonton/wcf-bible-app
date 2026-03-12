@@ -2,16 +2,18 @@
 	import Button from '../../Button.svelte';
 
 	import { getContext } from 'svelte';
-	import type { Verse, ContextValue, VerseSet } from '$lib/utils';
+	import type { ContextValue, VerseSet } from '$lib/utils';
+	import { Verse } from '$lib/shared/Verse';
 
 	const { searchResult, index }: { searchResult: Verse; index: number } = $props();
 
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
-	let selectedVerseSet = $derived(
-		verseSets.value.find((set) => set.id === selectedVerseSetId.value)
+	let selectedVerseSetIndex = $derived(
+		verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value)
 	);
 
+	const selectedVerseSet = getContext<ContextValue<VerseSet>>('selectedVerseSet');
 	const searchResults = getContext<ContextValue<VerseSet[]>>('searchResults');
 	const showBottomBorder = $derived(index < searchResults.value.length - 1);
 
@@ -42,13 +44,15 @@
 			eventHandler={() => {
 				// duplicates are not allowed
 				if (
-					!selectedVerseSet?.verses.find(
+					!verseSets.value[selectedVerseSetIndex]?.verses.find(
 						(verse) =>
 							verse.text === searchResult.text && verse.translation === searchResult.translation
 					)
 				) {
-					selectedVerseSet?.verses.push(searchResult);
+					selectedVerseSet.value.verses.push(new Verse(searchResult));
+					
 					// this is where we'll add the verse to the set. think about integration w db
+					console.log(verseSets.value[selectedVerseSetIndex])
 				}
 			}}
 		/>

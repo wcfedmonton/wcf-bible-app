@@ -3,8 +3,9 @@
 	import { fetchVerse } from '$lib/bible/chapterServices';
 	import { generateAutoSuggestions } from '$lib/bible/suggestionUtils';
 	import { getTranslations, type ContextValue, type Verse } from '$lib/utils';
+	import { VerseSet } from '$lib/shared/VerseSet';
 
-	let { verseSet, selectedTranslation = $bindable() } = $props();
+	let {  selectedTranslation = $bindable() }: { verseSet: VerseSet, selectedTranslation: string  } = $props();
 
 	let open = $state(false);
 	const translations: string[] = $derived(open ? getTranslations() : [selectedTranslation]);
@@ -14,6 +15,7 @@
 	const queryCopy = getContext<ContextValue<string>>('queryCopy');
 	const searchQuery = getContext<ContextValue<string>>('searchQuery');
 	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');
+	const selectedVerseSet = getContext<ContextValue<VerseSet>>('selectedVerseSet');
 	const viewingSearchResults = $derived(getContext<ContextValue<boolean>>('viewingSearchResults'));
 
 	/**
@@ -46,13 +48,15 @@
 		suggestions.forEach((suggestion, index) => {
 			searchResults.value[index] = {
 				// overwrite the previous result, so the empty state isn't shown unnecessarily
+				verseSetId: selectedVerseSet.value.id, // set to an empty string for now, but once added to the set the value will be set
 				text: resolved[index].text,
-				orderId: verseSet.verses.length + 1,
+				verseReference: suggestion,
 				translation: selectedTranslation,
-				verseReference: suggestion
+				orderId: selectedVerseSet.value.verses.length + 1,
 			};
 		});
 
+		loading = false;
 		searchResults.value = searchResults.value.slice(0, suggestions.length); // exclude any old results
 	}
 </script>

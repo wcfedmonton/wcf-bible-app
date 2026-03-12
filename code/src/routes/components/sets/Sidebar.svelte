@@ -27,7 +27,7 @@
 		// request to send a new verse will be created here
 		console.log('sending request to create new verse set')
 
-		sets.value.push(new VerseSet(crypto.randomUUID(), 'Untitled', getDate(), []))
+		sets.value.push(new VerseSet(crypto.randomUUID(), 'Untitled', getDate(), []));
 
 		if (sets.value.length === 1) {
 			// handles the case for selection when the user adds their first verse set

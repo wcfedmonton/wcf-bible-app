@@ -25,6 +25,8 @@
 	<Option
 		title="Delete"
 		eventHandler={() => {
+			verseSetReference.value.delete();
+
 			// capture the id of the set to be deleted before mutating the list
 			const verseSetId = verseSetReference.value.id;
 
@@ -34,8 +36,6 @@
 
 			// remove the deleted set from the list
 			verseSets.value = verseSets.value.filter((set) => set.id != verseSetId);
-
-			verseSetReference.value.delete();
 
 			// if the deleted is not the currently selected one, we don't need to make any changes
 			// to the selected set

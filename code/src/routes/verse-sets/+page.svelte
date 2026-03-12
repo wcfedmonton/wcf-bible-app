@@ -14,7 +14,7 @@
 		
 	const sets: VerseSet[] = [];
 
-	// initialize data classes so that user's updates can persist persist
+	// initialize data classes so that user's updates can persist
 	data.data.forEach((set) => { 
 		const versesInSet: Verse[] = [];
 		set.verses.forEach(verseData => versesInSet.push(new Verse(verseData)));
@@ -29,6 +29,9 @@
 		value: verseSets.value.length > 0 ? verseSets.value[0]?.id : ''
 	});
 	setContext('selectedVerseSetId', selectedVerseSetId);
+
+	const selectedVerseSet = $state({ value: verseSets.value.find(set => set.id === selectedVerseSetId.value) });
+	setContext('selectedVerseSet', selectedVerseSet);
 
 	const searchResults = $state({ value: [] });
 	setContext('searchResults', searchResults);
