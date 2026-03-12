@@ -2,14 +2,16 @@
 	import Button from '../../Button.svelte';
 
 	import { getContext } from 'svelte';
-	import type { Verse, ContextValue, VerseSet } from '$lib/utils';
+	import { Verse } from '$lib/shared/Verse';
+	import type { ContextValue } from '$lib/utils';
+	import { VerseSet } from '$lib/shared/VerseSet';
 
 	const { searchResult, index }: { searchResult: Verse; index: number } = $props();
 
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
-	let selectedVerseSet = $derived(
-		verseSets.value.find((set) => set.id === selectedVerseSetId.value)
+	let selectedVerseSetIndex = $derived(
+		verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value)
 	);
 
 	const searchResults = getContext<ContextValue<VerseSet[]>>('searchResults');
@@ -31,7 +33,9 @@
 			{searchResult.verseReference + ` (${searchResult.translation})`}
 		</p>
 		<p class="w-[97%] text-[.82rem] text-[#f0e6e6] font-serif">
-			{searchResult.text.length > 145 ? searchResult.text.slice(0, 145).trim() + '...':searchResult.text}
+			{searchResult.text.length > 145
+				? searchResult.text.slice(0, 145).trim() + '...'
+				: searchResult.text}
 		</p>
 	</div>
 
@@ -42,13 +46,23 @@
 			eventHandler={() => {
 				// duplicates are not allowed
 				if (
-					!selectedVerseSet?.verses.find(
+					!verseSets.value[selectedVerseSetIndex]?.verses.find(
 						(verse) =>
 							verse.text === searchResult.text && verse.translation === searchResult.translation
 					)
 				) {
-					selectedVerseSet?.verses.push(searchResult);
+					// reassign the context object, so it tracks the new values
+					const index = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
+					const verseToAdd = new Verse(searchResult);
+					verseSets.value[index] = new VerseSet(
+						verseSets.value[index].id,
+						verseSets.value[index].name,
+						verseSets.value[index].lastEdited,
+						[...verseSets.value[index].verses, new Verse(searchResult)]
+					);
+
 					// this is where we'll add the verse to the set. think about integration w db
+					verseToAdd.addToSet();
 				}
 			}}
 		/>

@@ -1,8 +1,15 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import type { ContextValue } from '$lib/utils';
+	import { VerseSet } from '$lib/shared/VerseSet';
 
-	let { set = $bindable() } = $props();
+	let { set = $bindable() }: { set: VerseSet } = $props();
+
+	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
+
+	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
+
+	const selectedVerseSet = getContext<ContextValue<VerseSet>>('verseSetReference');
 
 	let newName = $state(set.name);
 	const setNameInputDisabled = getContext<ContextValue<boolean>>('setNameInputDisabled');
@@ -21,10 +28,19 @@
 
 				if (e.key === 'Enter' && newName.trim() !== '') {
 					// verify that the new name is not an empty string
-					set.name = newName;
+
+					// reassign the context object, so it tracks the new values
+					const index = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
+					verseSets.value[index] = new VerseSet(set.id, newName, set.lastEdited, set.verses);
+
+					// we have to reassing the object to trigger a re-render
+					selectedVerseSet.value = new VerseSet(set.id, newName, set.lastEdited, set.verses);
 
 					setNameInputDisabled.value = true;
 					// NOTE: this is where we'll check the value of setInputDisabled before sending a post request
+
+					set.rename(newName);
+					setNameInputDisabled.value = true;
 				}
 			}}
 		/>
@@ -36,6 +52,7 @@
 		</p>
 	{/if}
 	<p class="pl-1 text-[0.7rem] text-light_grey">
-		{set.verses.length + `${set.verses.length === 1 ? ' verse' : ' verses'}`}
+		{selectedVerseSet.value.verses.length +
+			`${selectedVerseSet.value.verses.length === 1 ? ' verse' : ' verses'}`}
 	</p>
 </div>

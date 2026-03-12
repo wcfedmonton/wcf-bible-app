@@ -2,14 +2,17 @@
 	import Option from './Option.svelte';
 
 	import { getContext } from 'svelte';
-	import type { VerseSet } from '$lib/utils';
 	import type { ContextValue } from '$lib/utils';
+	import type { VerseSet } from '$lib/shared/VerseSet';
 
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const lastSetToOpenEdit = getContext<ContextValue<string>>('lastSetToOpenEdit');
-	const verseSetReference = getContext<ContextValue<VerseSet>>('verseSetReference');
 	const setNameInputDisabled = getContext<ContextValue<boolean>>('setNameInputDisabled');
 	const currentlySelectedVerseId = getContext<ContextValue<string>>('selectedVerseSetId');
+	let verseSetReference: ContextValue<VerseSet> | null =
+		getContext<ContextValue<VerseSet>>('verseSetReference');
+
+	const selectedVerseSet = getContext<ContextValue<VerseSet>>('selectedVerseSet');
 </script>
 
 <div
@@ -25,33 +28,29 @@
 	<Option
 		title="Delete"
 		eventHandler={() => {
-			// capture the id of the set to be deleted before mutating the list
-			const verseSetId = verseSetReference.value.id;
+			const verseSetId = verseSetReference!.value.id;
+			const deletedVerseIndex = verseSets.value.findIndex((v) => v.id === verseSetId);
+			const isCurrentlySelected = currentlySelectedVerseId.value === verseSetId;
 
-			// save the index of the set to be deleted so that we have a reference
-			// to toggle the verse set 'above' to the delete set
-			const deletedVerseIndex = verseSets.value.findIndex((v) => v.id === lastSetToOpenEdit.value);
+			verseSetReference!.value.delete();
+			verseSets.value = verseSets.value.filter((set) => set.id !== verseSetId);
 
-			// remove the deleted set from the list
-			verseSets.value = verseSets.value.filter((set) => set.id != verseSetId);
+			if (!isCurrentlySelected) return;
 
-			// if the deleted is not the currently selected one, we don't need to make any changes
-			// to the selected set
-			if (currentlySelectedVerseId.value !== verseSetReference.value?.id) {
-				return;
-			}
-
-			if (deletedVerseIndex === 0 && verseSets.value.length >= 1) {
-				// if the first set is deleted, the one after it becomes selected
-				lastSetToOpenEdit.value = verseSetId;
-				verseSetReference.value = verseSets.value[0];
-				currentlySelectedVerseId.value = verseSets.value[0]?.id;
+			if (verseSets.value.length === 0) {
+				currentlySelectedVerseId.value = '';
+				verseSetReference = null;
+			} else if (deletedVerseIndex === 0) {
+				// if the deleted set was first, select the new first set
+				currentlySelectedVerseId.value = verseSets.value[0].id;
+				verseSetReference!.value = verseSets.value[0];
+				selectedVerseSet.value = verseSets.value[0];
 			} else {
-				// if any other set is deleted, the one before it becomes selected
-				verseSetReference.value = verseSets.value[deletedVerseIndex - 1];
-
-				// this value will be null in the case where the only set gets deleted
-				currentlySelectedVerseId.value = verseSets.value[deletedVerseIndex - 1]?.id;
+				// otherwise, select the set directly above the deleted one
+				const newSelected = verseSets.value[deletedVerseIndex - 1];
+				currentlySelectedVerseId.value = newSelected.id;
+				verseSetReference!.value = newSelected;
+				selectedVerseSet.value = newSelected;
 			}
 		}}
 	/>

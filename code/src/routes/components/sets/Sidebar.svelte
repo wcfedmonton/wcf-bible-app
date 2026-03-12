@@ -3,7 +3,8 @@
 	import VerseSetReference from './set-sidebar/VerseSetReference.svelte';
 
 	import { getContext, setContext } from 'svelte';
-	import { getDate, type ContextValue, type VerseSet } from '$lib/utils';
+	import { VerseSet } from '$lib/shared/VerseSet';
+	import { getDate, type ContextValue } from '$lib/utils';
 
 	const add = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg w-[0.6rem] text-[#e0e0e0]" viewBox="0 0 16 16">
@@ -23,12 +24,10 @@
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 
 	function addVerseSet() {
-		sets.value.push({
-			verses: [],
-			name: 'Untitled',
-			lastEdited: getDate(),
-			id: crypto.randomUUID()
-		});
+		// request to send a new verse will be created here
+		console.log('sending request to create new verse set');
+
+		sets.value.push(new VerseSet(crypto.randomUUID(), 'Untitled', getDate(), []));
 
 		if (sets.value.length === 1) {
 			// handles the case for selection when the user adds their first verse set
