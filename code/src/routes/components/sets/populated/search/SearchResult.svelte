@@ -52,15 +52,16 @@
 				) {
 					// reassign the context object, so it tracks the new values
 					const index = verseSets.value.findIndex(set => set.id === selectedVerseSetId.value);
+					const verseToAdd = new Verse(searchResult);
 					verseSets.value[index] = new VerseSet(
 						verseSets.value[index].id, 
 						verseSets.value[index].name, 
 						verseSets.value[index].lastEdited, 
-						[...selectedVerseSet.value.verses, new Verse(searchResult)]
+						[...verseSets.value[index].verses, new Verse(searchResult)]
 					);
 					
 					// this is where we'll add the verse to the set. think about integration w db
-					console.log(verseSets.value[selectedVerseSetIndex])
+					verseToAdd.addToSet();
 				}
 			}}
 		/>

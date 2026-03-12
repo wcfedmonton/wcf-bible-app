@@ -7,9 +7,11 @@
 
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const lastSetToOpenEdit = getContext<ContextValue<string>>('lastSetToOpenEdit');
-	let verseSetReference: ContextValue<VerseSet> | null = getContext<ContextValue<VerseSet>>('verseSetReference');
 	const setNameInputDisabled = getContext<ContextValue<boolean>>('setNameInputDisabled');
 	const currentlySelectedVerseId = getContext<ContextValue<string>>('selectedVerseSetId');
+	let verseSetReference: ContextValue<VerseSet> | null = getContext<ContextValue<VerseSet>>('verseSetReference');
+
+	const selectedVerseSet = getContext<ContextValue<VerseSet>>('selectedVerseSet');
 </script>
 
 <div
@@ -37,13 +39,15 @@
 		if (verseSets.value.length === 0) {
 			currentlySelectedVerseId.value = '';
 			verseSetReference = null;
-		} else if (deletedVerseIndex === 0) {
+		} else if (deletedVerseIndex === 0) { // if the deleted set was first, select the new first set
 			currentlySelectedVerseId.value = verseSets.value[0].id;
 			verseSetReference!.value = verseSets.value[0];
-		} else {
+			selectedVerseSet.value = verseSets.value[0];
+		} else { // otherwise, select the set directly above the deleted one
 			const newSelected = verseSets.value[deletedVerseIndex - 1];
 			currentlySelectedVerseId.value = newSelected.id;
 			verseSetReference!.value = newSelected;
+			selectedVerseSet.value = newSelected;
 		}
 	}}
 	/>

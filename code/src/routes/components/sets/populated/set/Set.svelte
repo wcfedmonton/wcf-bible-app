@@ -65,7 +65,7 @@
 				<p class="text-[0.9rem] text-[#e05250] font-medium font-serif italic row-start-1">
 					{`${verse.verseReference} (${verse.translation})`}
 				</p>
-				<div class="row-start-1"><Buttons bind:verses={selectedVerseSet.verses} {verse} /></div>
+				<div class="row-start-1"><Buttons bind:verses={verses} {verse} /></div>
 
 				<!-- empty cell for number column, verse text aligns with col 2 -->
 				<span></span>

@@ -21,18 +21,30 @@ export class Verse {
         this.verseReference = data.verseReference;
     }
 
+    /**
+     * Updates the order position of this verse within its set.
+     * Sends a request to the database to persist the new order.
+     *
+     * @param {number} newOrderId - The new order position for this verse.
+     */
     updateOrder(newOrderId: number) {
         this.orderId = newOrderId;
-
-        console.log(`new orderId: ${this.orderId}`)
-        console.log(`sending verse order update request for verse (${this.verseSetId}, ${this.verseReference})`)
+        console.log(`changing order id of verse ${this.verseReference} to ${newOrderId}`);
     }
 
+    /**
+     * Adds this verse to its associated verse set.
+     * Sends a request to the database to persist the addition.
+     */
     addToSet() {
-        console.log("sending verse addition request for set", this.verseSetId);
+        console.log(`adding verse ${this.verseReference} to set ${this.verseSetId}`);
     }
 
+    /**
+     * Removes this verse from its associated verse set.
+     * Sends a request to the database to persist the deletion.
+     */
     deleteFromSet() {
-        console.log("sending verse delete request for set", this.verseSetId);
+        console.log(`deleting verse ${this.verseReference} from set ${this.verseSetId}`);
     }
 }

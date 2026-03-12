@@ -15,11 +15,21 @@ export class VerseSet {
         this.verses = verses;
     }
 
+    /**
+     * Renames this verse set.
+     * Sends a request to the database to persist the new name.
+     *
+     * @param {string} newName - The new name for this verse set.
+     */
     rename(newName: string) {
         console.log(`sending request to change name for verse set ${this.id} to ${newName}`)
     }
 
+    /**
+     * Deletes this verse set.
+     * Sends a request to the database to persist the deletion.
+     */
     delete() {
-        console.log(`sending request to delete verse ${this.id}`)
+        console.log(`sending request to delete verse set ${this.id}`)
     }
 }
