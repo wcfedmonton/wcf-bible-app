@@ -6,7 +6,8 @@
 	import SearchResults from './populated/search/SearchResults.svelte';
 
 	import { getContext } from 'svelte';
-	import type { ContextValue, Verse, VerseSet } from '$lib/utils';
+	import { VerseSet } from '$lib/shared/VerseSet';
+	import type { ContextValue, Verse } from '$lib/utils';
 
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');

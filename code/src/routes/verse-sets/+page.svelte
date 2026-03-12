@@ -6,9 +6,23 @@
 
 	import { setContext } from 'svelte';
 
+	import { Verse } from '$lib/shared/Verse.js';
+	import { VerseSet } from '$lib/shared/VerseSet.js';
+
 	const { data } = $props();
 	// svelte-ignore state_referenced_locally
-	const verseSets = $state({ value: data.data });
+		
+	const sets: VerseSet[] = [];
+
+	// initialize data classes so that user's updates can persist persist
+	data.data.forEach((set) => { 
+		const versesInSet: Verse[] = [];
+		set.verses.forEach(verseData => versesInSet.push(new Verse(verseData)));
+
+		sets.push(new VerseSet(set.id, set.name, set.lastEdited, versesInSet));
+	});
+
+	const verseSets = $state({ value: sets });
 	setContext('verseSets', verseSets);
 
 	const selectedVerseSetId = $state({

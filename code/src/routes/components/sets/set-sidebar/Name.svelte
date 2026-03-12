@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import type { ContextValue } from '$lib/utils';
+	import type { VerseSet } from '$lib/shared/VerseSet';
 
-	let { set = $bindable() } = $props();
+	let { set = $bindable() }: { set: VerseSet } = $props();
 
 	let newName = $state(set.name);
 	const setNameInputDisabled = getContext<ContextValue<boolean>>('setNameInputDisabled');
@@ -25,6 +26,8 @@
 
 					setNameInputDisabled.value = true;
 					// NOTE: this is where we'll check the value of setInputDisabled before sending a post request
+				
+					set.rename(newName)
 				}
 			}}
 		/>

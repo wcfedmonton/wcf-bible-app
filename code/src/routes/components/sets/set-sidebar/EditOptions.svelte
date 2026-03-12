@@ -2,8 +2,8 @@
 	import Option from './Option.svelte';
 
 	import { getContext } from 'svelte';
-	import type { VerseSet } from '$lib/utils';
 	import type { ContextValue } from '$lib/utils';
+	import type { VerseSet } from '$lib/shared/VerseSet';
 
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const lastSetToOpenEdit = getContext<ContextValue<string>>('lastSetToOpenEdit');
@@ -34,6 +34,8 @@
 
 			// remove the deleted set from the list
 			verseSets.value = verseSets.value.filter((set) => set.id != verseSetId);
+
+			verseSetReference.value.delete();
 
 			// if the deleted is not the currently selected one, we don't need to make any changes
 			// to the selected set
