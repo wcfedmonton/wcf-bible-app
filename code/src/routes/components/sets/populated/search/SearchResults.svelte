@@ -2,10 +2,11 @@
 	import SearchResult from './SearchResult.svelte';
 
 	import { getContext } from 'svelte';
-	import type { ContextValue, Verse } from '$lib/utils';
+	import { Verse } from '$lib/shared/Verse';
+	import type { ContextValue, Verse as VerseResult } from '$lib/utils';
 
 	const queryCopy = $state(getContext<ContextValue<string>>('queryCopy'));
-	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');
+	const searchResults = getContext<ContextValue<VerseResult[]>>('searchResults');
 	const { selectedTranslation }: { selectedTranslation: string } = $props();
 
 	// shorten the query if it's too long so that it doesn't break the UI
@@ -28,7 +29,7 @@
 
 		{#if searchResults.value.length > 0}
 			{#each searchResults.value as result, index (index)}
-				<SearchResult searchResult={result} {index} />
+				<SearchResult searchResult={new Verse(result)} {index} />
 			{/each}
 		{:else if searchResults.value.length === 0}
 			<div class="flex flex-col justify-center items-center w-full h-50">
