@@ -31,7 +31,7 @@ export function disabledCondition(state: FormState) {
 
 type TokenArgs = {
 	cookieObj: Cookies;
-	session: { AccessToken: string | undefined; RefreshToken: string | undefined };
+	session: { AccessToken: string | undefined; RefreshToken: string | undefined, IdToken: string | undefined };
 };
 
 /**
@@ -63,6 +63,11 @@ export function saveTokens({ cookieObj, session }: TokenArgs) {
 	});
 
 	cookieObj.set('refreshToken', session.RefreshToken!, {
+		...defaultCookieOptions,
+		maxAge: 60 * 60 * 24 * 30
+	});
+
+	cookieObj.set('idToken', session.IdToken!, {
 		...defaultCookieOptions,
 		maxAge: 60 * 60 * 24 * 30
 	});

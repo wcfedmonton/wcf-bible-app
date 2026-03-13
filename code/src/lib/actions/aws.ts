@@ -99,9 +99,9 @@ export async function getTokens(email: string, password: string) {
 	});
 
 	const { AuthenticationResult } = await client.send(signInCommand)!;
-	const { AccessToken, RefreshToken } = AuthenticationResult!;
+	const { AccessToken, RefreshToken, IdToken } = AuthenticationResult!;
 
-	return { AccessToken, RefreshToken };
+	return { AccessToken, RefreshToken, IdToken };
 }
 
 /**
@@ -136,7 +136,7 @@ function computeSecretHash(username: string) {
  */
 export async function googleAuthenticate(fullName: string, email: string) {
 	try {
-		const { AccessToken, RefreshToken } = await register({
+		const { AccessToken, RefreshToken, IdToken } = await register({
 			email,
 			name: fullName,
 			// we set a default because of Amazon's API requirements, but the user will be
@@ -145,7 +145,7 @@ export async function googleAuthenticate(fullName: string, email: string) {
 			password: GOOGLE_DEFAULT_PASSWORD
 		});
 
-		return { AccessToken: AccessToken!, RefreshToken: RefreshToken! };
+		return { AccessToken: AccessToken!, RefreshToken: RefreshToken!, IdToken: IdToken! };
 	} catch {
 		// the admin version version of InitiateAuth must be used otherwise the custom
 		// auth flow is disabled
@@ -160,8 +160,8 @@ export async function googleAuthenticate(fullName: string, email: string) {
 		});
 
 		const { AuthenticationResult } = (await client.send(command))!;
-		const { AccessToken, RefreshToken } = AuthenticationResult!;
+		const { AccessToken, RefreshToken, IdToken } = AuthenticationResult!;
 
-		return { AccessToken, RefreshToken };
+		return { AccessToken, RefreshToken, IdToken };
 	}
 }
