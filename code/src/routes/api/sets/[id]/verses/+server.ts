@@ -1,5 +1,7 @@
+import { putItem, deleteItem } from "$lib/actions/dynamo.js";
+
 export async function POST({ request }) {
-    console.log(await request.json())
+    putItem("Verses", await request.json());
 
     return new Response(JSON.stringify({ message: "Verse added to set successfully." }), {
         status: 200,
@@ -10,7 +12,7 @@ export async function POST({ request }) {
 }
 
 export async function PUT({ request }) {
-    console.log(await request.json());
+    putItem("Verses", await request.json());
 
     return new Response(JSON.stringify({ message: "Verse updated successfully." }), {
         status: 200,
@@ -21,7 +23,7 @@ export async function PUT({ request }) {
 }
 
 export async function DELETE({ request }) {
-    console.log(await request.json());
+    deleteItem("Verses", await request.json());
 
     return new Response(JSON.stringify({ message: "Verse deleted successfully." }), {
         status: 200,

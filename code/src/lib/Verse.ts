@@ -29,11 +29,12 @@ export class Verse {
 	 */
 	updateOrder(newOrderId: number) {
 		this.orderId = newOrderId;
-		console.log(`changing order id of verse ${this.verseReference} to ${newOrderId}`);
+		console.log(`changing order id of verse ${this.verseReference} to ${this.orderId}`);
 
 		fetch(`api/sets/${this.verseSetId}/verses`, {
 			method: "PUT",
 			body: JSON.stringify({
+				text: this.text,
 				orderId: this.orderId,
 				verseSetId: this.verseSetId,
 				verseReference: this.verseReference
