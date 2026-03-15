@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import type { ContextValue } from '$lib/utils';
-	import { VerseSet } from '$lib/shared/VerseSet';
+	import { VerseSet } from '$lib/VerseSet';
 
 	let { set = $bindable() }: { set: VerseSet } = $props();
 
@@ -26,11 +26,15 @@
 			onkeydown={(e) => {
 				e.stopPropagation();
 
-				if (e.key === 'Enter' && newName.trim() !== '') {
-					// verify that the new name is not an empty string
-
+				if (e.key === 'Enter' && newName.trim() !== '') { // verify that the new name is not an empty string
 					// reassign the context object, so it tracks the new values
-					const index = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
+					const index = verseSets.value.findIndex((set) => {
+						if(set.id === selectedVerseSetId.value) {
+							set.rename(newName);
+
+							return true;
+						}
+					});
 					verseSets.value[index] = new VerseSet(set.id, newName, set.lastEdited, set.verses);
 
 					// we have to reassing the object to trigger a re-render
@@ -39,7 +43,6 @@
 					setNameInputDisabled.value = true;
 					// NOTE: this is where we'll check the value of setInputDisabled before sending a post request
 
-					set.rename(newName);
 					setNameInputDisabled.value = true;
 				}
 			}}

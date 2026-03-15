@@ -3,7 +3,7 @@
 	import VerseSetReference from './set-sidebar/VerseSetReference.svelte';
 
 	import { getContext, setContext } from 'svelte';
-	import { VerseSet } from '$lib/shared/VerseSet';
+	import { VerseSet } from '$lib/VerseSet';
 	import { getDate, type ContextValue } from '$lib/utils';
 
 	const add = `
@@ -23,11 +23,21 @@
 
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 
-	function addVerseSet() {
+	async function addVerseSet() {
 		// request to send a new verse will be created here
 		console.log('sending request to create new verse set');
+		const newSet = new VerseSet(crypto.randomUUID(), 'Untitled', getDate(), []);
+	
+		await fetch("api/sets", { 
+			method: "POST", 
+			body: JSON.stringify({
+				id: newSet.id,
+				name: newSet.name,
+				lastEdited: newSet.lastEdited
+			})
+		});
 
-		sets.value.push(new VerseSet(crypto.randomUUID(), 'Untitled', getDate(), []));
+		sets.value.push(newSet);
 
 		if (sets.value.length === 1) {
 			// handles the case for selection when the user adds their first verse set

@@ -2,9 +2,9 @@
 	import Button from '../../Button.svelte';
 
 	import { getContext } from 'svelte';
-	import { Verse } from '$lib/shared/Verse';
+	import { Verse } from '$lib/Verse';
 	import type { ContextValue } from '$lib/utils';
-	import { VerseSet } from '$lib/shared/VerseSet';
+	import { VerseSet } from '$lib/VerseSet';
 
 	const { searchResult, index }: { searchResult: Verse; index: number } = $props();
 

@@ -6,7 +6,7 @@
 	import SearchResults from './populated/search/SearchResults.svelte';
 
 	import { getContext } from 'svelte';
-	import { VerseSet } from '$lib/shared/VerseSet';
+	import { VerseSet } from '$lib/VerseSet';
 	import type { ContextValue, Verse } from '$lib/utils';
 
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
@@ -25,7 +25,7 @@
 
 <div class="w-full h-screen">
 	<Header />
-	<Search verseSet={selectedVerseSet!} bind:selectedTranslation />
+	<Search bind:selectedTranslation />
 
 	{#if selectedVerseSet?.verses.length === 0 && searchResults.value.length === 0 && !viewingSearchResults.value}
 		<!-- the second check is to ensure the two screens don't show at the same time -->

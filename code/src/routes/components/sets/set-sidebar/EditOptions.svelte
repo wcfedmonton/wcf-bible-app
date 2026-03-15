@@ -3,7 +3,7 @@
 
 	import { getContext } from 'svelte';
 	import type { ContextValue } from '$lib/utils';
-	import type { VerseSet } from '$lib/shared/VerseSet';
+	import type { VerseSet } from '$lib/VerseSet';
 
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const lastSetToOpenEdit = getContext<ContextValue<string>>('lastSetToOpenEdit');

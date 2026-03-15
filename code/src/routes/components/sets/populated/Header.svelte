@@ -4,7 +4,7 @@
 	import { getContext } from 'svelte';
 
 	import type { ContextValue } from '$lib/utils';
-	import { VerseSet } from '$lib/shared/VerseSet';
+	import { VerseSet } from '$lib/VerseSet';
 
 	const id = getContext<ContextValue<string>>('selectedVerseSetId');
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');

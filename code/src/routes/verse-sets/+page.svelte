@@ -6,8 +6,8 @@
 
 	import { setContext } from 'svelte';
 
-	import { Verse } from '$lib/shared/Verse.js';
-	import { VerseSet } from '$lib/shared/VerseSet.js';
+	import { Verse } from '$lib/Verse.js';
+	import { VerseSet } from '$lib/VerseSet.js';
 
 	const { data } = $props();
 	// svelte-ignore state_referenced_locally

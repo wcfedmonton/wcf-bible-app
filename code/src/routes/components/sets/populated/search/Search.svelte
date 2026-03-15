@@ -3,7 +3,7 @@
 	import { fetchVerse } from '$lib/bible/chapterServices';
 	import { generateAutoSuggestions } from '$lib/bible/suggestionUtils';
 	import { getTranslations, type ContextValue, type Verse } from '$lib/utils';
-	import { VerseSet } from '$lib/shared/VerseSet';
+	import { VerseSet } from '$lib/VerseSet';
 
 	let { selectedTranslation = $bindable() }: { selectedTranslation: string } = $props();
 
