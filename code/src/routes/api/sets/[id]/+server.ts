@@ -1,7 +1,9 @@
-export async function PUT({ request }) {
-    console.log(await request.json())
+import { putItem, deleteItem } from '$lib/actions/dynamo.js';
 
-    return new Response(JSON.stringify({ message: "Set updated sucessfully" }), {
+export async function PUT({ request }) {
+    putItem("VerseSets", await request.json())
+
+    return new Response(JSON.stringify({ message: "Set updated sucessfully." }), {
         status: 200,
         headers: {
             "Content-Type": "application/json"
@@ -10,7 +12,7 @@ export async function PUT({ request }) {
 }
 
 export async function DELETE({ request }) {
-    console.log(await request.json())
+    deleteItem("VerseSets", await request.json())
 
     return new Response(JSON.stringify({ message: "Set deleted sucessfully." }), {
         status: 200,

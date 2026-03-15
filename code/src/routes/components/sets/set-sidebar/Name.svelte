@@ -5,10 +5,7 @@
 
 	let { set = $bindable() }: { set: VerseSet } = $props();
 
-	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
-
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
-
 	const selectedVerseSet = getContext<ContextValue<VerseSet>>('verseSetReference');
 
 	let newName = $state(set.name);
@@ -28,8 +25,8 @@
 
 				if (e.key === 'Enter' && newName.trim() !== '') { // verify that the new name is not an empty string
 					// reassign the context object, so it tracks the new values
-					const index = verseSets.value.findIndex((set) => {
-						if(set.id === selectedVerseSetId.value) {
+					const index = verseSets.value.findIndex((s) => {
+						if(set.id === s.id) {
 							set.rename(newName);
 
 							return true;
@@ -39,9 +36,6 @@
 
 					// we have to reassing the object to trigger a re-render
 					selectedVerseSet.value = new VerseSet(set.id, newName, set.lastEdited, set.verses);
-
-					setNameInputDisabled.value = true;
-					// NOTE: this is where we'll check the value of setInputDisabled before sending a post request
 
 					setNameInputDisabled.value = true;
 				}
