@@ -30,6 +30,15 @@ export class Verse {
 	updateOrder(newOrderId: number) {
 		this.orderId = newOrderId;
 		console.log(`changing order id of verse ${this.verseReference} to ${newOrderId}`);
+
+		fetch(`api/sets/${this.verseSetId}/verses`, {
+			method: "PUT",
+			body: JSON.stringify({
+				orderId: this.orderId,
+				verseSetId: this.verseSetId,
+				verseReference: this.verseReference
+			})
+		});
 	}
 
 	/**
@@ -38,6 +47,16 @@ export class Verse {
 	 */
 	addToSet() {
 		console.log(`adding verse ${this.verseReference} to set ${this.verseSetId}`);
+
+		fetch(`api/sets/${this.verseSetId}/verses`, {
+			method: "POST",
+			body: JSON.stringify({
+				text: this.text,
+				orderId: this.orderId,
+				verseSetId: this.verseSetId,
+				verseReference: this.verseReference
+			})
+		});
 	}
 
 	/**
@@ -46,5 +65,13 @@ export class Verse {
 	 */
 	deleteFromSet() {
 		console.log(`deleting verse ${this.verseReference} from set ${this.verseSetId}`);
+
+		fetch(`api/sets/${this.verseSetId}/verses`, {
+			method: "DELETE",
+			body: JSON.stringify({
+				verseSetId: this.verseSetId,
+				verseReference: this.verseReference
+			})
+		});
 	}
 }

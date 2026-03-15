@@ -22,12 +22,12 @@ export class VerseSet {
 	 * 
 	 * @param {string} newName - The new name for this verse set.
 	 */
-	async rename(newName: string) {
+	rename(newName: string) {
 		this.name = newName;
 		this.lastEdited = getDate();
 		console.log(`sending request to change name for verse set ${this.id} to ${this.name}`);
 
-		await fetch(`api/sets/${this.id}`, {
+		fetch(`api/sets/${this.id}`, {
 			method: "PUT",
 			body: JSON.stringify({
 				id: this.id,
@@ -41,10 +41,10 @@ export class VerseSet {
 	 * Deletes this verse set.
 	 * Sends a request to the database to persist the deletion.
 	 */
-	async delete() {
+	delete() {
 		console.log(`sending request to delete verse set ${this.id}`);
 
-		await fetch(`api/sets/${this.id}`, {
+		fetch(`api/sets/${this.id}`, {
 			method: "DELETE",
 			body: JSON.stringify({
 				id: this.id
