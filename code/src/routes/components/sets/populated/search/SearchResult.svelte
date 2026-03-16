@@ -66,7 +66,7 @@
 
 					// we also have to update this array or the initial id's in the database will be incorrect
 					// for any new verses
-					selectedVerseSet.value.verses.push(verseToAdd); 
+					selectedVerseSet.value.verses.push(verseToAdd);
 				}
 			}}
 		/>

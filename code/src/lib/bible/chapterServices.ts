@@ -77,7 +77,7 @@ export async function fetchVerse(query: string, translation: string) {
 	const res = await fetch(`api/verses?${params.toString()}`);
 	const { verses } = await res.json();
 
-	return verses.find((verse: { id: Number; text: string }) => verse.id === osis.selectedVerse);
+	return verses.find((verse: { id: number; text: string }) => verse.id === osis.selectedVerse);
 }
 
 /** Resolves and returns a valid selected verse reference.*/

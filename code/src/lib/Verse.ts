@@ -30,15 +30,16 @@ export class Verse {
 		this.orderId = newOrderId ?? this.orderId;
 
 		fetch(`api/sets/${this.verseSetId}/verses`, {
-			method: "POST",
+			method: 'POST',
 			body: JSON.stringify({
 				item: {
 					text: this.text,
 					orderId: this.orderId,
 					verseSetId: this.verseSetId,
+					translation: this.translation,
 					verseReference: this.verseReference
 				},
-				tableName: "Verses"
+				tableName: 'Verses'
 			})
 		});
 	}
@@ -49,13 +50,13 @@ export class Verse {
 	 */
 	deleteFromSet() {
 		fetch(`api/sets/${this.verseSetId}/verses`, {
-			method: "DELETE",
+			method: 'DELETE',
 			body: JSON.stringify({
 				item: {
 					verseSetId: this.verseSetId,
 					verseReference: this.verseReference
 				},
-				tableName: "Verses"
+				tableName: 'Verses'
 			})
 		});
 	}
