@@ -23,10 +23,11 @@
 			onkeydown={(e) => {
 				e.stopPropagation();
 
-				if (e.key === 'Enter' && newName.trim() !== '') { // verify that the new name is not an empty string
+				if (e.key === 'Enter' && newName.trim() !== '') {
+					// verify that the new name is not an empty string
 					// reassign the context object, so it tracks the new values
 					const index = verseSets.value.findIndex((s) => {
-						if(set.id === s.id) {
+						if (set.id === s.id) {
 							set.saveVerseSet(newName);
 
 							return true;

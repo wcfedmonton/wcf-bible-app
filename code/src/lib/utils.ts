@@ -31,7 +31,11 @@ export function disabledCondition(state: FormState) {
 
 type TokenArgs = {
 	cookieObj: Cookies;
-	session: { AccessToken: string | undefined; RefreshToken: string | undefined, IdToken: string | undefined };
+	session: {
+		AccessToken: string | undefined;
+		RefreshToken: string | undefined;
+		IdToken: string | undefined;
+	};
 };
 
 /**

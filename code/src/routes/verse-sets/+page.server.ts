@@ -5,6 +5,6 @@ export async function load({ fetch, cookies }) {
 
 	const res = await fetch(`api/users/${userId}/sets`);
 	const sets: VerseSet[] = await res.json();
-	
+
 	return { data: sets };
 }

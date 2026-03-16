@@ -19,22 +19,22 @@ export class VerseSet {
 
 	/**
 	 * Upserts the set into the database.
-	 * 
-	 * @param newName - The new name of the verse set. 
+	 *
+	 * @param newName - The new name of the verse set.
 	 */
 	saveVerseSet(newName?: string) {
 		this.name = newName ?? this.name;
 		this.lastEdited = getDate();
 
-		fetch("api/sets", { 
-			method: "POST", 
+		fetch('api/sets', {
+			method: 'POST',
 			body: JSON.stringify({
 				item: {
 					id: this.id,
 					name: this.name,
 					lastEdited: this.lastEdited
 				},
-				tableName: "VerseSets"
+				tableName: 'VerseSets'
 			})
 		});
 	}
@@ -45,12 +45,12 @@ export class VerseSet {
 	 */
 	delete() {
 		fetch(`api/sets/${this.id}`, {
-			method: "DELETE",
+			method: 'DELETE',
 			body: JSON.stringify({
 				item: {
 					id: this.id
 				},
-				tableName: "VerseSets"
+				tableName: 'VerseSets'
 			})
 		});
 	}

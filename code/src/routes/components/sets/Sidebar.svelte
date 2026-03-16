@@ -18,15 +18,17 @@
 
 	const allSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 
-	const sets = $derived([...allSets.value].sort((a, b) => {
-		if (new Date(a.lastEdited) > new Date(b.lastEdited)) {
-			return -1;
-		} else if (new Date(a.lastEdited) < new Date(b.lastEdited)) {
-			return 1;
-		} else {
-			return a.name.localeCompare(b.name);
-		}
-	}));
+	const sets = $derived(
+		[...allSets.value].sort((a, b) => {
+			if (new Date(a.lastEdited) > new Date(b.lastEdited)) {
+				return -1;
+			} else if (new Date(a.lastEdited) < new Date(b.lastEdited)) {
+				return 1;
+			} else {
+				return a.name.localeCompare(b.name);
+			}
+		})
+	);
 
 	const lastSetToOpenEdit = $state({ value: '' });
 	setContext('lastSetToOpenEdit', lastSetToOpenEdit);
@@ -36,7 +38,7 @@
 	async function addVerseSet() {
 		// request to send a new verse will be created here
 		const newSet = new VerseSet(crypto.randomUUID(), 'Untitled', getDate(), []);
-	
+
 		newSet.saveVerseSet();
 		allSets.value.push(newSet);
 
