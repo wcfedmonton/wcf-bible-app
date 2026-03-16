@@ -29,7 +29,6 @@ export class Verse {
 	 */
 	updateOrder(newOrderId: number) {
 		this.orderId = newOrderId;
-		console.log(`changing order id of verse ${this.verseReference} to ${this.orderId}`);
 
 		fetch(`api/sets/${this.verseSetId}/verses`, {
 			method: "PUT",
@@ -47,8 +46,6 @@ export class Verse {
 	 * Sends a request to the database to persist the addition.
 	 */
 	addToSet() {
-		console.log(`adding verse ${this.verseReference} to set ${this.verseSetId}`);
-
 		fetch(`api/sets/${this.verseSetId}/verses`, {
 			method: "POST",
 			body: JSON.stringify({
@@ -65,8 +62,6 @@ export class Verse {
 	 * Sends a request to the database to persist the deletion.
 	 */
 	deleteFromSet() {
-		console.log(`deleting verse ${this.verseReference} from set ${this.verseSetId}`);
-
 		fetch(`api/sets/${this.verseSetId}/verses`, {
 			method: "DELETE",
 			body: JSON.stringify({

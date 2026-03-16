@@ -18,21 +18,22 @@ export class VerseSet {
 	}
 
 	/**
-	 * Updates the verse set with this id to have the new name it was initialized with.
+	 * Upserts the set into the database.
 	 * 
-	 * @param {string} newName - The new name for this verse set.
+	 * @param newName - The new name of the verse set. 
 	 */
-	rename(newName: string) {
-		this.name = newName;
-		this.lastEdited = getDate();
-		console.log(`sending request to change name for verse set ${this.id} to ${this.name}`);
+	saveVerseSet(newName?: string) {
+		this.name = newName ?? this.name;
 
-		fetch(`api/sets/${this.id}`, {
-			method: "PUT",
+		fetch("api/sets", { 
+			method: "POST", 
 			body: JSON.stringify({
-				id: this.id,
-				name: this.name,
-				lastEdited: this.lastEdited
+				item: {
+					id: this.id,
+					name: this.name,
+					lastEdited: this.lastEdited
+				},
+				tableName: "VerseSets"
 			})
 		});
 	}
@@ -42,12 +43,13 @@ export class VerseSet {
 	 * Sends a request to the database to persist the deletion.
 	 */
 	delete() {
-		console.log(`sending request to delete verse set ${this.id}`);
-
 		fetch(`api/sets/${this.id}`, {
 			method: "DELETE",
 			body: JSON.stringify({
-				id: this.id
+				item: {
+					id: this.id
+				},
+				tableName: "VerseSets"
 			})
 		});
 	}

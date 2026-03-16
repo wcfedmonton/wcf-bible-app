@@ -1,6 +1,8 @@
 import type { VerseSet } from '$lib/utils';
 
-export async function load() {
+export async function load({ fetch,url }) {
+	const res = await fetch('api/sets/1234');
+
 	const sets: VerseSet[] = [
 		// server will send the verses sorted by their orderid for their initial load, client handles re-sorting on changes
 		{

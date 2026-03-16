@@ -28,15 +28,7 @@
 		console.log('sending request to create new verse set');
 		const newSet = new VerseSet(crypto.randomUUID(), 'Untitled', getDate(), []);
 	
-		await fetch("api/sets", { 
-			method: "POST", 
-			body: JSON.stringify({
-				id: newSet.id,
-				name: newSet.name,
-				lastEdited: newSet.lastEdited
-			})
-		});
-
+		newSet.saveVerseSet();
 		sets.value.push(newSet);
 
 		if (sets.value.length === 1) {

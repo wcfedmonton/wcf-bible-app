@@ -27,7 +27,7 @@
 					// reassign the context object, so it tracks the new values
 					const index = verseSets.value.findIndex((s) => {
 						if(set.id === s.id) {
-							set.rename(newName);
+							set.saveVerseSet(newName);
 
 							return true;
 						}
