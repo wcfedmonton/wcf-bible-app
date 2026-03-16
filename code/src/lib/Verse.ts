@@ -36,6 +36,7 @@ export class Verse {
 					text: this.text,
 					orderId: this.orderId,
 					verseSetId: this.verseSetId,
+					translation: this.translation,
 					verseReference: this.verseReference
 				},
 				tableName: "Verses"

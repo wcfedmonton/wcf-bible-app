@@ -2,11 +2,26 @@ import { saveTokens } from "$lib/utils";
 import { refreshTokens } from '$lib/actions/aws';
 import type { Cookies } from "@sveltejs/kit";
 
+export async function handle({ event, resolve }) {
+    const refreshToken = event.cookies.get('refreshToken');
+    const privateRoutes = ['/verse-sets']; // can be expanded later to include other routes
+
+    // navigation to the private routes is prohibited if the user is not authenticated
+    if (!refreshToken && privateRoutes.includes(event.url.pathname)) {
+        return new Response(null, {
+            status: 302,
+            headers: { location: '/login' }
+        });
+    }
+    
+    return resolve(event);
+}
+
 export async function handleFetch({ event, request, fetch }) {
     // when the token expires, it will automatically be removed from the cookies
     // object because of the configuration used when it was first saved. thus, if we want
     // to check for expiration, it suffices to verify the existence of the token
-    if(!event.cookies.get('accessToken')) { 
+    if(!event.cookies.get('accessToken') || !event.cookies.get('idToken')) { 
         const session = await refreshTokens(event.cookies.get('refreshToken')!);
         saveTokens({ cookieObj: event.cookies, session });
     }
@@ -53,9 +68,7 @@ async function addUserIdToRequest(cookies: Cookies, request: Request, defaultHea
     
     request = new Request(request, {
         headers: { ...defaultHeaders },
-        body: JSON.stringify({
-            ...payload
-        })
+        body: JSON.stringify(payload)
     });
 
     return request;
