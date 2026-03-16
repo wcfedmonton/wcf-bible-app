@@ -42,6 +42,7 @@ type TokenArgs = {
  * @param {Object} options.session - The session object containing token data
  * @param {string} options.session.AccessToken - The access token to be saved
  * @param {string} options.session.RefreshToken - The refresh token to be saved
+ * @param {string} options.session.IdToken - The id token to be saved
  * @returns {void}
  * @example
  * saveTokens({
@@ -69,7 +70,7 @@ export function saveTokens({ cookieObj, session }: TokenArgs) {
 
 	cookieObj.set('idToken', session.IdToken!, {
 		...defaultCookieOptions,
-		maxAge: 60 * 60 * 24 * 30
+		maxAge: 60 * 60
 	});
 }
 
