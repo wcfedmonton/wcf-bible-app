@@ -22,22 +22,25 @@ export class Verse {
 	}
 
 	/**
-	 * Updates the order position of this verse within its set.
-	 * Sends a request to the database to persist the new order.
+	 * Upserts the verse into the database.
 	 *
 	 * @param {number} newOrderId - The new order position for this verse.
 	 */
-	updateOrder(newOrderId: number) {
-		this.orderId = newOrderId;
-		console.log(`changing order id of verse ${this.verseReference} to ${newOrderId}`);
-	}
+	saveVerse(newOrderId?: number) {
+		this.orderId = newOrderId ?? this.orderId;
 
-	/**
-	 * Adds this verse to its associated verse set.
-	 * Sends a request to the database to persist the addition.
-	 */
-	addToSet() {
-		console.log(`adding verse ${this.verseReference} to set ${this.verseSetId}`);
+		fetch(`api/sets/${this.verseSetId}/verses`, {
+			method: "POST",
+			body: JSON.stringify({
+				item: {
+					text: this.text,
+					orderId: this.orderId,
+					verseSetId: this.verseSetId,
+					verseReference: this.verseReference
+				},
+				tableName: "Verses"
+			})
+		});
 	}
 
 	/**
@@ -45,6 +48,15 @@ export class Verse {
 	 * Sends a request to the database to persist the deletion.
 	 */
 	deleteFromSet() {
-		console.log(`deleting verse ${this.verseReference} from set ${this.verseSetId}`);
+		fetch(`api/sets/${this.verseSetId}/verses`, {
+			method: "DELETE",
+			body: JSON.stringify({
+				item: {
+					verseSetId: this.verseSetId,
+					verseReference: this.verseReference
+				},
+				tableName: "Verses"
+			})
+		});
 	}
 }

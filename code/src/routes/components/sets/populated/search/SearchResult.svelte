@@ -2,13 +2,14 @@
 	import Button from '../../Button.svelte';
 
 	import { getContext } from 'svelte';
-	import { Verse } from '$lib/shared/Verse';
+	import { Verse } from '$lib/Verse';
 	import type { ContextValue } from '$lib/utils';
-	import { VerseSet } from '$lib/shared/VerseSet';
+	import { VerseSet } from '$lib/VerseSet';
 
 	const { searchResult, index }: { searchResult: Verse; index: number } = $props();
 
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
+	const selectedVerseSet = getContext<ContextValue<VerseSet>>('selectedVerseSet');
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 	let selectedVerseSetIndex = $derived(
 		verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value)
@@ -61,8 +62,11 @@
 						[...verseSets.value[index].verses, new Verse(searchResult)]
 					);
 
-					// this is where we'll add the verse to the set. think about integration w db
-					verseToAdd.addToSet();
+					verseToAdd.saveVerse();
+
+					// we also have to update this array or the initial id's in the database will be incorrect
+					// for any new verses
+					selectedVerseSet.value.verses.push(verseToAdd); 
 				}
 			}}
 		/>

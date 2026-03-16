@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import { Verse } from '$lib/shared/Verse';
+	import { Verse } from '$lib/Verse';
 	import type { ContextValue } from '$lib/utils';
-	import { VerseSet } from '$lib/shared/VerseSet';
+	import { VerseSet } from '$lib/VerseSet';
 
 	let { verses = $bindable(), verse }: { verses: Verse[]; verse: Verse } = $props();
 
@@ -70,8 +70,8 @@
 			const currentVerse = verses[index];
 			const nextVerse = verses[index - 1];
 
-			currentVerse.updateOrder(nextVerse.orderId);
-			nextVerse.updateOrder(currentVerse.orderId + 1);
+			currentVerse.saveVerse(nextVerse.orderId);
+			nextVerse.saveVerse(currentVerse.orderId + 1);
 
 			verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
 
@@ -94,8 +94,8 @@
 			const currentVerse = verses[index];
 			const nextVerse = verses[index + 1];
 
-			currentVerse.updateOrder(nextVerse.orderId);
-			nextVerse.updateOrder(currentVerse.orderId - 1);
+			currentVerse.saveVerse(nextVerse.orderId);
+			nextVerse.saveVerse(currentVerse.orderId - 1);
 
 			updateUIVerseOrder();
 		}

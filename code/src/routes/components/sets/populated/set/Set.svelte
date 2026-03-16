@@ -2,7 +2,7 @@
 	import Buttons from './Buttons.svelte';
 
 	import { getContext } from 'svelte';
-	import { VerseSet } from '$lib/shared/VerseSet';
+	import { VerseSet } from '$lib/VerseSet';
 	import type { ContextValue, Verse } from '$lib/utils';
 
 	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');

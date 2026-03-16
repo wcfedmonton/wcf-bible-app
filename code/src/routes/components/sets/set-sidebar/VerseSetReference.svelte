@@ -3,7 +3,7 @@
 	import Name from './Name.svelte';
 
 	import { getContext, setContext } from 'svelte';
-	import { VerseSet } from '$lib/shared/VerseSet';
+	import { VerseSet } from '$lib/VerseSet';
 	import type { ContextValue, Verse } from '$lib/utils';
 
 	let { set = $bindable() } = $props<{ set: VerseSet }>();

@@ -2,7 +2,7 @@
 	import SearchResult from './SearchResult.svelte';
 
 	import { getContext } from 'svelte';
-	import { Verse } from '$lib/shared/Verse';
+	import { Verse } from '$lib/Verse';
 	import type { ContextValue, Verse as VerseResult } from '$lib/utils';
 
 	const queryCopy = $state(getContext<ContextValue<string>>('queryCopy'));
