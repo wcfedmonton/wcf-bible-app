@@ -24,6 +24,7 @@ export class VerseSet {
 	 */
 	saveVerseSet(newName?: string) {
 		this.name = newName ?? this.name;
+		this.lastEdited = getDate();
 
 		fetch("api/sets", { 
 			method: "POST", 

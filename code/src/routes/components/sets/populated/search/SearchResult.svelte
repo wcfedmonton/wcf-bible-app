@@ -62,7 +62,7 @@
 						[...verseSets.value[index].verses, new Verse(searchResult)]
 					);
 
-					verseToAdd.addToSet();
+					verseToAdd.saveVerse();
 
 					// we also have to update this array or the initial id's in the database will be incorrect
 					// for any new verses

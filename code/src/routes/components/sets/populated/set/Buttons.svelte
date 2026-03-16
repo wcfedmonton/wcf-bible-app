@@ -70,8 +70,8 @@
 			const currentVerse = verses[index];
 			const nextVerse = verses[index - 1];
 
-			currentVerse.updateOrder(nextVerse.orderId);
-			nextVerse.updateOrder(currentVerse.orderId + 1);
+			currentVerse.saveVerse(nextVerse.orderId);
+			nextVerse.saveVerse(currentVerse.orderId + 1);
 
 			verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
 
@@ -94,8 +94,8 @@
 			const currentVerse = verses[index];
 			const nextVerse = verses[index + 1];
 
-			currentVerse.updateOrder(nextVerse.orderId);
-			nextVerse.updateOrder(currentVerse.orderId - 1);
+			currentVerse.saveVerse(nextVerse.orderId);
+			nextVerse.saveVerse(currentVerse.orderId - 1);
 
 			updateUIVerseOrder();
 		}
