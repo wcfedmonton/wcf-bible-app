@@ -53,5 +53,19 @@ export class VerseSet {
 				tableName: 'VerseSets'
 			})
 		});
+
+		const verseDeleteRequests: Promise<string>[] = [];
+
+		// simultaneously send delete requests for each verse in the set
+
+		this.verses.forEach(verse => { 
+			verseDeleteRequests.push(new Promise(resolve => {
+				verse.deleteFromSet();
+
+				resolve('Verse deleted.')
+			}));
+		});
+
+		Promise.allSettled(verseDeleteRequests);
 	}
 }
