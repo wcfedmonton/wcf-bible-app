@@ -3,11 +3,11 @@ import { refreshTokens } from '$lib/actions/aws';
 import type { Cookies } from '@sveltejs/kit';
 
 export async function handle({ event, resolve }) {
-	const refreshToken = event.cookies.get('refreshToken');
+	const authenticated = event.cookies.get('refreshToken') && event.cookies.get('idToken');
 	const privateRoutes = ['/verse-sets']; // can be expanded later to include other routes
 
 	// navigation to the private routes is prohibited if the user is not authenticated
-	if (!refreshToken && privateRoutes.includes(event.url.pathname)) {
+	if (!authenticated && privateRoutes.includes(event.url.pathname)) {
 		return new Response(null, {
 			status: 302,
 			headers: { location: '/login' }
