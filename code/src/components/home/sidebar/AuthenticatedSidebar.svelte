@@ -7,6 +7,8 @@
     import Divider from "./Divider.svelte";
     import SignOut from "./SignOut.svelte";
 
+    let { showSidebar = $bindable() } = $props();
+
     const menu = `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="15" height="18" class="w-full">
             <line x1="15" y1="25" x2="85" y2="25" stroke="black" stroke-width="5" stroke-linecap="round" class="stroke-form_title"/>
@@ -16,8 +18,10 @@
     `;
 </script>
 
-<div class="w-[19%] min-w-[18rem] h-dvh flex flex-col border border-solid border-border_accent bg-[#1a1a1a] shadow-[4px_0_28px_rgba(0,0,0,0.6)]">
-    <Header />
+<div 
+    class="w-[19%] min-w-[18rem] h-dvh flex flex-col border border-solid border-border_accent bg-[#1a1a1a] shadow-[4px_0_28px_rgba(0,0,0,0.6)] animate-slide-in-right"
+>
+    <Header bind:showSidebar={showSidebar} />
 
     <Name />
 

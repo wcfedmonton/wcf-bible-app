@@ -11,7 +11,7 @@
 
 	const { data: initialData } = $props(); // initial data is loaded on the server
 
-	let state: {
+	let dataState: {
 		verseLimit: number;
 		osis?: OSISReference;
 		verseReference: string;
@@ -24,21 +24,33 @@
 	async function fetchChapterData(query: string) {
 		const updatedData = await fetchChapter({
 			input: query,
-			...state
+			...dataState
 		})!;
 
 		if (updatedData) {
-			state.osis = updatedData.osis;
-			state.verseData = updatedData.verseData;
-			state.verseLimit = updatedData.verseLimit;
-			state.verseReference = updatedData.verseReference;
-			state.selectedVerseIndex = updatedData.selectedVerseIndex;
+			dataState.osis = updatedData.osis;
+			dataState.verseData = updatedData.verseData;
+			dataState.verseLimit = updatedData.verseLimit;
+			dataState.verseReference = updatedData.verseReference;
+			dataState.selectedVerseIndex = updatedData.selectedVerseIndex;
 		}
 	}
+
+	let showSidebar: boolean = $state(false);
 </script>
 
 <!-- <Search {fetchChapterData} /> -->
 
 <!-- <Verse bind:state {fetchChapterData} /> -->
-<!-- <SidebarButton /> -->
-<AuthenticatedSidebar />
+
+<div class="absolute">
+	<div class="absolute top-0 left-0">
+		<SidebarButton bind:showSidebar />
+	</div>
+
+	{#if showSidebar}
+		<div class="absolute top-0 left-0">
+			<AuthenticatedSidebar bind:showSidebar/>
+		</div>
+	{/if}
+</div>
