@@ -10,7 +10,7 @@
 	import { fetchChapter } from '$lib/bible/chapterServices';
 	import { type BibleTranslation, type Verse as VerseType } from '$lib/server/bible';
 
-	const { data: initialData } = $props(); // initial data is loaded on the server
+	const { data: initialData } = $props();
 
 	let dataState: {
 		verseLimit: number;
@@ -23,12 +23,15 @@
 	} = $state(initialData);
 
 	let showSidebar = $state(false);
-	
-	const name: string = $derived(initialData.name);
-	setContext('name', { get value() { return name; } });
 
 	const selectedSetIndex = $state({ value: -1 });
 	setContext('selectedSetIndex', selectedSetIndex);
+
+	const name: string = $derived(initialData.name);
+	setContext('name', { get value() { return name; } });
+
+	const verseSets = $derived(initialData.sets);
+	setContext('verseSets', { get value() { return verseSets } });
 
 	async function fetchChapterData(query: string) {
 		selectedSetIndex.value = -1; // make no set appear selected since the user will no longer be navigating through a set

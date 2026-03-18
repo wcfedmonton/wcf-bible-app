@@ -2,32 +2,24 @@
     import Set from "./Set.svelte";
 
 	import { getContext } from "svelte";
+    import type { VerseSet } from "$lib/utils";
     import type { ContextValue } from "$lib/utils";
 
-    const sets = [ // will use context variable declared in page.svelte
-        { name: "Easter Sunday 2025" },
-        { name: "Good Friday 2025" },
-        { name: "Pentecost Sunday 2025" },
-        { name: "Ash Wednesday 2025" },
-        { name: "Palm Sunday 2025" },
-        { name: "Maundy Thursday 2025" },
-        { name: "Christmas Eve 2024" },
-        { name: "New Year's Eve Worship" },
-        { name: "Thanksgiving Praise Night" },
-        { name: "Advent Week 1: Hope" },
-        { name: "Advent Week 2: Peace" },
-        { name: "Advent Week 3: Joy" },
-        { name: "Advent Week 4: Love" },
-        { name: "Sunday: Faith Over Fear" },
-        { name: "Sunday: Walking on Water" },
-        { name: "Sunday: The Prodigal Son" },
-        { name: "Sunday: Fruit of Spirit" },
-        { name: "Sunday: Sermon on Mount" },
-        { name: "Sunday: Comfort & Hope" },
-        { name: "Sunday: Love Your Neighbour" },
-    ];
+    const allSets = getContext<ContextValue<VerseSet[]>>('verseSets');
     
-    let selectedSetIndex = getContext<ContextValue<number>>('selectedSetIndex');
+    const sets = $derived(
+		[...allSets.value].sort((a, b) => {
+			if (new Date(a.lastEdited) > new Date(b.lastEdited)) {
+				return -1;
+			} else if (new Date(a.lastEdited) < new Date(b.lastEdited)) {
+				return 1;
+			} else {
+				return a.name.localeCompare(b.name);
+			}
+		})
+	);
+
+    let selectedSetIndex = $state(getContext<ContextValue<number>>('selectedSetIndex'));
 </script>
 
 <div class="w-full flex flex-col overflow-auto h-[calc(100vh-21rem)] scrollbar-black">

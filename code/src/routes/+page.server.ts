@@ -1,3 +1,4 @@
+import type { VerseSet } from '$lib/utils.js';
 import { fetchChapter } from '$lib/bible/chapterServices';
 import type { BibleTranslation } from '$lib/server/bible.js';
 
@@ -12,10 +13,14 @@ export async function load({ fetch, cookies }) {
 		fetch
 	}))!;
 
-	const { name } = JSON.parse(atob(cookies.get('idToken')!.split('.')[1]));
+	const { name, sub: userId } = cookies.get('idToken') ? JSON.parse(atob(cookies.get('idToken')!.split('.')[1])) : "";
+	
+	const res = await fetch(`api/users/${userId}/sets`);
+	const sets: VerseSet[] = await res.json();
 
 	return {
 		name,
+		sets,
 		...data,
 		translation: 'NIV' as BibleTranslation
 	};
