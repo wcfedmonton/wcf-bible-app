@@ -1,16 +1,16 @@
-<div class="flex flex-col items-center justify-center">
+<div class="flex flex-col items-center justify-center group">
 	<a href="/" aria-label="nav to home">
 		<button
 			aria-label="go back"
 			class="flex flex-row justify-center items-center w-8 h-8 rounded-[0.2rem] border-solid border-1 border-border_accent cursor-pointer hover:border-accent_btn_hover"
 		>
 			<svg
-				xmlns="http://www.w3.org/2000/svg"
 				width="11"
 				height="11"
-				fill="currentColor"
-				class="bi bi-chevron-left text-[#80868b]"
 				viewBox="0 0 16 16"
+				fill="currentColor"
+				xmlns="http://www.w3.org/2000/svg"
+				class="bi bi-chevron-left text-[#80868b] group-hover:stroke-neutral-50"
 			>
 				<path
 					fill-rule="evenodd"

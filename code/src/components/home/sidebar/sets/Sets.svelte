@@ -1,6 +1,9 @@
 <script lang="ts">
     import Set from "./Set.svelte";
 
+	import { getContext } from "svelte";
+    import type { ContextValue } from "$lib/utils";
+
     const sets = [ // will use context variable declared in page.svelte
         { name: "Easter Sunday 2025" },
         { name: "Good Friday 2025" },
@@ -24,11 +27,11 @@
         { name: "Sunday: Love Your Neighbour" },
     ];
     
-    let selectedIndex = $state(-1);
+    let selectedSetIndex = getContext<ContextValue<number>>('selectedSetIndex');
 </script>
 
 <div class="w-full flex flex-col overflow-auto h-[calc(100vh-21rem)] scrollbar-black">
     {#each sets as set, index }
-        <Set index={index} bind:selectedIndex set={set}/>
+        <Set index={index} bind:selectedIndex={selectedSetIndex} set={set}/>
     {/each}
 </div>

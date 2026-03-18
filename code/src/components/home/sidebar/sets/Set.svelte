@@ -1,12 +1,12 @@
 <script lang="ts">
     let { index, selectedIndex = $bindable(), set } = $props(); 
 
-    let selected = $derived(selectedIndex === index);
+    let selected = $derived(selectedIndex.value === index);
 </script>
 
 <button
     onclick={() => {
-        selectedIndex = index;
+        selectedIndex.value = index;
     }}
     class="cursor-pointer w-full h-11 px-4 flex justify-center items-center hover:bg-light_grey/30"
 >

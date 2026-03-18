@@ -1,6 +1,12 @@
 <script lang="ts">
-    const name = "Jospin Muhanuzi";
-    const initials = "JM";
+	import { getContext } from "svelte";
+    import type { ContextValue } from "$lib/utils";
+
+    const name = getContext<ContextValue<string>>('name');
+
+    //const name = "Jospin Muhanuzi";
+    const names = name.value.split(' ');
+    const initials = names.length > 1 ? names[0][0] + names[1][0] : names[0][0]
 </script>
 
 <div class="w-full h-15 border-b border-border_accent">
@@ -12,7 +18,7 @@
         </div>
 
         <div class="w-[65%] h-5">
-            <p class="pl-2 font-serif text-sm">{name}</p>
+            <p class="pl-2 font-serif text-sm">{name.value}</p>
         </div>
     </div>
 </div>

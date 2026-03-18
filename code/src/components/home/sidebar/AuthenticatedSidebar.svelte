@@ -26,7 +26,7 @@
     <Name />
 
     <Title title="NAVIGATION"/>
-    <NavItem pageTitle="Verse Set Manager" icon={menu}/>
+    <NavItem pageTitle="Verse Set Manager" icon={menu} route="/verse-sets"/>
     <Divider />
 
     <Title title="VERSE SETS" />

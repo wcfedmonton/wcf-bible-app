@@ -42,7 +42,7 @@ body {
 
 	--color-option_hover: #333333;
 
-	--animate-slide-in-right: slide-in-right 1s cubic-bezier(.33, 1, .68, 1);
+	--animate-slide-in-right: slide-in-right 0.75s cubic-bezier(.33, 1, .68, 1);
 }
 
 @keyframes slide-in-right {

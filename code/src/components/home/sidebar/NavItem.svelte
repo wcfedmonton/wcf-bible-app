@@ -1,8 +1,12 @@
 <script lang="ts">
-    const { pageTitle, icon } = $props();
+	import { goto, preloadData } from "$app/navigation";
+
+    const { pageTitle, icon, route } = $props();
 </script>
 
 <button
+    onclick={() => goto(route)}
+    onmouseenter={() => preloadData(route)}
     class="cursor-pointer w-full h-11 px-4 flex items-center hover:bg-light_grey/30"
 >
     <div class="w-full h-6 ">

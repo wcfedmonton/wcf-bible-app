@@ -1,7 +1,7 @@
 import { fetchChapter } from '$lib/bible/chapterServices';
 import type { BibleTranslation } from '$lib/server/bible.js';
 
-export async function load({ fetch }) {
+export async function load({ fetch, cookies }) {
 	const data = (await fetchChapter({
 		input: 'John 1:1',
 		verseLimit: 1,
@@ -12,7 +12,10 @@ export async function load({ fetch }) {
 		fetch
 	}))!;
 
+	const { name } = JSON.parse(atob(cookies.get('idToken')!.split('.')[1]));
+
 	return {
+		name,
 		...data,
 		translation: 'NIV' as BibleTranslation
 	};

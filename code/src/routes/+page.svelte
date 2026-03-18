@@ -5,6 +5,7 @@
 	import SidebarButton from '../components/home/SidebarButton.svelte';
 	import AuthenticatedSidebar from '../components/home/sidebar/AuthenticatedSidebar.svelte';
 
+	import { setContext } from 'svelte';
 	import type { OSISReference } from '$lib/shared/format';
 	import { fetchChapter } from '$lib/bible/chapterServices';
 	import { type BibleTranslation, type Verse as VerseType } from '$lib/server/bible';
@@ -21,7 +22,17 @@
 		// svelte-ignore state_referenced_locally
 	} = $state(initialData);
 
+	let showSidebar = $state(false);
+	
+	const name: string = $derived(initialData.name);
+	setContext('name', { get value() { return name; } });
+
+	const selectedSetIndex = $state({ value: -1 });
+	setContext('selectedSetIndex', selectedSetIndex);
+
 	async function fetchChapterData(query: string) {
+		selectedSetIndex.value = -1; // make no set appear selected since the user will no longer be navigating through a set
+
 		const updatedData = await fetchChapter({
 			input: query,
 			...dataState
@@ -35,8 +46,6 @@
 			dataState.selectedVerseIndex = updatedData.selectedVerseIndex;
 		}
 	}
-
-	let showSidebar: boolean = $state(false);
 </script>
 
 <!-- <Search {fetchChapterData} /> -->
