@@ -1,10 +1,12 @@
 <script lang="ts">
 	import Search from '../components/home/Search.svelte';
 	import Verse from '../components/home/VerseNavigator.svelte';
+	import SidebarButton from '../components/home/SidebarButton.svelte';
 
 	import type { OSISReference } from '$lib/shared/format';
 	import { fetchChapter } from '$lib/bible/chapterServices';
 	import { type BibleTranslation, type Verse as VerseType } from '$lib/server/bible';
+	import Sidebar from '../components/common/Sidebar.svelte';
 
 	const { data: initialData } = $props(); // initial data is loaded on the server
 
@@ -37,3 +39,4 @@
 <!-- <Search {fetchChapterData} /> -->
 
 <!-- <Verse bind:state {fetchChapterData} /> -->
+<SidebarButton />
