@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Search from './components/home/Search.svelte';
-	import Verse from './components/home/VerseNavigator.svelte';
+	import Search from '../components/home/Search.svelte';
+	import Verse from '../components/home/VerseNavigator.svelte';
 
 	import type { OSISReference } from '$lib/shared/format';
 	import { fetchChapter } from '$lib/bible/chapterServices';
@@ -34,9 +34,6 @@
 	}
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<!-- <Search {fetchChapterData} /> -->
 
-<Search {fetchChapterData} />
-
-<Verse bind:state {fetchChapterData} />
+<!-- <Verse bind:state {fetchChapterData} /> -->
