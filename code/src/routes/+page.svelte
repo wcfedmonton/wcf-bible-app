@@ -3,8 +3,8 @@
 	import Sidebar from '../components/common/Sidebar.svelte';
 	import Verse from '../components/home/VerseNavigator.svelte';
 	import SidebarButton from '../components/home/SidebarButton.svelte';
-	import GeneralSidebar from '../components/home/sidebar/GeneralSidebar.svelte';
-	import AuthenticatedSidebar from '../components/home/sidebar/AuthenticatedSidebar.svelte';
+	import GeneralSidebar from '../components/home/sidebar/general/GeneralSidebar.svelte';
+	import AuthenticatedSidebar from '../components/home/sidebar/authenticated/AuthenticatedSidebar.svelte';
 
 	import { setContext } from 'svelte';
 	import type { OSISReference } from '$lib/shared/format';

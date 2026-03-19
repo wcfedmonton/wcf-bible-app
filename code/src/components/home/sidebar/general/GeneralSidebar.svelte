@@ -1,16 +1,14 @@
 <script lang="ts">
-    import Title from "./Title.svelte";
-    import Header from "./Header.svelte";
-    import Divider from "./Divider.svelte";
+    import Title from "../Title.svelte";
+    import Header from "../Header.svelte";
+    import Divider from "../Divider.svelte";
     import AuthModal from "./AuthModal.svelte";
-    import VerseSetsNav from "./nav/VerseSetsNav.svelte";
+    import VerseSetsNav from "../nav/VerseSetsNav.svelte";
 
     import { fly } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
 
     let { showSidebar = $bindable() } = $props();
-
-    
 </script>
 
 <div 

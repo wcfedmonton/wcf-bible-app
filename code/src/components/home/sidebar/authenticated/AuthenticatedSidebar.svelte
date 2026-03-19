@@ -1,11 +1,11 @@
 <script lang="ts">
-    import Name from "./Name.svelte";
-    import Title from "./Title.svelte";
-    import Header from "./Header.svelte";
-    import Sets from "./sets/Sets.svelte";
-    import Divider from "./Divider.svelte";
+    import Name from "../Name.svelte";
+    import Title from "../Title.svelte";
+    import Header from "../Header.svelte";
+    import Sets from "../sets/Sets.svelte";
     import SignOut from "./SignOut.svelte";
-    import VerseSetsNav from "./nav/VerseSetsNav.svelte";
+    import Divider from "../Divider.svelte";
+    import VerseSetsNav from "../nav/VerseSetsNav.svelte";
 
     import { fly } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
@@ -22,7 +22,7 @@
     <Name />
 
     <Title title="NAVIGATION"/>
-    <VerseSetsNav />
+    <VerseSetsNav disabled={false}/>
     <Divider />
 
     <Title title="VERSE SETS" />
