@@ -1,4 +1,5 @@
 <script lang="ts">
+	import tailwindcss from '@tailwindcss/vite';
 	import { getVerseReference } from '$lib/bible/chapterServices';
 	import YVTranslations from '$lib/shared/YVTranslations.json' with { type: 'json' };
 	import APIBibleTranslations from '$lib/shared/APIBibleTranslations.json' with { type: 'json' };
@@ -14,27 +15,27 @@
 
 
 <div style="display: flex; flex-direction: row;">
-	<div class="nav-button-container">
+	<div class="w-(15%) flex justify-start mr-(15rem) mt-(15%)">
 		<button
-			class="nav_button"
+			class="text-center bg-transparent outline-none border-none disabled:opacity-(0.5) cursor-not-allowed"
 			onclick={() => {
 			state.selectedVerseIndex -= 1;
 			state.verseReference = getVerseReference(state.verseData, state.osis, state.selectedVerseIndex);
 			}}
-			disabled={state.selectedVerseIndex == 0}><img class="nav_button" src={previous_icon} alt="Previous" /></button
+			disabled={state.selectedVerseIndex == 0}><img class="text-center bg-transparent outline-none border-none disabled:opacity-(0.5) cursor-not-allowed" src={previous_icon} alt="Previous" /></button
 		>
 	</div>
 
 
 
 
-	<div class=verse-navigator-container>
-		<div class="verse-header-container">
-			<h1 class="verse-header">{state.verseReference}</h1>
+	<div class="flex justify-center items-left flex-col gap-(1rem) w-(100%) mt-(5%) h-(100%)">
+		<div class="position-left w-(100%)">
+			<h1 class="text-2xl font-bold">{state.verseReference}</h1>
 		</div>
 
-		<div class="version-dropdown-container">
-			<select class="version-dropdown"
+		<div class="color-red-400">
+			<select class="color-red-200 italic text-sm"
 				bind:value={state.translation}
 				onchange={() => {
 					fetchChapterData(state.verseReference, state.selectedTranslation);
@@ -54,8 +55,8 @@
 			</select>
 		</div>
 
-		<div class="verse-content-container">
-			<h3 class="verse-content">{state.verseData[state.selectedVerseIndex]?.text}</h3>
+		<div class="w-(100%) overflow-y-auto">
+			<h3 class="text-base">{state.verseData[state.selectedVerseIndex]?.text}</h3>
 		</div>
 
 	</div>
@@ -63,58 +64,14 @@
 
 
 
-	<div class="nav-button-container-next">
+	<div class="w-(15%) flex justify-end mr-(15rem) mt-(15%)">
 		<button
-			class="nav_button"
+			class="text-center bg-transparent outline-none border-none disabled:opacity-(0.5) cursor-not-allowed"
 			onclick={() => {
 				state.selectedVerseIndex += 1;
 				state.verseReference = getVerseReference(state.verseData, state.osis, state.selectedVerseIndex);
 			}}
-			disabled={state.selectedVerseIndex == state.verseLimit - 1}><img class="nav_button" src={next_icon} alt="Next" /></button
+			disabled={state.selectedVerseIndex == state.verseLimit - 1}><img class="text-center bg-transparent outline-none border-none disabled:opacity-(0.5) cursor-not-allowed" src={next_icon} alt="Next" /></button
 		>
 	</div>
 </div>
-
-
-
-<style>
-	.nav_button {
-		text-align: center;
-		background: transparent;
-		outline: none !important;
-		border: none;
-		opacity: 2.0;
-	}
-	.nav_button:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-	.verse-navigator-container {
-		display: flex;
-		justify-content: center;
-		flex-direction: column;
-		align-items: left;
-		gap: 1rem;
-		width: 100%;
-		margin-top: 5%;
-		height: 100%;
-	}
-	.verse-header-container {
-		position: left;
-		width: 100%;
-	}
-	.nav-button-container {
-		width: 15%; 
-		display: flex;
-		justify-content: flex-start;
-		margin-right: 15rem;
-		margin-top: 15%;
-	}
-	.nav-button-container-next {
-		width: 15%; 
-		display: flex;
-		justify-content: flex-end;
-		margin-left: 15rem;
-		margin-top: 15%;
-	}
-</style>

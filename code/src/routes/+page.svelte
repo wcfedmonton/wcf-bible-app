@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import tailwindcss from '@tailwindcss/vite';
 
 	import Search from './components/home/Search.svelte';
 	import Verse from './components/home/VerseNavigator.svelte';
@@ -46,32 +47,15 @@
 	<Search {fetchChapterData} />
 </div>
 
-<div class="verse-container">
+<div class="flex justify-center">
 	<Verse bind:state {fetchChapterData} />
 </div>
 
-<div class="Credits-container">
+<div class="text-center mt-(20rem)">
 	<p>
 		Built by 
-		<a class="credits" href="https://sites.google.com/view/wcfedmonton/home">
+		<a class="text-[#d3413f]" href="https://sites.google.com/view/wcfedmonton/home">
 			Winners Campus Fellowship Edmonton
 		</a>
 	</p>
 </div>
-
-<style>
-	.Credits-container {
-		text-align: center;
-		margin-top: 20rem;
-	}
-
-	.credits {
-		color: #d3413f;
-		text-decoration: none;
-	}
-
-	.verse-container {
-		display: flex;
-		justify-content: center;
-	}
-</style>
