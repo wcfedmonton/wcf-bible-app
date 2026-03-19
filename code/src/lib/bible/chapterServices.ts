@@ -10,6 +10,7 @@ type FetchChapterParams = {
 	verseReference: string;
 	selectedVerseIndex: number;
 	translation: BibleTranslation;
+	fetch?: typeof globalThis.fetch; // a 'fetch' field is included because a different 'fetch' fn is used on the server
 };
 
 /**
@@ -19,17 +20,18 @@ type FetchChapterParams = {
  * @param translation - The selected Bible translation identifier used to fetch the corresponding chapter data.
  */
 export async function fetchChapter(options: FetchChapterParams) {
-	let { verseData, verseLimit, verseReference, selectedVerseIndex } = options;
 	const osis = parseQuery(options.input)!;
-
 	if (!osis) return;
+
+	const fetchFn = options.fetch ?? fetch;
+	let { verseData, verseLimit, verseReference, selectedVerseIndex } = options;
 
 	const params = new URLSearchParams({
 		query: `${osis.book}.${osis.chapter}`, // normalize the query to increase cache hits
 		translation: options.translation
 	});
 
-	const res = await fetch(`api/verses?${params.toString()}`);
+	const res = await fetchFn(`api/verses?${params.toString()}`);
 	const resolved = await res.json();
 
 	// verse length must be verified since some translations do not have certain verses
@@ -52,6 +54,30 @@ export async function fetchChapter(options: FetchChapterParams) {
 		verseReference,
 		selectedVerseIndex
 	};
+}
+
+/**
+ * Fetches a specific verse based on a user query and translation.
+ *
+ * @param {string} query - A verse query string (e.g., "John 3:16").
+ * @param {string} translation - The Bible translation identifier to fetch from the API.
+ * @returns {Promise<{ id: number, text: string } | undefined>}
+ * A promise resolving to the matching verse object if found, otherwise `undefined`.
+ */
+export async function fetchVerse(query: string, translation: string) {
+	const osis = parseQuery(query)!;
+
+	if (!osis) return;
+
+	const params = new URLSearchParams({
+		query: `${osis.book}.${osis.chapter}`, // normalize the query to increase cache hits
+		translation: translation
+	});
+
+	const res = await fetch(`api/verses?${params.toString()}`);
+	const { verses } = await res.json();
+
+	return verses.find((verse: { id: number; text: string }) => verse.id === osis.selectedVerse);
 }
 
 /** Resolves and returns a valid selected verse reference.*/

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import tailwindcss from '@tailwindcss/vite';
 
 	import Search from './components/home/Search.svelte';
 	import Verse from './components/home/VerseNavigator.svelte';
@@ -9,21 +8,17 @@
 	import { fetchChapter } from '$lib/bible/chapterServices';
 	import { type BibleTranslation, type Verse as VerseType } from '$lib/server/bible';
 
+	const { data: initialData } = $props(); // initial data is loaded on the server
+
 	let state: {
 		verseLimit: number;
-		verseReference: string;
 		osis?: OSISReference;
+		verseReference: string;
 		verseData: VerseType[];
 		selectedVerseIndex: number;
 		translation: BibleTranslation;
-	} = $state({
-		verseLimit: 1,
-		verseReference: '',
-		osis: undefined,
-		verseData: [],
-		selectedVerseIndex: 0,
-		translation: 'NIV'
-	});
+		// svelte-ignore state_referenced_locally
+	} = $state(initialData);
 
 	async function fetchChapterData(query: string) {
 		const updatedData = await fetchChapter({
@@ -39,8 +34,6 @@
 			state.selectedVerseIndex = updatedData.selectedVerseIndex;
 		}
 	}
-
-	onMount(async () => fetchChapterData('John 1:1')); // this will be the default verse
 </script>
 
 <div>
