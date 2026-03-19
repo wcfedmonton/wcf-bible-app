@@ -13,15 +13,22 @@ export async function load({ fetch, cookies }) {
 		fetch
 	}))!;
 
-	const { name, sub: userId } = cookies.get('idToken') ? JSON.parse(atob(cookies.get('idToken')!.split('.')[1])) : "";
+	if(cookies.get('idToken')) {
+		const { name, sub: userId } = cookies.get('idToken') ? JSON.parse(atob(cookies.get('idToken')!.split('.')[1])) : "";
 	
-	const res = await fetch(`api/users/${userId}/sets`);
-	const sets: VerseSet[] = await res.json();
+		const res = await fetch(`api/users/${userId}/sets`);
+		const sets: VerseSet[] = await res.json();
 
-	return {
-		name,
-		sets,
-		...data,
-		translation: 'NIV' as BibleTranslation
-	};
+		return {
+			name,
+			sets,
+			authenticated: true,
+			initialVerse: { ...data, translation: 'NIV' as BibleTranslation }
+		};
+	} else {
+		return {
+			authenticated: false,
+			initialVerse: { ...data, translation: 'NIV' as BibleTranslation }
+		};
+	}
 }

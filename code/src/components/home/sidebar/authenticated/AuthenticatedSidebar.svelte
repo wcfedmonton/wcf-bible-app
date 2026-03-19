@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Name from "../Name.svelte";
+    import Name from "./Name.svelte";
     import Title from "../Title.svelte";
     import Header from "../Header.svelte";
     import Sets from "../sets/Sets.svelte";

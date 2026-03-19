@@ -18,21 +18,24 @@
 		osis?: OSISReference;
 		verseReference: string;
 		verseData: VerseType[];
+		authenticated: boolean;
 		selectedVerseIndex: number;
 		translation: BibleTranslation;
 		// svelte-ignore state_referenced_locally
-	} = $state(initialData);
+	} = $state({ ...initialData.initialVerse, authenticated: initialData.authenticated });
 
 	let showSidebar = $state(false);
 
 	const selectedSetIndex = $state({ value: -1 });
 	setContext('selectedSetIndex', selectedSetIndex);
 
-	const name: string = $derived(initialData.name);
-	setContext('name', { get value() { return name } });
+	if(dataState.authenticated) {
+		const name: string = $derived(initialData.name);
+		setContext('name', { get value() { return name } });
 
-	const verseSets = $derived(initialData.sets);
-	setContext('verseSets', { get value() { return verseSets } });
+		const verseSets = $derived(initialData.sets);
+		setContext('verseSets', { get value() { return verseSets } });
+	}
 
 	async function fetchChapterData(query: string) {
 		selectedSetIndex.value = -1; // make no set appear selected since the user will no longer be navigating through a set
@@ -63,8 +66,11 @@
 
 	{#if showSidebar}
 		<div class="absolute top-0 left-0">
-			<!-- <AuthenticatedSidebar bind:showSidebar/> -->
-			<GeneralSidebar bind:showSidebar />
+			{#if dataState.authenticated}
+				<AuthenticatedSidebar bind:showSidebar/>
+			{:else}
+				<GeneralSidebar bind:showSidebar />
+			{/if}
 		</div>
 	{/if}
 </div>
