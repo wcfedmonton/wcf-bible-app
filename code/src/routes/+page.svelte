@@ -3,6 +3,7 @@
 	import Sidebar from '../components/common/Sidebar.svelte';
 	import Verse from '../components/home/VerseNavigator.svelte';
 	import SidebarButton from '../components/home/SidebarButton.svelte';
+	import GeneralSidebar from '../components/home/sidebar/GeneralSidebar.svelte';
 	import AuthenticatedSidebar from '../components/home/sidebar/AuthenticatedSidebar.svelte';
 
 	import { setContext } from 'svelte';
@@ -28,7 +29,7 @@
 	setContext('selectedSetIndex', selectedSetIndex);
 
 	const name: string = $derived(initialData.name);
-	setContext('name', { get value() { return name; } });
+	setContext('name', { get value() { return name } });
 
 	const verseSets = $derived(initialData.sets);
 	setContext('verseSets', { get value() { return verseSets } });
@@ -62,7 +63,8 @@
 
 	{#if showSidebar}
 		<div class="absolute top-0 left-0">
-			<AuthenticatedSidebar bind:showSidebar/>
+			<!-- <AuthenticatedSidebar bind:showSidebar/> -->
+			<GeneralSidebar bind:showSidebar />
 		</div>
 	{/if}
 </div>

@@ -5,8 +5,8 @@
 </script>
 
 
-<div class="w-full h-16 flex flex-row justify-between items-center px-5 border-b border-border_accent">
-    <div class="flex flex-row justify-start">
+<div class="w-full h-16 flex flex-row justify-between items-center px-3 border-b border-border_accent">
+    <div class="flex flex-row justify-start pl-3">
         <Logo />
     </div>
 

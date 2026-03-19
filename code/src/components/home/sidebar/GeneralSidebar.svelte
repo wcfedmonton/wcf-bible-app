@@ -1,16 +1,16 @@
 <script lang="ts">
-    import Name from "./Name.svelte";
     import Title from "./Title.svelte";
     import Header from "./Header.svelte";
-    import Sets from "./sets/Sets.svelte";
     import Divider from "./Divider.svelte";
-    import SignOut from "./SignOut.svelte";
+    import AuthModal from "./AuthModal.svelte";
     import VerseSetsNav from "./nav/VerseSetsNav.svelte";
 
     import { fly } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
 
     let { showSidebar = $bindable() } = $props();
+
+    
 </script>
 
 <div 
@@ -19,14 +19,15 @@
 >
     <Header bind:showSidebar={showSidebar} />
 
-    <Name />
+    <AuthModal />
 
-    <Title title="NAVIGATION"/>
-    <VerseSetsNav />
+    <Title title="NAVIGATION" />
+    <VerseSetsNav disabled={true} />
     <Divider />
 
     <Title title="VERSE SETS" />
-    <Sets />
-    
-    <SignOut />
+
+    <div class="flex flex-row justify-center">
+        <p class="w-[87%] h-4 pt-2 text-[0.76rem] text-center text-light_grey">Sign in to save and manage verse sets across sessions.</p>
+    </div>
 </div>

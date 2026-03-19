@@ -41,13 +41,6 @@ body {
 	--color-verse_set_selected: rgba(211, 65, 63, 0.1);
 
 	--color-option_hover: #333333;
-
-	--animate-slide-in-right: slide-in-right 0.75s cubic-bezier(.33, 1, .68, 1);
-}
-
-@keyframes slide-in-right {
-	0% { transform: translateX(-100%); }
-	100% { transform: translateX(0); }
 }
 
 @layer base {

@@ -8,7 +8,7 @@
     onclick={() => {
         selectedIndex.value = index;
     }}
-    class="cursor-pointer w-full h-11 px-4 flex justify-center items-center hover:bg-light_grey/30"
+    class="cursor-pointer w-full h-11 px-5 flex justify-center items-center hover:bg-light_grey/30"
 >
     <div class="w-[95%] h-full flex flex-row justify-start items-center">
         {#if selected}
