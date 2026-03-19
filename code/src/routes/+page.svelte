@@ -1,42 +1,76 @@
 <script lang="ts">
-	import Search from './components/home/Search.svelte';
-	import Verse from './components/home/VerseNavigator.svelte';
+	import Search from '../components/home/Search.svelte';
+	import Sidebar from '../components/common/Sidebar.svelte';
+	import Verse from '../components/home/VerseNavigator.svelte';
+	import SidebarButton from '../components/home/SidebarButton.svelte';
+	import GeneralSidebar from '../components/home/sidebar/general/GeneralSidebar.svelte';
+	import AuthenticatedSidebar from '../components/home/sidebar/authenticated/AuthenticatedSidebar.svelte';
 
+	import { setContext } from 'svelte';
 	import type { OSISReference } from '$lib/shared/format';
 	import { fetchChapter } from '$lib/bible/chapterServices';
 	import { type BibleTranslation, type Verse as VerseType } from '$lib/server/bible';
 
-	const { data: initialData } = $props(); // initial data is loaded on the server
+	const { data: initialData } = $props();
 
-	let state: {
+	let dataState: {
 		verseLimit: number;
 		osis?: OSISReference;
 		verseReference: string;
 		verseData: VerseType[];
+		authenticated: boolean;
 		selectedVerseIndex: number;
 		translation: BibleTranslation;
 		// svelte-ignore state_referenced_locally
-	} = $state(initialData);
+	} = $state({ ...initialData.initialVerse, authenticated: initialData.authenticated });
+
+	let showSidebar = $state(false);
+
+	const selectedSetIndex = $state({ value: -1 });
+	setContext('selectedSetIndex', selectedSetIndex);
+
+	if(dataState.authenticated) {
+		const name: string = $derived(initialData.name);
+		setContext('name', { get value() { return name } });
+
+		const verseSets = $derived(initialData.sets);
+		setContext('verseSets', { get value() { return verseSets } });
+	}
 
 	async function fetchChapterData(query: string) {
+		selectedSetIndex.value = -1; // make no set appear selected since the user will no longer be navigating through a set
+
 		const updatedData = await fetchChapter({
 			input: query,
-			...state
+			...dataState
 		})!;
 
 		if (updatedData) {
-			state.osis = updatedData.osis;
-			state.verseData = updatedData.verseData;
-			state.verseLimit = updatedData.verseLimit;
-			state.verseReference = updatedData.verseReference;
-			state.selectedVerseIndex = updatedData.selectedVerseIndex;
+			dataState.osis = updatedData.osis;
+			dataState.verseData = updatedData.verseData;
+			dataState.verseLimit = updatedData.verseLimit;
+			dataState.verseReference = updatedData.verseReference;
+			dataState.selectedVerseIndex = updatedData.selectedVerseIndex;
 		}
 	}
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<!-- <Search {fetchChapterData} /> -->
 
-<Search {fetchChapterData} />
+<!-- <Verse bind:state {fetchChapterData} /> -->
 
-<Verse bind:state {fetchChapterData} />
+<div class="absolute">
+	<div class="absolute top-0 left-0">
+		<SidebarButton bind:showSidebar />
+	</div>
+
+	{#if showSidebar}
+		<div class="absolute top-0 left-0">
+			{#if dataState.authenticated}
+				<AuthenticatedSidebar bind:showSidebar/>
+			{:else}
+				<GeneralSidebar bind:showSidebar />
+			{/if}
+		</div>
+	{/if}
+</div>

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Empty from '../components/sets/Empty.svelte';
-	import Populated from '../components/sets/Populated.svelte';
-	import SetsSidebar from '../components/sets/Sidebar.svelte';
-	import GeneralSidebar from '../components/common/Sidebar.svelte';
+	import Empty from '../../components/sets/Empty.svelte';
+	import Populated from '../../components/sets/Populated.svelte';
+	import SetsSidebar from '../../components/sets/Sidebar.svelte';
+	import GeneralSidebar from '../../components/common/Sidebar.svelte';
 
 	import { setContext } from 'svelte';
 

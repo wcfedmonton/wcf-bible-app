@@ -1,13 +1,13 @@
 <script lang="ts">
-	import Form from '../components/authentication/Form.svelte';
-	import Input from '../components/authentication/Input.svelte';
-	import Footer from '../components/authentication/Footer.svelte';
-	import Button from '../components/authentication/Button.svelte';
-	import Divider from '../components/authentication/Divider.svelte';
-	import Password from '../components/authentication/Password.svelte';
-	import AuthCard from '../components/authentication/AuthCard.svelte';
-	import AuthPage from '../components/authentication/AuthPage.svelte';
-	import GoogleButton from '../components/authentication/GoogleButton.svelte';
+	import Form from '../../components/authentication/Form.svelte';
+	import Input from '../../components/authentication/Input.svelte';
+	import Footer from '../../components/authentication/Footer.svelte';
+	import Button from '../../components/authentication/Button.svelte';
+	import Divider from '../../components/authentication/Divider.svelte';
+	import Password from '../../components/authentication/Password.svelte';
+	import AuthCard from '../../components/authentication/AuthCard.svelte';
+	import AuthPage from '../../components/authentication/AuthPage.svelte';
+	import GoogleButton from '../../components/authentication/GoogleButton.svelte';
 
 	import { createForm } from 'felte';
 	import { goto } from '$app/navigation';
