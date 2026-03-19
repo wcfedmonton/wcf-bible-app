@@ -1,7 +1,23 @@
 <script lang="ts">
 	import Button from '../Button.svelte';
 
-	const { selectedVerseSet = $bindable() } = $props();
+	import { getContext } from 'svelte';
+
+	import type { ContextValue } from '$lib/utils';
+	import { VerseSet } from '$lib/VerseSet';
+
+	const id = getContext<ContextValue<string>>('selectedVerseSetId');
+	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
+	const selectedVerseSet = $derived(verseSets.value.find((set) => set.id === id.value));
+
+	//  svelte/state_referenced_locally
+	let name = $state(selectedVerseSet?.name ?? '');
+	let lastEdited = $state(selectedVerseSet?.lastEdited ?? '');
+
+	$effect(() => {
+		name = selectedVerseSet?.name ?? '';
+		lastEdited = selectedVerseSet?.lastEdited ?? '';
+	});
 
 	const arrowUp = `
         <svg width=16 height=16 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#e0e0e0"">
@@ -17,8 +33,8 @@
 >
 	<div class="flex flex-row justify-between w-[94%] h-[3.2rem]">
 		<div class="flex flex-col gap-1">
-			<p class="font-serif text-3xl italic">{selectedVerseSet?.name}</p>
-			<p class="text-[0.8rem] text-light_grey">Last edited {selectedVerseSet?.lastEdited}</p>
+			<p class="font-serif text-3xl italic">{name}</p>
+			<p class="text-[0.8rem] text-light_grey">Last edited {lastEdited}</p>
 		</div>
 
 		<div class="flex flex-row justify-end h-[2.6rem]">

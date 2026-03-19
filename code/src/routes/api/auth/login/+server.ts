@@ -7,7 +7,7 @@ export async function POST({ request, cookies }) {
 	const email = form.get('email') as string;
 	const password = form.get('password') as string;
 
-	/*try {
+	try {
 		const session = await getTokens(email, password);
 		saveTokens({ cookieObj: cookies, session });
 	} catch (error) {
@@ -17,7 +17,7 @@ export async function POST({ request, cookies }) {
 				headers: { 'Content-Type': 'application/json' }
 			});
 		}
-	}*/
+	}
 
 	return new Response(JSON.stringify({ message: 'User succesfully signed in.' }), {
 		status: 201,

@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
+	import { fetchVerse } from '$lib/bible/chapterServices';
+	import { generateAutoSuggestions } from '$lib/bible/suggestionUtils';
 	import { getTranslations, type ContextValue, type Verse } from '$lib/utils';
+	import { VerseSet } from '$lib/VerseSet';
 
-	let { verseSet, selectedTranslation = $bindable() } = $props();
+	let { selectedTranslation = $bindable() }: { selectedTranslation: string } = $props();
 
 	let open = $state(false);
 	const translations: string[] = $derived(open ? getTranslations() : [selectedTranslation]);
@@ -12,43 +15,60 @@
 	const queryCopy = getContext<ContextValue<string>>('queryCopy');
 	const searchQuery = getContext<ContextValue<string>>('searchQuery');
 	const searchResults = getContext<ContextValue<Verse[]>>('searchResults');
+	const selectedVerseSet = getContext<ContextValue<VerseSet>>('selectedVerseSet');
 	const viewingSearchResults = $derived(getContext<ContextValue<boolean>>('viewingSearchResults'));
 
-	function returnDummyData() {
-		return [
-			{
-				orderId: verseSet.verses.length + 1,
-				verseSetId: verseSet.id,
-				translation: 'NIV',
-				text: 'For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life. For God so loved the world',
-				verseReference: 'John 3:16'
-			},
-			{
-				orderId: verseSet.verses.length + 1,
-				verseSetId: verseSet.id,
-				translation: 'NIV',
-				text: 'But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not faint.',
-				verseReference: 'Isaiah 40:31'
-			},
-			{
-				orderId: verseSet.verses.length + 1,
-				verseSetId: verseSet.id,
-				translation: 'NIV',
-				text: 'I can do all this through him who gives me strength, for I know that nothing is impossible with God, and his grace is sufficient for all who call upon him.',
-				verseReference: 'Philippians 4:13'
+	/**
+	 * Updates the search results displayed to the user based on the current search query.
+	 *
+	 * @returns {Promise<void>} Resolves once all verse requests have completed and
+	 * the search results have been updated.
+	 */
+	async function updateSearchResults() {
+		const searchRequests: Promise<Record<string, string>>[] = [];
+		const suggestions = (await generateAutoSuggestions(searchQuery.value)).slice(0, 3);
+
+		if (suggestions.length === 0) {
+			searchResults.value = [];
+
+			return;
+		}
+
+		suggestions.forEach(async (suggestion, index) => {
+			// if the user's query doesn't include a verse, we add one so that the UI is consistent
+			if (!suggestion.includes(':')) {
+				suggestions[index] = suggestion + ':1';
 			}
-		];
+
+			searchRequests.push(fetchVerse(suggestions[index], selectedTranslation));
+		});
+
+		const resolved = await Promise.all(searchRequests);
+
+		suggestions.forEach((suggestion, index) => {
+			searchResults.value[index] = {
+				// overwrite the previous result, so the empty state isn't shown unnecessarily
+				verseSetId: selectedVerseSet.value.id, // set to an empty string for now, but once added to the set the value will be set
+				text: resolved[index].text,
+				verseReference: suggestion,
+				translation: selectedTranslation,
+				orderId: selectedVerseSet.value.verses.length + 1
+			};
+		});
+
+		loading = false;
+		searchResults.value = searchResults.value.slice(0, suggestions.length); // exclude any old results
 	}
 </script>
 
-<svelte:window 
+<svelte:window
 	onclick={(event) => {
 		if (!(event.target instanceof HTMLInputElement)) {
 			searchQuery.value = '';
 			searchResults.value = [];
 			viewingSearchResults.value = false;
 		}
-	}}	
+	}}
 />
 
 <div class="relative flex flex-row justify-center items-start">
@@ -103,18 +123,15 @@
 	<input
 		bind:value={searchQuery.value}
 		disabled={loading}
-		onkeydown={({ key }) => {
+		onkeydown={async ({ key }) => {
 			if (key === 'Enter' && searchQuery.value.trim() !== '') {
-				loading = true;
-				// POST request will be made here using the search query
-				setTimeout(() => {
-					searchResults.value.splice(0, searchResults.value.length, ...returnDummyData());
-					
-					// these should only be set after the request resolves
-					queryCopy.value = searchQuery.value; // make a shallow copy of the query so that changes to the original one are not propagated
-					viewingSearchResults.value = true; 
-					loading = false;
-				}, 2000);
+				loading = true; // activate loading state
+
+				await updateSearchResults();
+
+				queryCopy.value = searchQuery.value; // make a shallow copy of the query so that changes to the original one are not propagated
+				viewingSearchResults.value = true;
+				loading = false;
 			}
 		}}
 		class="z-0 w-[87%] h-[2.48rem] mt-[1.2rem] pl-3 pr-7 rounded-tr rounded-br border-y border-r border-solid border-accent_btn outline-none bg-form_input"

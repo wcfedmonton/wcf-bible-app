@@ -31,7 +31,11 @@ export function disabledCondition(state: FormState) {
 
 type TokenArgs = {
 	cookieObj: Cookies;
-	session: { AccessToken: string | undefined; RefreshToken: string | undefined };
+	session: {
+		AccessToken: string | undefined;
+		RefreshToken: string | undefined;
+		IdToken: string | undefined;
+	};
 };
 
 /**
@@ -42,6 +46,7 @@ type TokenArgs = {
  * @param {Object} options.session - The session object containing token data
  * @param {string} options.session.AccessToken - The access token to be saved
  * @param {string} options.session.RefreshToken - The refresh token to be saved
+ * @param {string} options.session.IdToken - The id token to be saved
  * @returns {void}
  * @example
  * saveTokens({
@@ -66,11 +71,17 @@ export function saveTokens({ cookieObj, session }: TokenArgs) {
 		...defaultCookieOptions,
 		maxAge: 60 * 60 * 24 * 30
 	});
+
+	cookieObj.set('idToken', session.IdToken!, {
+		...defaultCookieOptions,
+		maxAge: 60 * 60
+	});
 }
 
 export type Verse = {
 	text: string;
 	orderId: number;
+	verseSetId: string;
 	translation: string;
 	verseReference: string;
 };

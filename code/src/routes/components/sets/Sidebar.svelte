@@ -3,7 +3,8 @@
 	import VerseSetReference from './set-sidebar/VerseSetReference.svelte';
 
 	import { getContext, setContext } from 'svelte';
-	import { getDate, type ContextValue, type VerseSet } from '$lib/utils';
+	import { VerseSet } from '$lib/VerseSet';
+	import { getDate, type ContextValue } from '$lib/utils';
 
 	const add = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg w-[0.6rem] text-[#e0e0e0]" viewBox="0 0 16 16">
@@ -15,24 +16,35 @@
             <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
         </svg>`;
 
-	const sets = getContext<ContextValue<VerseSet[]>>('verseSets');
+	const allSets = getContext<ContextValue<VerseSet[]>>('verseSets');
+
+	const sets = $derived(
+		[...allSets.value].sort((a, b) => {
+			if (new Date(a.lastEdited) > new Date(b.lastEdited)) {
+				return -1;
+			} else if (new Date(a.lastEdited) < new Date(b.lastEdited)) {
+				return 1;
+			} else {
+				return a.name.localeCompare(b.name);
+			}
+		})
+	);
 
 	const lastSetToOpenEdit = $state({ value: '' });
 	setContext('lastSetToOpenEdit', lastSetToOpenEdit);
 
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 
-	function addVerseSet() {
-		sets.value.push({
-			verses: [],
-			name: 'Untitled',
-			lastEdited: getDate(),
-			id: crypto.randomUUID()
-		});
+	async function addVerseSet() {
+		// request to send a new verse will be created here
+		const newSet = new VerseSet(crypto.randomUUID(), 'Untitled', getDate(), []);
 
-		if (sets.value.length === 1) {
+		newSet.saveVerseSet();
+		allSets.value.push(newSet);
+
+		if (sets.length === 1) {
 			// handles the case for selection when the user adds their first verse set
-			selectedVerseSetId.value = sets.value[0].id;
+			selectedVerseSetId.value = sets[0].id;
 		}
 	}
 </script>
@@ -50,8 +62,8 @@
 	</div>
 
 	<div class="overflow-auto h-[calc(100vh-6.25rem)] scrollbar-black">
-		{#each sets.value as set, index (set)}
-			<VerseSetReference bind:set={sets.value[index]} />
+		{#each sets as set, index (set)}
+			<VerseSetReference bind:set={sets[index]} />
 		{/each}
 	</div>
 </div>

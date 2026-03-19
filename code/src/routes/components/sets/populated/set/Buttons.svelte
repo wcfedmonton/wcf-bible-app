@@ -1,7 +1,13 @@
 <script lang="ts">
-	import { type Verse } from '$lib/utils';
+	import { getContext } from 'svelte';
+	import { Verse } from '$lib/Verse';
+	import type { ContextValue } from '$lib/utils';
+	import { VerseSet } from '$lib/VerseSet';
 
 	let { verses = $bindable(), verse }: { verses: Verse[]; verse: Verse } = $props();
+
+	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
+	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 
 	const disabledCss = `group-hover:text-accent_btn`;
 
@@ -37,6 +43,18 @@
 
 	let index = $derived(verses.indexOf(verse));
 
+	/** Reassigns the 'verseSets' context variable to trigger a re-render. */
+	function updateUIVerseOrder() {
+		const i = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
+		const current = verseSets.value[i];
+		verseSets.value[i] = new VerseSet(
+			current.id,
+			current.name,
+			current.lastEdited,
+			[...current.verses].sort((a, b) => (a.orderId < b.orderId ? -1 : 1))
+		);
+	}
+
 	/**
 	 * Moves the current verse one position up in the list.
 	 *
@@ -50,14 +68,14 @@
 	function moveVerseUp() {
 		if (index > 0) {
 			const currentVerse = verses[index];
-			currentVerse.orderId = currentVerse.orderId - 1;
-
 			const nextVerse = verses[index - 1];
-			nextVerse.orderId = nextVerse.orderId + 1;
+
+			currentVerse.saveVerse(nextVerse.orderId);
+			nextVerse.saveVerse(currentVerse.orderId + 1);
 
 			verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
 
-			// send update request to db
+			updateUIVerseOrder();
 		}
 	}
 
@@ -74,14 +92,12 @@
 	function moveVerseDown() {
 		if (index < verses.length - 1) {
 			const currentVerse = verses[index];
-			currentVerse.orderId = currentVerse.orderId + 1;
-
 			const nextVerse = verses[index + 1];
-			nextVerse.orderId = nextVerse.orderId - 1;
 
-			verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
+			currentVerse.saveVerse(nextVerse.orderId);
+			nextVerse.saveVerse(currentVerse.orderId - 1);
 
-			// send update request to db
+			updateUIVerseOrder();
 		}
 	}
 
@@ -92,9 +108,16 @@
 	 * @returns {void}
 	 */
 	function deleteVerse() {
-		verses = verses.filter((verse) => verse.text != verses[index].text);
+		verse.deleteFromSet();
 
-		// send update request to db
+		const i = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
+		const current = verseSets.value[i];
+		verseSets.value[i] = new VerseSet(
+			current.id,
+			current.name,
+			current.lastEdited,
+			current.verses.filter((v) => v.text !== verse.text || v.translation !== verse.translation)
+		);
 	}
 
 	const eventHandlers = $derived([

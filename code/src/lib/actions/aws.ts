@@ -2,7 +2,8 @@ import {
 	SignUpCommand,
 	InitiateAuthCommand,
 	AdminInitiateAuthCommand,
-	CognitoIdentityProviderClient
+	CognitoIdentityProviderClient,
+	GetTokensFromRefreshTokenCommand
 } from '@aws-sdk/client-cognito-identity-provider';
 
 import crypto from 'crypto';
@@ -99,9 +100,36 @@ export async function getTokens(email: string, password: string) {
 	});
 
 	const { AuthenticationResult } = await client.send(signInCommand)!;
-	const { AccessToken, RefreshToken } = AuthenticationResult!;
+	const { AccessToken, RefreshToken, IdToken } = AuthenticationResult!;
 
-	return { AccessToken, RefreshToken };
+	return { AccessToken, RefreshToken, IdToken };
+}
+
+/**
+ * Exchanges a refresh token for a new set of authentication tokens using AWS Cognito.
+ *
+ * Implements refresh token rotation for enhanced security — each call invalidates the
+ * provided refresh token and returns a new one. This ensures that stolen or leaked
+ * refresh tokens cannot be reused after they have been rotated out, limiting the
+ * window of opportunity for unauthorized access.
+ *
+ * @param refreshToken - The refresh token issued during a previous authentication or rotation.
+ * @returns A promise resolving to a new set of tokens:
+ *   - `AccessToken` — short-lived token for authorizing API requests.
+ *   - `RefreshToken` — new refresh token to replace the one consumed by this call.
+ *   - `IdToken` — JWT containing the user's identity claims.
+ */
+export async function refreshTokens(refreshToken: string) {
+	const command = new GetTokensFromRefreshTokenCommand({
+		RefreshToken: refreshToken,
+		ClientId: USER_POOL_CLIENT_ID,
+		ClientSecret: USER_POOL_CLIENT_SECRET
+	});
+
+	const { AuthenticationResult } = await client.send(command);
+	const { AccessToken, RefreshToken, IdToken } = AuthenticationResult!;
+
+	return { AccessToken: AccessToken!, RefreshToken: RefreshToken!, IdToken: IdToken! };
 }
 
 /**
@@ -136,7 +164,7 @@ function computeSecretHash(username: string) {
  */
 export async function googleAuthenticate(fullName: string, email: string) {
 	try {
-		const { AccessToken, RefreshToken } = await register({
+		const { AccessToken, RefreshToken, IdToken } = await register({
 			email,
 			name: fullName,
 			// we set a default because of Amazon's API requirements, but the user will be
@@ -145,7 +173,7 @@ export async function googleAuthenticate(fullName: string, email: string) {
 			password: GOOGLE_DEFAULT_PASSWORD
 		});
 
-		return { AccessToken: AccessToken!, RefreshToken: RefreshToken! };
+		return { AccessToken: AccessToken!, RefreshToken: RefreshToken!, IdToken: IdToken! };
 	} catch {
 		// the admin version version of InitiateAuth must be used otherwise the custom
 		// auth flow is disabled
@@ -160,8 +188,8 @@ export async function googleAuthenticate(fullName: string, email: string) {
 		});
 
 		const { AuthenticationResult } = (await client.send(command))!;
-		const { AccessToken, RefreshToken } = AuthenticationResult!;
+		const { AccessToken, RefreshToken, IdToken } = AuthenticationResult!;
 
-		return { AccessToken, RefreshToken };
+		return { AccessToken, RefreshToken, IdToken };
 	}
 }
