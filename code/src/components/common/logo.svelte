@@ -1,5 +1,9 @@
+<script>
+	import Logo from "$lib/assets/logo.png";
+</script>
+
 <div
-	class="relative flex flex-col items-center gap-1.5"
+	class="flex flex-col w-fit"
 >
-	<p class="font-serif font-black text-[1.1rem] text-white tracking-widest">WCF</p>
+	<img src={Logo} alt="logo" />
 </div>
