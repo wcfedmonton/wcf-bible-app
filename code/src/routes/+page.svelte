@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	import Search from './components/home/Search.svelte';
 	import Verse from './components/home/VerseNavigator.svelte';
 
@@ -34,9 +36,19 @@
 	}
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<div>
+	<Search {fetchChapterData} />
+</div>
 
-<Search {fetchChapterData} />
+<div class="flex justify-center">
+	<Verse bind:state {fetchChapterData} />
+</div>
 
-<Verse bind:state {fetchChapterData} />
+<div class="text-center mt-(20rem)">
+	<p>
+		Built by 
+		<a class="text-[#d3413f]" href="https://sites.google.com/view/wcfedmonton/home">
+			Winners Campus Fellowship Edmonton
+		</a>
+	</p>
+</div>

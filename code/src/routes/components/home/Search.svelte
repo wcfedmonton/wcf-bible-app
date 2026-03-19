@@ -1,5 +1,7 @@
 <script lang="ts">
+	import tailwindcss from '@tailwindcss/vite';
 	import { generateAutoSuggestions } from '$lib/bible/suggestionUtils';
+	import search_icon from '$lib/assets/OOjs_UI_icon_keyboard.svg';
 
 	let userInput = $state('');
 	let highlightedIndex = $state(-1);
@@ -48,47 +50,41 @@
 	}
 </script>
 
-<div style="width: fit-content;">
-	<input
-		type="text"
-		bind:value={userInput}
-		onkeydown={handleKeyDown}
-		oninput={async () => {
-			autoSuggestions = await generateAutoSuggestions(userInput);
-
-			if (autoSuggestions.length > 0) {
-				showSuggestions = true;
-			}
-		}}
-	/>
-	{#if showSuggestions}
-		<div id="suggestions-list" role="listbox">
-			{#each autoSuggestions as suggestion, index (suggestion)}
-				<div
-					role="option"
-					class="option"
-					class:selected={index === highlightedIndex}
-					tabindex="-1"
-					aria-selected={index === highlightedIndex}
-					onkeydown={handleKeyDown}
-					onclick={() => selectSuggestion(suggestion)}
-				>
-					{suggestion}
-				</div>
-			{/each}
+<div class="flex">
+	<div class="flex-col gap-(0.5rem) w-fit ml-(83%)">
+		<div class="relative">
+			<input
+				type="text"
+				class="z-0 text-auto fixed pt-(0.4rem) pb-(0.4rem) pl-(1.9rem) pr-(0.3rem) w-(13%) rounded-(1rem)"
+				bind:value={userInput}
+				onkeydown={handleKeyDown}
+				placeholder="start typing to find verse"
+				oninput={async () => {
+					autoSuggestions = await generateAutoSuggestions(userInput);
+					if(autoSuggestions.length > 0) {
+						showSuggestions = true;
+					}
+				}}
+			>
+			<img class="fixed z-1 py-(0.4rem) px-(0.5rem) scale-75" src={search_icon} alt="search icon"/> 
+			{#if showSuggestions}
+			<div class="fixed mt-(2.2rem) bg-gray w-(14.75%)" role="listbox">
+				{#each autoSuggestions as suggestion, index (suggestion)}
+					<div
+						role="option"
+						class="cursor-pointer hover:selected bg-gray-200"
+						class:selected={index === highlightedIndex}
+						tabindex="-1"
+						aria-selected={index === highlightedIndex}
+						onkeydown={handleKeyDown}
+						onclick={() => selectSuggestion(suggestion)}
+					>
+						{suggestion}
+					</div>
+				{/each}
+			</div>
+		{/if}
+	</div>
 		</div>
-	{/if}
+		
 </div>
-
-<button onclick={() => fetchChapterData(userInput)}>Submit</button>
-
-<style>
-	.option {
-		cursor: pointer;
-	}
-
-	.option:hover,
-	.selected {
-		background: #dbeafe;
-	}
-</style>
