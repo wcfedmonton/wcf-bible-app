@@ -2,7 +2,7 @@
 	import { generateAutoSuggestions } from '$lib/bible/suggestionUtils';
 
 	let userInput = $state('');
-	let highlightedIndex = $state(-1);
+	let selectedIndex = $state(-1);
 	let { fetchChapterData } = $props();
 	let showSuggestions = $state(false);
 	let autoSuggestions: string[] = $state([]);
@@ -14,7 +14,7 @@
 	 */
 	function selectSuggestion(suggestion: string) {
 		autoSuggestions = []; // clear the suggestions
-		highlightedIndex = -1;
+		selectedIndex = -1;
 		showSuggestions = false;
 
 		fetchChapterData(suggestion);
@@ -31,16 +31,16 @@
 		if (event.key === 'ArrowDown') {
 			event.preventDefault();
 
-			highlightedIndex = (highlightedIndex + 1) % autoSuggestions.length;
+			selectedIndex = (selectedIndex + 1) % autoSuggestions.length;
 		} else if (event.key === 'ArrowUp') {
 			event.preventDefault();
 
-			highlightedIndex = (highlightedIndex - 1 + autoSuggestions.length) % autoSuggestions.length;
+			selectedIndex = (selectedIndex - 1 + autoSuggestions.length) % autoSuggestions.length;
 		} else if (event.key === 'Enter') {
 			event.preventDefault();
 
-			if (highlightedIndex >= 0) {
-				selectSuggestion(autoSuggestions[highlightedIndex]);
+			if (selectedIndex >= 0) {
+				selectSuggestion(autoSuggestions[selectedIndex]);
 			} else {
 				fetchChapterData(userInput);
 			}
@@ -62,13 +62,42 @@
             bind:value={userInput}
             onkeydown={handleKeyDown}
             placeholder="Search by verse or phrase..."
-            class="w-[95%] pl-10 pr-4 py-2 bg-[#1a1a1a] text-[#cccccc] placeholder-[#606060] placeholder:text-[0.79rem] text-sm rounded-full border border-border_accent outline-none focus:ring-0 focus:border-gray-700"
-            oninput={async () => {
+			class="w-[95%] pl-10 pr-4 py-2 bg-[#1a1a1a] text-[#cccccc] placeholder-[#606060] placeholder:text-[0.79rem] text-sm border border-border_accent outline-none focus:ring-0 focus:border-gray-700
+			{showSuggestions && autoSuggestions.length > 0
+				? 'rounded-tl-sm rounded-tr-sm rounded-b-none border-b-[#1a1a1a]'
+				: 'rounded-sm'}"
+			oninput={async () => {
                 autoSuggestions = await generateAutoSuggestions(userInput);
+
                 if (autoSuggestions.length > 0) {
                     showSuggestions = true;
                 }
             }}
         />
+
+		<!-- dropdown -->
+        {#if showSuggestions && autoSuggestions.length > 0}
+            <ul
+                class="absolute top-full left-0 w-[95%] bg-[#1a1a1a] border border-border_accent border-t-0 rounded-b-sm overflow-hidden z-50 shadow-lg shadow-black/40"
+            >
+                {#each autoSuggestions as suggestion, i}
+                    <li>
+                        <button
+                            type="button"
+                            class="cursor-pointer w-full text-left px-3 py-2 text-sm flex items-center gap-2 bg-[#1a1a1a]
+                                   {i === selectedIndex
+                                       ? 'bg-[#2a2a2a] text-[#e0e0e0]'
+                                       : 'text-[#aaaaaa] hover:bg-[#222222] hover:text-[#cccccc]'}
+                                   {i === autoSuggestions.length - 1 ? '' : 'border-b border-[#2a2a2a]'}"
+                            onmouseenter={() => selectedIndex = i}
+                            onmouseleave={() => selectedIndex = -1}
+                            onclick={() => selectSuggestion(suggestion)}
+                        >
+                            <span>{suggestion}</span>
+                        </button>
+                    </li>
+                {/each}
+            </ul>
+        {/if}
     </div>
 </div>
