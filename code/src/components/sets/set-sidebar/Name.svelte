@@ -18,7 +18,7 @@
 			class={` font-serif w-[94%] h-7 mx-1 px-1 rounded-sm outline-none ${!setNameInputDisabled.value ? 'bg-[#222222] border border-solid border-input_focus focus:border-input_focus' : ''}`}
 			bind:value={newName}
 			minlength={1}
-			maxlength={35}
+			maxlength={30}
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={(e) => {
 				e.stopPropagation();

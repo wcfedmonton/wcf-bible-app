@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import { Verse } from '$lib/Verse';
-	import type { ContextValue } from '$lib/utils';
 	import { VerseSet } from '$lib/VerseSet';
+	import type { ContextValue } from '$lib/utils';
 
 	let { verses = $bindable(), verse }: { verses: Verse[]; verse: Verse } = $props();
 
