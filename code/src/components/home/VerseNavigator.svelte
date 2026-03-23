@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import type { ContextValue } from '$lib/utils';
-	import { getVerseReference } from '$lib/bible/chapterServices';
+	import { fetchVerse, getVerseReference } from '$lib/bible/chapterServices';
 	import YVTranslations from '$lib/shared/YVTranslations.json' with { type: 'json' };
 	import APIBibleTranslations from '$lib/shared/APIBibleTranslations.json' with { type: 'json' };
 
@@ -73,11 +73,21 @@
 									<button
 										type="button"
 										class="w-full text-left px-2 py-1 text-sm text-[#d3413f] hover:bg-[#d3413f2e]/50 cursor-pointer"
-										onclick={() => {
+										onclick={async () => {
 											open = false;
 											dataState.translation = translation;
-											fetchChapterData(dataState.verseReference, dataState.selectedTranslation);
-											dataState.verseReference = getVerseReference(dataState.verseData, dataState.osis, dataState.selectedVerseIndex);
+											
+											if(navigatingSet.value) {
+												const { text } = await fetchVerse(dataState.verseReference, dataState.translation);
+
+												// note that changes are only for the client's convience; they don't 
+												// persist upon navigation
+												dataState.verseData[dataState.selectedVerseIndex].text = text;
+												dataState.verseData[dataState.selectedVerseIndex].translation = translation;
+											} else {
+												fetchChapterData(dataState.verseReference, dataState.selectedTranslation);
+												dataState.verseReference = getVerseReference(dataState.verseData, dataState.osis, dataState.selectedVerseIndex);
+											}
 										}}
 									>
 										{translation}

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
+	import type { ContextValue } from '$lib/utils';
 	import { generateAutoSuggestions } from '$lib/bible/suggestionUtils';
 
 	let userInput = $state('');
@@ -8,6 +10,7 @@
 	let autoSuggestions: string[] = $state([]);
 
 	let loading = $state(false);
+	const navigatingSet = getContext<ContextValue<boolean>>('navigatingSet');
 
 	/**
 	 * Handles selection of an auto-suggestion.
@@ -15,6 +18,8 @@
 	 * @param {string} suggestion - The selected suggestion value.
 	 */
 	async function selectSuggestion(suggestion: string) {
+		navigatingSet.value = false;
+
 		autoSuggestions = []; // clear the suggestions
 		selectedIndex = -1;
 		showSuggestions = false;
@@ -23,6 +28,7 @@
 
 		await fetchChapterData(suggestion);
 
+		userInput = "";
 		loading = false;
 	}
 
@@ -45,6 +51,9 @@
 		} else if (event.key === 'Enter') {
 			event.preventDefault();
 
+			showSuggestions = false;
+			navigatingSet.value = false;
+
 			if (selectedIndex >= 0) {
 				selectSuggestion(autoSuggestions[selectedIndex]);
 			} else {	
@@ -52,6 +61,7 @@
 
 				await fetchChapterData(userInput);
 
+				userInput = "";
 				loading = false;
 			}
 		}

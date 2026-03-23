@@ -27,7 +27,8 @@
             translation: verse.translation,
             verseReference: verse.verseReference
         }));
-        console.log(versesInSet)
+        
+        dataState.value.selectedVerseIndex = 0;
         dataState.value.verseData = versesInSet;
         dataState.value.verseLimit = selectedSet.verses.length;
         dataState.value.verseReference = selectedSet.verses[0].verseReference;
