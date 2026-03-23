@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Search from '../components/home/Search.svelte';
-	import Sidebar from '../components/common/Sidebar.svelte';
 	import Verse from '../components/home/VerseNavigator.svelte';
 	import SidebarButton from '../components/home/SidebarButton.svelte';
 	import GeneralSidebar from '../components/home/sidebar/general/GeneralSidebar.svelte';
@@ -55,22 +54,32 @@
 	}
 </script>
 
-<!-- <Search {fetchChapterData} /> -->
+<div class="relative w-full h-dvh flex flex-row">
+    {#if showSidebar}
+        <div class="absolute top-0 left-0 h-full z-50">
+            {#if dataState.authenticated}
+                <AuthenticatedSidebar bind:showSidebar/>
+            {:else}
+                <GeneralSidebar bind:showSidebar />
+            {/if}
+        </div>
+    {/if}
 
-<!-- <Verse bind:state {fetchChapterData} /> -->
+    <div class="relative flex-1 h-dvh flex flex-col justify-center items-center">
+        <div class="absolute top-0 left-0 flex flex-row justify-between w-full">
+            <SidebarButton bind:showSidebar />
+			<Search fetchChapterData={fetchChapterData} />
+        </div>
 
-<div class="absolute">
-	<div class="absolute top-0 left-0">
-		<SidebarButton bind:showSidebar />
-	</div>
+        <div class="w-full">
+            <Verse bind:dataState {fetchChapterData} />
+        </div>
 
-	{#if showSidebar}
-		<div class="absolute top-0 left-0">
-			{#if dataState.authenticated}
-				<AuthenticatedSidebar bind:showSidebar/>
-			{:else}
-				<GeneralSidebar bind:showSidebar />
-			{/if}
-		</div>
-	{/if}
+        <p class="absolute bottom-0 pb-3">
+            Built by 
+            <a class="text-[#d3413f]" href="https://sites.google.com/view/wcfedmonton/home">
+                Winners Campus Fellowship Edmonton
+            </a>
+        </p>
+    </div>
 </div>
