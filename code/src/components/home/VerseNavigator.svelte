@@ -22,7 +22,7 @@
 
 <div class="flex flex-row justify-center items-center w-[100%]"> 
 	<div class="flex flex-row justify-between w-full">
-		<div class="flex flex-col justify-center items-center h-[18rem]">
+		<div class="flex flex-col justify-center items-center h-[25rem]">
 			<button
 				aria-label="previous"
 				class="cursor-pointer w-[2.5rem] ml-2 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
@@ -86,7 +86,7 @@
 			</div>
 		</div>
 
-		<div class="flex flex-col justify-center items-center h-[18rem]">
+		<div class="flex flex-col justify-center items-center h-[25rem]">
 			<button
 				aria-label="next"
 				class="cursor-pointer mr-2 text-center bg-transparent outline-none border-none disabled:opacity-50 disabled:cursor-not-allowed"

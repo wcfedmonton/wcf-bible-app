@@ -34,13 +34,17 @@ export async function fetchChapter(options: FetchChapterParams) {
 	const res = await fetchFn(`api/verses?${params.toString()}`);
 	const resolved = await res.json();
 
-	// verse length must be verified since some translations do not have certain verses
 	verseData = resolved.verses.length === 0 ? verseData : resolved.verses;
 	verseLimit = resolved.verses.length === 0 ? verseLimit : resolved.numVerses;
 	selectedVerseIndex =
 		resolved.verses.length === 0
 			? selectedVerseIndex
 			: verseData.findIndex((verse) => `${verse.id}` === `${osis.selectedVerse}`);
+
+	// if the verse the user was looking for doesn't exist in the selected translation, default to the first verse
+	if(selectedVerseIndex === -1) { 
+		selectedVerseIndex = 0;
+	}
 
 	verseReference =
 		resolved.verses.length === 0
