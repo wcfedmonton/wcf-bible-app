@@ -23,7 +23,7 @@
 </script>
 
 <div class="w-full flex flex-col overflow-auto h-[calc(100vh-21rem)] scrollbar-black">
-	{#each sets as set, index}
+	{#each sets as set, index (set.name)}
 		<Set {index} bind:selectedIndex={selectedSetIndex} {set} />
 	{/each}
 </div>

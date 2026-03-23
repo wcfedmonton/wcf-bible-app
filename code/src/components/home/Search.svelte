@@ -145,7 +145,7 @@
 			<ul
 				class="absolute top-full left-0 w-[95%] bg-[#1a1a1a] border border-border_accent border-t-0 rounded-b-sm overflow-hidden z-50 shadow-lg shadow-black/40"
 			>
-				{#each autoSuggestions as suggestion, i}
+				{#each autoSuggestions as suggestion, i (suggestion)}
 					<li>
 						<button
 							type="button"
