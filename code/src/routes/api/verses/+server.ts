@@ -7,6 +7,7 @@ export async function GET({ url }): Promise<Response> {
 
 	return new Response(JSON.stringify({ verses, numVerses: verses.length }), {
 		headers: {
+			'Content-Type': 'application/json',
 			'Cache-Control': `public, max-age=${3600 * 24 * 30}`
 		}
 	});
