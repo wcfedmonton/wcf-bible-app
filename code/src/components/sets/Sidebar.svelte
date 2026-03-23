@@ -2,8 +2,8 @@
 	import Button from './Button.svelte';
 	import VerseSetReference from './set-sidebar/VerseSetReference.svelte';
 
-	import { getContext, setContext } from 'svelte';
 	import { VerseSet } from '$lib/VerseSet';
+	import { getContext, setContext } from 'svelte';
 	import { getDate, type ContextValue } from '$lib/utils';
 
 	const add = `

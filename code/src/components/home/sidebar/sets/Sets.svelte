@@ -1,13 +1,13 @@
 <script lang="ts">
-    import Set from "./Set.svelte";
+	import Set from './Set.svelte';
 
-	import { getContext } from "svelte";
-    import type { VerseSet } from "$lib/utils";
-    import type { ContextValue } from "$lib/utils";
+	import { getContext } from 'svelte';
+	import type { VerseSet } from '$lib/utils';
+	import type { ContextValue } from '$lib/utils';
 
-    const allSets = getContext<ContextValue<VerseSet[]>>('verseSets');
-    
-    const sets = $derived(
+	const allSets = getContext<ContextValue<VerseSet[]>>('verseSets');
+
+	const sets = $derived(
 		[...allSets.value].sort((a, b) => {
 			if (new Date(a.lastEdited) > new Date(b.lastEdited)) {
 				return -1;
@@ -19,11 +19,11 @@
 		})
 	);
 
-    let selectedSetIndex = $state(getContext<ContextValue<number>>('selectedSetIndex'));
+	let selectedSetIndex = $state(getContext<ContextValue<number>>('selectedSetIndex'));
 </script>
 
 <div class="w-full flex flex-col overflow-auto h-[calc(100vh-21rem)] scrollbar-black">
-    {#each sets as set, index }
-        <Set index={index} bind:selectedIndex={selectedSetIndex} set={set}/>
-    {/each}
+	{#each sets as set, index (set.name)}
+		<Set {index} bind:selectedIndex={selectedSetIndex} {set} />
+	{/each}
 </div>

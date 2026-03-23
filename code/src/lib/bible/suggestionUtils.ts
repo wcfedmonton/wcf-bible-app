@@ -1,5 +1,5 @@
 import * as lang from 'bible-passage-reference-parser/esm/lang/en.js';
-import { bcv_parser } from 'bible-passage-reference-parser/esm/bcv_parser';
+import { bcv_parser } from 'bible-passage-reference-parser/esm/bcv_parser.js';
 
 import bookMap from '$lib/shared/OSIS.json';
 import { parseQuery } from '$lib/shared/format';

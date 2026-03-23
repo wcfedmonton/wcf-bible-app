@@ -13,13 +13,23 @@ type FetchChapterParams = {
 	fetch?: typeof globalThis.fetch; // a 'fetch' field is included because a different 'fetch' fn is used on the server
 };
 
+export type FetchChapterResult = {
+	verseData: Verse[];
+	verseLimit: number;
+	osis: OSISReference;
+	verseReference: string;
+	selectedVerseIndex: number;
+};
+
 /**
  * Fetches and initializes chapter verse data for a parsed Bible reference and selected translation.
  *
  * @param input - A Bible reference string (e.g., "gen 1 1") to be parsed into book and chapter information.
  * @param translation - The selected Bible translation identifier used to fetch the corresponding chapter data.
  */
-export async function fetchChapter(options: FetchChapterParams) {
+export async function fetchChapter(
+	options: FetchChapterParams
+): Promise<FetchChapterResult | undefined> {
 	const osis = parseQuery(options.input)!;
 	if (!osis) return;
 
@@ -34,13 +44,17 @@ export async function fetchChapter(options: FetchChapterParams) {
 	const res = await fetchFn(`api/verses?${params.toString()}`);
 	const resolved = await res.json();
 
-	// verse length must be verified since some translations do not have certain verses
 	verseData = resolved.verses.length === 0 ? verseData : resolved.verses;
 	verseLimit = resolved.verses.length === 0 ? verseLimit : resolved.numVerses;
 	selectedVerseIndex =
 		resolved.verses.length === 0
 			? selectedVerseIndex
 			: verseData.findIndex((verse) => `${verse.id}` === `${osis.selectedVerse}`);
+
+	// if the verse the user was looking for doesn't exist in the selected translation, default to the first verse
+	if (selectedVerseIndex === -1) {
+		selectedVerseIndex = 0;
+	}
 
 	verseReference =
 		resolved.verses.length === 0
