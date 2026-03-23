@@ -69,7 +69,7 @@
 
 		{#if signInScreen}
 			<!-- these components are only displayed if the user is on the sign in screen -->
-			 
+
 			<!-- 'forgot password' will remain hidden until the appropriate pages have been implemented.
 				<div class="flex pt-1 pb-2 mb-[-1rem] text-input_focus text-[0.8rem]">
 					<a class="hover:text-input_focus_hover" href="#">Forgot password?</a>

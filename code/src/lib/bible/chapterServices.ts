@@ -14,11 +14,11 @@ type FetchChapterParams = {
 };
 
 export type FetchChapterResult = {
-	verseData: Verse[],
-	verseLimit: number,
-	osis: OSISReference,
-	verseReference: string,
-	selectedVerseIndex: number
+	verseData: Verse[];
+	verseLimit: number;
+	osis: OSISReference;
+	verseReference: string;
+	selectedVerseIndex: number;
 };
 
 /**
@@ -27,7 +27,9 @@ export type FetchChapterResult = {
  * @param input - A Bible reference string (e.g., "gen 1 1") to be parsed into book and chapter information.
  * @param translation - The selected Bible translation identifier used to fetch the corresponding chapter data.
  */
-export async function fetchChapter(options: FetchChapterParams): Promise<FetchChapterResult | undefined> {
+export async function fetchChapter(
+	options: FetchChapterParams
+): Promise<FetchChapterResult | undefined> {
 	const osis = parseQuery(options.input)!;
 	if (!osis) return;
 
@@ -50,7 +52,7 @@ export async function fetchChapter(options: FetchChapterParams): Promise<FetchCh
 			: verseData.findIndex((verse) => `${verse.id}` === `${osis.selectedVerse}`);
 
 	// if the verse the user was looking for doesn't exist in the selected translation, default to the first verse
-	if(selectedVerseIndex === -1) { 
+	if (selectedVerseIndex === -1) {
 		selectedVerseIndex = 0;
 	}
 

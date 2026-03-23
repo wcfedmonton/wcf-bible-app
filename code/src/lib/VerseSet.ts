@@ -58,12 +58,14 @@ export class VerseSet {
 
 		// simultaneously send delete requests for each verse in the set
 
-		this.verses.forEach(verse => { 
-			verseDeleteRequests.push(new Promise(resolve => {
-				verse.deleteFromSet();
+		this.verses.forEach((verse) => {
+			verseDeleteRequests.push(
+				new Promise((resolve) => {
+					verse.deleteFromSet();
 
-				resolve('Verse deleted.')
-			}));
+					resolve('Verse deleted.');
+				})
+			);
 		});
 
 		Promise.allSettled(verseDeleteRequests);

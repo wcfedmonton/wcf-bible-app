@@ -4,7 +4,7 @@
 	const { children }: { children: import('svelte').Snippet } = $props();
 </script>
 
-<div class="flex flex-row justify-between items-center min-h-dvh ">
+<div class="flex flex-row justify-between items-center min-h-dvh">
 	<div class="w-[50%] h-dvh bg-[#1a1a1a] flex flex-row justify-center items-center">
 		<Logo />
 	</div>

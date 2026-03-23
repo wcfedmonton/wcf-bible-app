@@ -11,9 +11,7 @@
 
 	// shorten the query if it's too long so that it doesn't break the UI
 	const modifiedQuery = $derived(
-		queryCopy.value.length > 50
-			? `${queryCopy.value.slice(0, 50)}...`
-			: queryCopy.value
+		queryCopy.value.length > 50 ? `${queryCopy.value.slice(0, 50)}...` : queryCopy.value
 	);
 </script>
 

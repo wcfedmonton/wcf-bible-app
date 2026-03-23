@@ -13,9 +13,11 @@ export async function load({ fetch, cookies }) {
 		fetch
 	}))!;
 
-	if(cookies.get('idToken')) {
-		const { name, sub: userId } = cookies.get('idToken') ? JSON.parse(atob(cookies.get('idToken')!.split('.')[1])) : "";
-	
+	if (cookies.get('idToken')) {
+		const { name, sub: userId } = cookies.get('idToken')
+			? JSON.parse(atob(cookies.get('idToken')!.split('.')[1]))
+			: '';
+
 		const res = await fetch(`api/users/${userId}/sets`);
 		const sets: VerseSet[] = await res.json();
 
