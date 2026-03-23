@@ -13,13 +13,21 @@ type FetchChapterParams = {
 	fetch?: typeof globalThis.fetch; // a 'fetch' field is included because a different 'fetch' fn is used on the server
 };
 
+export type FetchChapterResult = {
+	verseData: Verse[],
+	verseLimit: number,
+	osis: OSISReference,
+	verseReference: string,
+	selectedVerseIndex: number
+};
+
 /**
  * Fetches and initializes chapter verse data for a parsed Bible reference and selected translation.
  *
  * @param input - A Bible reference string (e.g., "gen 1 1") to be parsed into book and chapter information.
  * @param translation - The selected Bible translation identifier used to fetch the corresponding chapter data.
  */
-export async function fetchChapter(options: FetchChapterParams) {
+export async function fetchChapter(options: FetchChapterParams): Promise<FetchChapterResult | undefined> {
 	const osis = parseQuery(options.input)!;
 	if (!osis) return;
 

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
+	import type { ContextValue } from '$lib/utils';
 	import { getVerseReference } from '$lib/bible/chapterServices';
 	import YVTranslations from '$lib/shared/YVTranslations.json' with { type: 'json' };
 	import APIBibleTranslations from '$lib/shared/APIBibleTranslations.json' with { type: 'json' };
@@ -9,7 +11,9 @@
 		...new Set([...Object.keys(YVTranslations), ...Object.keys(APIBibleTranslations)])
 	].sort();
 
-	let open = $state(false)
+	let open = $state(false);
+	
+	const navigatingSet = $derived(getContext<ContextValue<boolean>>('navigatingSet'));
 </script>
 
 <svelte:window
@@ -28,7 +32,8 @@
 				class="cursor-pointer w-[2.5rem] ml-2 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
 				onclick={() => {
 					dataState.selectedVerseIndex -= 1;
-					dataState.verseReference = getVerseReference(dataState.verseData, dataState.osis, dataState.selectedVerseIndex);
+					dataState.verseReference = navigatingSet.value ? 
+						dataState.verseData[dataState.selectedVerseIndex].verseReference : getVerseReference(dataState.verseData, dataState.osis, dataState.selectedVerseIndex) ;
 				}}
 				disabled={dataState.selectedVerseIndex == 0}
 			>
@@ -50,7 +55,10 @@
 						class="relative flex flex-row items-center w-[4.25rem] h-9 pl-2 pr-5 py-1 bg-[#d3413f2e]/50 40 text-[#d3413f] text-sm  rounded cursor-pointer border-none outline-none"
 						onclick={() => open = !open}
 					>
-						{dataState.translation}
+						{navigatingSet.value ?
+							dataState.verseData[dataState.selectedVerseIndex].translation : 
+							dataState.translation
+						}
 						<span class="absolute ml-2 right-1 top-1/2 -translate-y-1/2 pointer-events-none text-[#d3413f]">
 							<svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
 								<path d="M2 4 L6 8 L10 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -92,7 +100,8 @@
 				class="cursor-pointer mr-2 text-center bg-transparent outline-none border-none disabled:opacity-50 disabled:cursor-not-allowed"
 				onclick={() => {
 					dataState.selectedVerseIndex += 1;
-					dataState.verseReference = getVerseReference(dataState.verseData, dataState.osis, dataState.selectedVerseIndex);
+					dataState.verseReference = navigatingSet.value ? 
+						dataState.verseData[dataState.selectedVerseIndex].verseReference : getVerseReference(dataState.verseData, dataState.osis, dataState.selectedVerseIndex) ;
 				}}
 				disabled={dataState.selectedVerseIndex == dataState.verseLimit - 1}
 			>	

@@ -11,8 +11,9 @@ export type BibleTranslation =
 	| keyof typeof APIBibleTranslationsMap;
 
 export type Verse = {
-	id: number;
+	id?: number;
 	text: string;
+	verseReference?: string;
 };
 
 /**

@@ -6,39 +6,28 @@
 	import AuthenticatedSidebar from '../components/home/sidebar/authenticated/AuthenticatedSidebar.svelte';
 
 	import { setContext } from 'svelte';
-	import type { OSISReference } from '$lib/shared/format';
 	import { fetchChapter } from '$lib/bible/chapterServices';
-	import { type BibleTranslation, type Verse as VerseType } from '$lib/server/bible';
 
 	const { data: initialData } = $props();
 
-	let dataState: {
-		verseLimit: number;
-		osis?: OSISReference;
-		verseReference: string;
-		verseData: VerseType[];
-		authenticated: boolean;
-		selectedVerseIndex: number;
-		translation: BibleTranslation;
-		// svelte-ignore state_referenced_locally
-	} = $state({ ...initialData.initialVerse, authenticated: initialData.authenticated });
-
-	let showSidebar = $state(false);
+	let dataState = $state({ ...initialData.initialVerse });
+	setContext('dataState', { value: dataState });
 
 	const selectedSetIndex = $state({ value: -1 });
 	setContext('selectedSetIndex', selectedSetIndex);
 
-	if(dataState.authenticated) {
-		const name: string = $derived(initialData.name);
-		setContext('name', { get value() { return name } });
+	const navigatingSet = $state({ value: false });
+	setContext('navigatingSet', navigatingSet);
 
-		const verseSets = $derived(initialData.sets);
-		setContext('verseSets', { get value() { return verseSets } });
-	}
+	const name: string = $derived(initialData.name);
+	setContext('name', { get value() { return name } });
+
+	const verseSets = $derived(initialData.sets);
+	setContext('verseSets', { get value() { return verseSets } });
 
 	async function fetchChapterData(query: string) {
 		selectedSetIndex.value = -1; // make no set appear selected since the user will no longer be navigating through a set
-
+		navigatingSet.value = false;
 		const updatedData = await fetchChapter({
 			input: query,
 			...dataState
@@ -52,12 +41,14 @@
 			dataState.selectedVerseIndex = updatedData.selectedVerseIndex;
 		}
 	}
+
+	let showSidebar = $state(false);
 </script>
 
 <div class="relative w-full h-dvh flex flex-row">
     {#if showSidebar}
         <div class="absolute top-0 left-0 h-full z-50">
-            {#if dataState.authenticated}
+            {#if initialData.authenticated}
                 <AuthenticatedSidebar bind:showSidebar/>
             {:else}
                 <GeneralSidebar bind:showSidebar />
