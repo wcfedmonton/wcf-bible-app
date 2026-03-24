@@ -2,6 +2,7 @@
     import Modal from "./Modal.svelte";
 
     let fileInput: HTMLInputElement;
+    let { showImportModal = $bindable() } = $props();
 
     function handleDrop(e: DragEvent) {
         e.preventDefault();
@@ -11,10 +12,10 @@
     }
 </script>
 
-<Modal modalTitle="Import Set">
+<Modal modalTitle="Import Set" bind:showModal={showImportModal}>
     <div class="flex justify-center items-center w-full py-4 rounded-tl rounded-tr">
         <div class="flex flex-col w-[87%] gap-2">
-            <p class="w-full h-5 font-sans text-[#f0e6e6] text-[0.87rem]">
+            <p class="w-full h-5 font-sans text-[#f0e6e6] text-[0.893rem]">
                 Upload a <span class="w-[3rem] h-6 bg-zinc-800 text-center text-[0.81rem] inline-block border border-border_accent rounded-sm">.json</span> file exported from the WCF Bible App.
             </p>
 

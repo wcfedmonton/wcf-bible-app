@@ -49,12 +49,14 @@
 
 	const viewingSearchResults = $state({ value: false });
 	setContext('viewingSearchResults', viewingSearchResults);
+
+	let showImportModal = $state(false);
 </script>
 
 <div class="relative ">
 	<div class="absolute flex items-center min-h-dvh min-w-[60rem]">
 		<GeneralSidebar />
-		<SetsSidebar />
+		<SetsSidebar bind:showImportModal />
 
 		{#if empty}
 			<Empty />
@@ -63,5 +65,7 @@
 		{/if}
 	</div>
 
-	<ImportSet />
+	{#if showImportModal}
+		<ImportSet bind:showImportModal />
+	{/if}
 </div>
