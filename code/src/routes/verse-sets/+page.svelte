@@ -3,6 +3,7 @@
 	import Populated from '../../components/sets/Populated.svelte';
 	import SetsSidebar from '../../components/sets/Sidebar.svelte';
 	import GeneralSidebar from '../../components/common/Sidebar.svelte';
+	import ImportSet from "../../components/sets/populated/modal/ImportSet.svelte";
 
 	import { setContext } from 'svelte';
 
@@ -50,13 +51,17 @@
 	setContext('viewingSearchResults', viewingSearchResults);
 </script>
 
-<div class="flex min-h-dvh min-w-[60rem]">
-	<GeneralSidebar />
-	<SetsSidebar />
+<div class="relative ">
+	<div class="absolute flex items-center min-h-dvh min-w-[60rem]">
+		<GeneralSidebar />
+		<SetsSidebar />
 
-	{#if empty}
-		<Empty />
-	{:else}
-		<Populated />
-	{/if}
+		{#if empty}
+			<Empty />
+		{:else}
+			<Populated />
+		{/if}
+	</div>
+
+	<ImportSet />
 </div>
