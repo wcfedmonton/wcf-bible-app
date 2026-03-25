@@ -54,7 +54,7 @@
 </script>
 
 <div class="relative ">
-	<div class="absolute flex items-center min-h-dvh min-w-[60rem]">
+	<div class="absolute flex items-center min-h-dvh min-w-[100%]">
 		<GeneralSidebar />
 		<SetsSidebar bind:showImportModal />
 

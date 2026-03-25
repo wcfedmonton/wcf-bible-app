@@ -9,7 +9,7 @@
 </script>
 
 <div class="relative flex justify-center items-center w-full h-dvh bg-black/50">
-    <div class="w-[28%] h-fit rounded border border-border_accent bg-[#222222]">
+    <div class="w-[28%] max-w-[28rem] h-fit rounded border border-border_accent bg-[#222222]">
         <!-- header -->
         <div class="flex justify-center items-center w-full h-[14%] py-4 border-b border-b-border_accent rounded-tl rounded-tr">
             <div class="flex flex-row justify-between w-[88.5%]">
