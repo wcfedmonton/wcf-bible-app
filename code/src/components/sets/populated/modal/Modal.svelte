@@ -39,6 +39,10 @@
         </div>
 
         <!-- body -->
-        {@render children()}
+         <div class="flex justify-center items-center w-full py-4 rounded-tl rounded-tr">
+            <div class="flex flex-col w-[87%] gap-2">
+                {@render children()}
+            </div>
+        </div>
     </div>
 </div>

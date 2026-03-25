@@ -7,7 +7,7 @@
 
     let { showImportModal = $bindable() } = $props();
 
-    let validFile = $state(false);
+    let validFile = $state(true);
     let importedSet: object | null = $state(null); // the VerseSet type will be specified later, once behaviour for file processing is implemented
     let fileInput: HTMLInputElement | null = $state(null);   
     let selectedFile: File | null | undefined = $state(null); 

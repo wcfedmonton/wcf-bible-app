@@ -4,6 +4,7 @@
 	import SetsSidebar from '../../components/sets/Sidebar.svelte';
 	import GeneralSidebar from '../../components/common/Sidebar.svelte';
 	import ImportSet from "../../components/sets/populated/modal/ImportSet.svelte";
+	import ExportSet from '../../components/sets/populated/modal/ExportSet.svelte';
 
 	import { setContext } from 'svelte';
 	import { Verse } from '$lib/Verse.js';
@@ -50,6 +51,7 @@
 	setContext('viewingSearchResults', viewingSearchResults);
 
 	let showImportModal = $state(false);
+	let showExportModal = $state(false);
 </script>
 
 <div class="relative ">
@@ -60,11 +62,15 @@
 		{#if empty}
 			<Empty />
 		{:else}
-			<Populated />
+			<Populated bind:showExportModal />
 		{/if}
 	</div>
 
 	{#if showImportModal}
 		<ImportSet bind:showImportModal />
+	{/if}
+
+	{#if showExportModal}
+		<ExportSet bind:showExportModal />
 	{/if}
 </div>
