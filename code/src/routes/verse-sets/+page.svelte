@@ -6,7 +6,6 @@
 	import ImportSet from "../../components/sets/populated/modal/ImportSet.svelte";
 
 	import { setContext } from 'svelte';
-
 	import { Verse } from '$lib/Verse.js';
 	import { VerseSet } from '$lib/VerseSet.js';
 

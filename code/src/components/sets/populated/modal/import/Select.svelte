@@ -1,10 +1,12 @@
 <script lang="ts">
-    let { handleUpload, fileInput = $bindable() } = $props();
+    import Button from "../Button.svelte";
+
+    let { handleUpload, selectedFile = $bindable(), fileInput = $bindable(), validFile = $bindable() } = $props();
 </script>
 
 <div class="flex justify-center items-center w-full py-4 rounded-tl rounded-tr">
     <div class="flex flex-col w-[87%] gap-2">
-        <p class="w-full h-5 font-sans text-[#f0e6e6] text-[0.893rem]">
+        <p class="w-full h-5 font-sans text-[0.893rem]">
             Upload a <span class="w-[3rem] h-6 bg-zinc-800 text-center text-[0.81rem] inline-block border border-border_accent rounded-sm">.json</span> file exported from the WCF Bible App.
         </p>
 
@@ -40,10 +42,10 @@
             </div>
         </div>
 
-        <div class="flex mt-auto justify-end items-end w-full">
-            <button class="cursor-pointer w-30 h-10 rounded font-sans font-serif font-semibold bg-accent_btn hover:bg-accent_btn_hover">
-                Import
-            </button>
-        </div>
+        {#if !validFile}
+            <!-- this is where we'll display the error message -->
+        {/if}
+        
+        <Button action="Import" disabledCondition={true} />
     </div>
 </div>
