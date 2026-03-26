@@ -52,11 +52,12 @@
 				text: resolved[index].text,
 				verseReference: suggestion,
 				translation: selectedTranslation,
-				orderId: selectedVerseSet.value.verses[selectedVerseSet.value.verses.length - 1].orderId + 1
+				orderId: selectedVerseSet.value.verses.length > 0 ?
+					selectedVerseSet.value.verses[selectedVerseSet.value.verses.length - 1].orderId + 1 : 1
 			};
 		});
 
-		loading = false;
+		
 		searchResults.value = searchResults.value.slice(0, suggestions.length); // exclude any old results
 	}
 </script>
@@ -64,6 +65,7 @@
 <svelte:window
 	onclick={(event) => {
 		if (!(event.target instanceof HTMLInputElement)) {
+			loading = false;
 			searchQuery.value = '';
 			searchResults.value = [];
 			viewingSearchResults.value = false;
@@ -131,7 +133,6 @@
 
 				queryCopy.value = searchQuery.value; // make a shallow copy of the query so that changes to the original one are not propagated
 				viewingSearchResults.value = true;
-				loading = false;
 			}
 		}}
 		class="z-0 w-[87%] h-[2.48rem] mt-[1.2rem] pl-3 pr-7 rounded-tr rounded-br border-y border-r border-solid border-accent_btn outline-none bg-form_input"
