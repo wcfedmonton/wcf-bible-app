@@ -25,7 +25,10 @@
 
         <button
             aria-label="Close menu"
-            onclick={() => selectedFile = null}
+            onclick={() => {
+                importedSet = null;
+                selectedFile = null;
+            }}
             class="cursor-pointer flex flex-row justify-center items-center rounded hover:text-accent_btn"
         >
             <svg
