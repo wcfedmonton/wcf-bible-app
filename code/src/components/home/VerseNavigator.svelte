@@ -29,7 +29,7 @@
 		<div class="flex flex-col justify-center items-center h-[25rem]">
 			<button
 				aria-label="previous"
-				class="cursor-pointer w-[2.5rem] ml-2 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
+				class="cursor-pointer w-[2.9rem] ml-2 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
 				onclick={() => {
 					dataState.selectedVerseIndex -= 1;
 					dataState.verseReference = navigatingSet.value
@@ -38,7 +38,11 @@
 				}}
 				disabled={dataState.selectedVerseIndex == 0}
 			>
-				<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+				<svg 
+					viewBox="0 0 48 48" 
+					class="w-full h-full"
+					xmlns="http://www.w3.org/2000/svg"
+				>
 					<path
 						d="M 30 8 L 14 24 L 30 40"
 						fill="none"
@@ -134,7 +138,7 @@
 		<div class="flex flex-col justify-center items-center h-[25rem]">
 			<button
 				aria-label="next"
-				class="cursor-pointer mr-2 text-center bg-transparent outline-none border-none disabled:opacity-50 disabled:cursor-not-allowed"
+				class="cursor-pointer w-[2.9rem] mr-2 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
 				onclick={() => {
 					dataState.selectedVerseIndex += 1;
 					dataState.verseReference = navigatingSet.value
@@ -144,11 +148,9 @@
 				disabled={dataState.selectedVerseIndex == dataState.verseLimit - 1}
 			>
 				<svg
-					width="48"
-					height="48"
 					viewBox="0 0 48 48"
+					class="w-full h-full"
 					xmlns="http://www.w3.org/2000/svg"
-					class="pointer-events-none"
 				>
 					<path
 						d="M 18 8 L 34 24 L 18 40"
@@ -157,7 +159,6 @@
 						stroke-width="3.5"
 						stroke-linecap="round"
 						stroke-linejoin="round"
-						class="disabled:opacity-30"
 					/>
 				</svg>
 			</button>
