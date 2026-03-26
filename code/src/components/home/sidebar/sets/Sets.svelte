@@ -25,7 +25,7 @@
 </script>
 
 <div class="w-full flex flex-col overflow-auto h-[calc(100vh-21rem)] scrollbar-black">
-	{#each sets as set, index (set.name)}
+	{#each sets as set, index (index)}
 		<Set {index} bind:selectedIndex={selectedSetIndex} bind:showSidebar bind:sortedSetList={sets} {set} />
 	{/each}
 </div>
