@@ -14,7 +14,8 @@
 	function loginWithGoogle() {
 		const params = new URLSearchParams({
 			client_id: PUBLIC_GOOGLE_CLIENT_ID,
-			redirect_uri: `${PUBLIC_DOMAIN}/register/callback`,
+			origin: PUBLIC_DOMAIN,
+			redirect_uri: `postmessage`,
 			response_type: 'code',
 			scope: 'openid email profile',
 			prompt: 'select_account',
