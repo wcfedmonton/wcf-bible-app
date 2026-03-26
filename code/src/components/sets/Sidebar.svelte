@@ -31,10 +31,14 @@
 		})
 	);
 
+	const selectedVerseSetId = $state(getContext<ContextValue<string>>('selectedVerseSetId'));
+	
+	$effect(() => {
+		selectedVerseSetId.value = sets[0].id;
+	});
+
 	const lastSetToOpenEdit = $state({ value: '' });
 	setContext('lastSetToOpenEdit', lastSetToOpenEdit);
-
-	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 
 	async function addVerseSet() {
 		// request to send a new verse will be created here
