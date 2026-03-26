@@ -3,9 +3,10 @@
 	import Populated from '../../components/sets/Populated.svelte';
 	import SetsSidebar from '../../components/sets/Sidebar.svelte';
 	import GeneralSidebar from '../../components/common/Sidebar.svelte';
+	import ImportSet from "../../components/sets/populated/modal/ImportSet.svelte";
+	import ExportSet from '../../components/sets/populated/modal/ExportSet.svelte';
 
 	import { setContext } from 'svelte';
-
 	import { Verse } from '$lib/Verse.js';
 	import { VerseSet } from '$lib/VerseSet.js';
 
@@ -48,15 +49,28 @@
 
 	const viewingSearchResults = $state({ value: false });
 	setContext('viewingSearchResults', viewingSearchResults);
+
+	let showImportModal = $state(false);
+	let showExportModal = $state(false);
 </script>
 
-<div class="flex min-h-dvh min-w-[60rem]">
-	<GeneralSidebar />
-	<SetsSidebar />
+<div class="relative ">
+	<div class="absolute flex items-center min-h-dvh min-w-[100%]">
+		<GeneralSidebar />
+		<SetsSidebar bind:showImportModal />
 
-	{#if empty}
-		<Empty />
-	{:else}
-		<Populated />
+		{#if empty}
+			<Empty />
+		{:else}
+			<Populated bind:showExportModal />
+		{/if}
+	</div>
+
+	{#if showImportModal}
+		<ImportSet bind:showImportModal />
+	{/if}
+
+	{#if showExportModal}
+		<ExportSet bind:showExportModal />
 	{/if}
 </div>
