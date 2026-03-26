@@ -26,10 +26,10 @@
 
 <div class="flex flex-row justify-center items-center w-[100%]">
 	<div class="flex flex-row justify-between w-full">
-		<div class="flex flex-col justify-center items-center h-[25rem]">
+		<div class="flex flex-col justify-start pt-[11rem] items-center h-[25rem]">
 			<button
 				aria-label="previous"
-				class="cursor-pointer w-[2.9rem] ml-2 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
+				class="cursor-pointer w-[2.5rem] ml-2 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
 				onclick={() => {
 					dataState.selectedVerseIndex -= 1;
 					dataState.verseReference = navigatingSet.value
@@ -55,7 +55,7 @@
 			</button>
 		</div>
 
-		<div class="flex flex-col justify-center items-center w-full">
+		<div class="flex flex-col justify-start pt-[7rem] items-center w-full">
 			<div class="w-[85%]">
 				<div class="w-(100%) pb-4">
 					<h1 class="text-5xl font-serif font-md">{dataState.verseReference}</h1>
@@ -135,10 +135,10 @@
 			</div>
 		</div>
 
-		<div class="flex flex-col justify-center items-center h-[25rem]">
+		<div class="flex flex-col justify-start pt-[11rem] items-center h-[25rem]">
 			<button
 				aria-label="next"
-				class="cursor-pointer w-[2.9rem] mr-2 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
+				class="cursor-pointer w-[2.5rem] mr-2 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
 				onclick={() => {
 					dataState.selectedVerseIndex += 1;
 					dataState.verseReference = navigatingSet.value
