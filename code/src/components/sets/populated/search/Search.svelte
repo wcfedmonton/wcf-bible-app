@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
+	import { VerseSet } from '$lib/VerseSet';
 	import { fetchVerse } from '$lib/bible/chapterServices';
 	import { generateAutoSuggestions } from '$lib/bible/suggestionUtils';
 	import { getTranslations, type ContextValue, type Verse } from '$lib/utils';
-	import { VerseSet } from '$lib/VerseSet';
 
 	let { selectedTranslation = $bindable() }: { selectedTranslation: string } = $props();
 
@@ -130,6 +130,8 @@
 				loading = true; // activate loading state
 
 				await updateSearchResults();
+
+				loading = false;
 
 				queryCopy.value = searchQuery.value; // make a shallow copy of the query so that changes to the original one are not propagated
 				viewingSearchResults.value = true;
