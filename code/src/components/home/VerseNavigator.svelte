@@ -55,7 +55,7 @@
 			</button>
 		</div>
 
-		<div class="flex flex-col justify-start pt-[7rem] items-center w-full">
+		<div class="flex flex-col justify-start pt-[3.6rem] items-center w-full">
 			<div class="w-[85%]">
 				<div class="w-(100%) pb-4">
 					<h1 class="text-5xl font-serif font-md">{dataState.verseReference}</h1>
