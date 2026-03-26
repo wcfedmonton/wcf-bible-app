@@ -1,9 +1,12 @@
 <script lang="ts">
-    const { title, subtitle, type } = $props();
+    let { title, subtitle, type, index, selectedIndex = $bindable() } = $props();
+
+    const selected = $derived(index === selectedIndex);
 </script>
 
 <button
-    class="cursor-pointer flex flex-col items-center gap-3 w-[50%] py-[1.37rem] px-[1.13rem] rounded-sm border-[0.08rem] border-light_grey hover:border-accent_btn text-center"
+    onclick={() => selectedIndex = index}
+    class="cursor-pointer flex flex-col items-center gap-3 w-[50%] py-[1.8rem] px-[1.13rem] rounded-sm border-[0.1rem] hover:border-accent_btn {selected ? "border-accent_btn bg-light_grey/8" : "border-light_grey"} text-center"
 >
     <div class="flex justify-center items-center w-11 h-11 rounded-full border border-action_btn_border bg-[#d3413f2e]">
         {#if type === "email"}

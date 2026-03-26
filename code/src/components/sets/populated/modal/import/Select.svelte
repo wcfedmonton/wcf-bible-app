@@ -18,8 +18,8 @@
     <input 
         type="file" 
         accept=".json"
-        onchange={handleUpload}
         bind:this={fileInput}  
+        onchange={handleUpload}
         class="absolute inset-0 w-full h-full opacity-0 z-10 hidden"
     />
     

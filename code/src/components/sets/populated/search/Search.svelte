@@ -52,7 +52,7 @@
 				text: resolved[index].text,
 				verseReference: suggestion,
 				translation: selectedTranslation,
-				orderId: selectedVerseSet.value.verses.length + 1
+				orderId: selectedVerseSet.value.verses[selectedVerseSet.value.verses.length - 1].orderId + 1
 			};
 		});
 
