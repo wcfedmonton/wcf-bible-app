@@ -1,7 +1,15 @@
 <script lang="ts">
     import Button from "../Button.svelte";
+    
+    import { Verse } from "$lib/Verse";
+    import { getContext } from "svelte";
+    import { VerseSet } from "$lib/VerseSet";
+    import type { ContextValue, Verse as VerseObject, VerseSet as VerseSetObject } from '$lib/utils';
 
-    let { importedSet = $bindable(), selectedFile = $bindable() } = $props();
+    let { importedSet = $bindable(), selectedFile = $bindable(), showImportModal = $bindable() } = $props();
+
+    const verseSets = getContext<ContextValue<VerseSetObject[]>>('verseSets');
+    const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 </script>
 
 <div class="flex flex-col justify-center item-center w-full h-13 border border-border_accent rounded bg-zinc-800">
@@ -38,16 +46,38 @@
 
 <div class="flex justify-center items-center w-full border border-border_accent rounded">
     <div class="flex flex-col w-[91%] h-[80%] py-4">
-        <p class="pb-2 font-serif text-[0.98rem]">Missions Sunday: Go & Tell</p>
+        <p class="pb-2 font-serif text-[0.98rem]">{importedSet?.name}</p>
 
-        {#each importedSet.verses.slice(0,5) as verse, index }
+        {#each importedSet?.verses.slice(0,5) as verse, index }
             <p class="text-[0.8rem] text-[#777a7d]">{`${index + 1}. ${verse.verseReference} (${verse.translation})`}</p>
         {/each}
 
-        {#if importedSet.verses.length > 5}
-            <p class="pl-3 pt-1 text-[0.8rem] text-[#777a7d]">{`(${importedSet.verses.length - 5} more...)`}</p>
+        {#if importedSet?.verses.length > 5}
+            <p class="pl-3 pt-1 text-[0.8rem] text-[#777a7d]">{`(${importedSet?.verses.length - 5} more...)`}</p>
         {/if}
     </div>
 </div>
 
-<Button action={"Import"} disabledCondition={false}/>
+<Button 
+    action={"Import"} 
+    disabledCondition={false}
+    eventHandler={() => {
+        showImportModal = false;
+
+        const newVerseSet = new VerseSet(
+            importedSet.id,
+            importedSet.name,
+            importedSet.lastEdited,
+            
+            importedSet.verses.map((verse: VerseObject) => new Verse(verse))
+        );
+
+        newVerseSet.saveVerseSet();
+        newVerseSet.verses.forEach(verse => {
+            verse.saveVerse();
+        });
+    
+        verseSets.value.push(newVerseSet);
+        selectedVerseSetId.value = newVerseSet.id;
+    }}    
+/>

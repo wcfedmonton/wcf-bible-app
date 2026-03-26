@@ -29,15 +29,13 @@
                + '.json';
      }
 
-     const setCopy = $derived({ // create a copy without the set id for security
+     const setCopy = $derived({ // create a modified copy for security
           name: selectedSet.name,
           verses: selectedSet.verses.map(verse => ({ 
                orderId: verse.orderId,
                translation: verse.translation,
-               verseRefence: verse.verseReference
-               
-          })),
-          lastEdited: selectedSet.lastEdited
+               verseReference: verse.verseReference
+          }))
      });
      const blob = $derived(new Blob([JSON.stringify(setCopy)], { type: "application/json" }));
      const kilobytes = $derived(((blob.size / (1024)) * 100).toPrecision(2)); // returns the set size in kilobytes
@@ -50,6 +48,7 @@
           a.href = url;
           a.click();
 
+          showExportModal = false;
           URL.revokeObjectURL(url); // clean up memory
      }
 </script>

@@ -1,9 +1,10 @@
 <script lang="ts">
     import Modal from "./Modal.svelte";
+
+    import { getDate } from "$lib/utils";
     import Select from "./import/Select.svelte";
     import Selected from "./import/Selected.svelte";
-
-    // import type { VerseSet } from "$lib/utils";
+    import { fetchVerse } from "$lib/bible/chapterServices";
 
     let { showImportModal = $bindable() } = $props();
 
@@ -12,7 +13,38 @@
     let fileInput: HTMLInputElement | null = $state(null);   
     let selectedFile: File | null | undefined = $state(null); 
 
-    function handleUpload(e: Event) {
+    async function readFile() {
+        type ImportedSet = {
+            name: string,
+            verses: {
+                orderId: number,
+                translation: string,
+                verseReference: string
+            }[]
+        }
+
+        const verseSetId = crypto.randomUUID();
+        const content: ImportedSet = await JSON.parse(await selectedFile!.text());
+        const versePromises = content.verses.map(async (verse) => {
+            const { text } = await fetchVerse(verse.verseReference, verse.translation);
+
+            return { 
+                text,
+                ...verse,
+                verseSetId
+            };
+        });
+
+        return {
+            id: verseSetId,
+            name: content.name,
+            lastEdited: getDate(),
+
+            verses: await Promise.all(versePromises)
+        };
+    }
+
+    async function handleUpload(e: Event) {
         e.preventDefault(); // prevents a new tab from opening
 
         if(e instanceof DragEvent) {
@@ -24,27 +56,16 @@
             
             selectedFile = file;
         }
-
-        // this is where the check will be done to ensure the file is valid. for now we set an
-        // arbitrary value for testing
+        
         validFile = true; // will be used to toggle error state
-        importedSet =  { // will represent the actual set
-            verses: [
-                { verseReference: "Matthew 28:19", translation: "NIV" },
-                { verseReference: "Romans 10:15", translation: "ESV" },
-                { verseReference: "Acts 1:8", translation: "NKJV" },
-                { verseReference: "Isaiah 6:8", translation: "NIV" },
-                { verseReference: "Mark 16:15", translation: "ESV" },
-                { verseReference: "Luke 24:47", translation: "NIV" }
-            ]
-        };
-    }
+        importedSet = await readFile(); // if there is any errors during processing, a null value should be returned, then we set 'validFile' accordingly
+   }
 </script>
 
 <Modal modalTitle="Import Verse Set" bind:showModal={showImportModal}>
    {#if !selectedFile || !validFile} 
         <Select handleUpload={handleUpload} bind:selectedFile bind:fileInput bind:validFile />
     {:else}
-        <Selected bind:importedSet bind:selectedFile />
+        <Selected bind:importedSet bind:selectedFile bind:showImportModal />
     {/if}
 </Modal>
