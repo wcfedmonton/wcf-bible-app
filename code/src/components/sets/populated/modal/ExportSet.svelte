@@ -11,7 +11,7 @@
      const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 		
-	const { name: verseSetName } = $derived(
+	const selectedSet = $derived(
 		verseSets.value.find((set) => set.id === selectedVerseSetId.value)
 	)!;
 
@@ -28,17 +28,52 @@
                .replace(/\s+/g, '-')
                + '.json';
      }
+
+     const setCopy = $derived({ // create a modified copy for security
+          name: selectedSet.name,
+          verses: selectedSet.verses.map(verse => ({ 
+               orderId: verse.orderId,
+               translation: verse.translation,
+               verseReference: verse.verseReference
+          }))
+     });
+     const blob = $derived(new Blob([JSON.stringify(setCopy)], { type: "application/json" }));
+     const kilobytes = $derived(((blob.size / (1024)) * 100).toPrecision(2)); // returns the set size in kilobytes
+
+     function exportSet() {
+          const url = URL.createObjectURL(blob);
+
+          const a = document.createElement("a");
+          a.download = toFileName(setCopy.name);
+          a.href = url;
+          a.click();
+
+          showExportModal = false;
+          URL.revokeObjectURL(url); // clean up memory
+     }
 </script>
 
 <Modal modalTitle="Export Verse Set" bind:showModal={showExportModal}>
      <div class="w-full">
           <p class="font-serif text-[0.8rem] text-light_grey">Exporting</p>
-          <p class="font-serif font-semibold italic text-[1rem]">{verseSetName}</p>
+          <p class="font-serif font-semibold italic text-[1rem]">{selectedSet.name}</p>
      </div>
 
      <div class="flex flex-row w-full mt-1 gap-x-2">
-          <Button title="Send by Email" subtitle="Send this set directly to another operator's email address" type="email" index={0} bind:selectedIndex />
-          <Button title="Download Locally" subtitle="Save a .json file to your device" type="download" index={1} bind:selectedIndex />
+          <Button 
+               index={0} 
+               type="email" 
+               bind:selectedIndex 
+               title="Send by Email" 
+               subtitle="Send this set directly to another operator's email address" 
+          />
+          <Button 
+               index={1}
+               type="download"
+               bind:selectedIndex 
+               title="Download Locally" 
+               subtitle="Save a .json file to your device"   
+          />
      </div>
 
      <div class="flex justify-center py-2">
@@ -57,9 +92,12 @@
                 <polyline points="14 2 14 8 20 8"></polyline>
             </svg>
 
-            <p class="text-[0.8rem] font-serif">{toFileName(verseSetName)}</p>
+            <div class="flex flex-row justify-between w-full">
+               <p class="text-[0.8rem] font-serif">{toFileName(selectedSet.name)}</p>
+               <p class="text-[0.8rem] font-serif text-light_grey leading-[1.5] tracking-[0.02em]">{`${kilobytes} KB`}</p>
+            </div>
         </div>
 
-        <FooterButton action="Download" disabledCondition={false} eventHandler={() => {}} />
+        <FooterButton action="Download" disabledCondition={false} eventHandler={exportSet} />
      {/if}
 </Modal>

@@ -10,16 +10,11 @@
 
 	const id = getContext<ContextValue<string>>('selectedVerseSetId');
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
+
 	const selectedVerseSet = $derived(verseSets.value.find((set) => set.id === id.value));
 
-	//  svelte/state_referenced_locally
-	let name = $state(selectedVerseSet?.name ?? '');
-	let lastEdited = $state(selectedVerseSet?.lastEdited ?? '');
-
-	$effect(() => {
-		name = selectedVerseSet?.name ?? '';
-		lastEdited = selectedVerseSet?.lastEdited ?? '';
-	});
+	const name = $derived(selectedVerseSet?.name ?? '');
+	const lastEdited = $derived(selectedVerseSet?.lastEdited ?? '');
 
 	const arrowUp = `
         <svg width=16 height=16 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#e0e0e0"">
@@ -40,7 +35,7 @@
 		</div>
 
 		<div class="flex flex-row justify-end h-[2.6rem]">
-			<Button prompt="Export" icon={arrowUp} eventHandler={() => showExportModal = true} />
+			<Button prompt="Export" icon={arrowUp} eventHandler={() => showExportModal = true} disabledCondition={selectedVerseSet!.verses.length === 0} />
 		</div>
 	</div>
 </div>

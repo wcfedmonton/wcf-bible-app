@@ -64,7 +64,7 @@
 
 	<div class="overflow-auto h-[calc(100vh-6.25rem)] scrollbar-black">
 		{#each sets as set, index (set)}
-			<VerseSetReference bind:set={sets[index]} />
+			<VerseSetReference set={sets[index]} />
 		{/each}
 	</div>
 </div>

@@ -1,5 +1,5 @@
 <div class="flex flex-col justify-center">
-	<div class="flex flex-col justify-center items-center w-[94%] h-[calc(100vh-15rem)] pb-15">
+	<div class="flex flex-col justify-center items-center w-[94%] h-[calc(100vh-15rem)]">
 		<div
 			class="flex flex-col justify-center items-center w-25 h-25 rounded-[50%] border border-solid border-action_btn_border bg-[#d3413f2e]"
 		>

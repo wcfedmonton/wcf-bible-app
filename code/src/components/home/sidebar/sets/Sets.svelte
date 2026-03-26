@@ -10,15 +10,7 @@
 	const allSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 
 	let sets = $derived(
-		[...allSets.value].sort((a, b) => {
-			if (new Date(a.lastEdited) > new Date(b.lastEdited)) {
-				return -1;
-			} else if (new Date(a.lastEdited) < new Date(b.lastEdited)) {
-				return 1;
-			} else {
-				return a.name.localeCompare(b.name);
-			}
-		})
+		[...allSets.value].sort((a, b) => a.name.localeCompare(b.name))
 	);
 
 	let selectedSetIndex = $state(getContext<ContextValue<number>>('selectedSetIndex'));
