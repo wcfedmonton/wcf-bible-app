@@ -6,6 +6,8 @@
 	import type { ContextValue } from '$lib/utils';
 	import { VerseSet } from '$lib/VerseSet';
 
+	let { showExportModal = $bindable() } = $props();
+
 	const id = getContext<ContextValue<string>>('selectedVerseSetId');
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const selectedVerseSet = $derived(verseSets.value.find((set) => set.id === id.value));
@@ -38,7 +40,7 @@
 		</div>
 
 		<div class="flex flex-row justify-end h-[2.6rem]">
-			<Button prompt="Export" icon={arrowUp} eventHandler={() => {}} />
+			<Button prompt="Export" icon={arrowUp} eventHandler={() => showExportModal = true} />
 		</div>
 	</div>
 </div>

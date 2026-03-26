@@ -5,9 +5,11 @@
 	import type { VerseSet } from '$lib/utils';
 	import type { ContextValue } from '$lib/utils';
 
+	let { showSidebar = $bindable() } = $props();
+
 	const allSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 
-	const sets = $derived(
+	let sets = $derived(
 		[...allSets.value].sort((a, b) => {
 			if (new Date(a.lastEdited) > new Date(b.lastEdited)) {
 				return -1;
@@ -24,6 +26,6 @@
 
 <div class="w-full flex flex-col overflow-auto h-[calc(100vh-21rem)] scrollbar-black">
 	{#each sets as set, index (set.name)}
-		<Set {index} bind:selectedIndex={selectedSetIndex} {set} />
+		<Set {index} bind:selectedIndex={selectedSetIndex} bind:showSidebar bind:sortedSetList={sets} {set} />
 	{/each}
 </div>
