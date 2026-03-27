@@ -48,7 +48,8 @@
 		"biblesdk": "^1.0.0",
 		"dotenv": "^17.2.4",
 		"felte": "^1.3.0",
-		"googleapis": "^171.4.0"
+		"googleapis": "^171.4.0",
+		"zod": "^3.25.17"
 	},
 	"overrides": {
 		"rollup": "4.57.1"

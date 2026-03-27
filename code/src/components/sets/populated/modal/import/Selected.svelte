@@ -24,7 +24,7 @@
         </div>
 
         <button
-            aria-label="Close menu"
+            aria-label="Deselect file"
             onclick={() => {
                 importedSet = null;
                 selectedFile = null;
