@@ -1,15 +1,11 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import type { ContextValue } from '$lib/utils';
+	import { type ContextValue, getTranslations } from '$lib/utils';
 	import { fetchVerse, getVerseReference } from '$lib/bible/chapterServices';
-	import YVTranslations from '$lib/shared/YVTranslations.json' with { type: 'json' };
-	import APIBibleTranslations from '$lib/shared/APIBibleTranslations.json' with { type: 'json' };
-
+	
 	let { dataState = $bindable(), fetchChapterData } = $props();
 
-	const translations = [
-		...new Set([...Object.keys(YVTranslations), ...Object.keys(APIBibleTranslations)])
-	].sort();
+	const translations = getTranslations();
 
 	let open = $state(false);
 
@@ -29,7 +25,7 @@
 		<div class="flex flex-col justify-start pt-[11rem] items-center h-[25rem]">
 			<button
 				aria-label="previous"
-				class="cursor-pointer w-[2.5rem] ml-2 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
+				class="cursor-pointer w-[2.5rem] ml-4 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
 				onclick={() => {
 					dataState.selectedVerseIndex -= 1;
 					dataState.verseReference = navigatingSet.value
@@ -138,7 +134,7 @@
 		<div class="flex flex-col justify-start pt-[11rem] items-center h-[25rem]">
 			<button
 				aria-label="next"
-				class="cursor-pointer w-[2.5rem] mr-2 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
+				class="cursor-pointer w-[2.5rem] mr-4 text-center bg-transparent outline-none border-none disabled:opacity-30 disabled:cursor-not-allowed"
 				onclick={() => {
 					dataState.selectedVerseIndex += 1;
 					dataState.verseReference = navigatingSet.value

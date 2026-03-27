@@ -33,9 +33,9 @@
 
 	const selectedVerseSetId = $state(getContext<ContextValue<string>>('selectedVerseSetId'));
 	
-	$effect(() => {
+	if (!selectedVerseSetId.value && sets.length > 0) {
 		selectedVerseSetId.value = sets[0].id;
-	});
+	}
 
 	const lastSetToOpenEdit = $state({ value: '' });
 	setContext('lastSetToOpenEdit', lastSetToOpenEdit);

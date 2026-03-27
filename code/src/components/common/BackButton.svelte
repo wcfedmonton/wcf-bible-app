@@ -6,6 +6,7 @@
 	<button
 		aria-label="go back"
 		onclick={() => goto('/')}
+		onmouseenter={() => preloadData('/')}
 		class="flex flex-row justify-center items-center w-9 h-9 rounded-[0.2rem] border-solid border-1 border-border_accent cursor-pointer group-hover:border-accent_btn_hover"
 	>
 		<svg
