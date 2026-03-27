@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Button from '../../Button.svelte';
 
-	import { getContext } from 'svelte';
 	import { Verse } from '$lib/Verse';
+	import { getContext } from 'svelte';
 	import { VerseSet } from '$lib/VerseSet';
-	import type { ContextValue } from '$lib/utils';
+	import { getDate, type ContextValue } from '$lib/utils';
 
 	const { searchResult, index }: { searchResult: Verse; index: number } = $props();
 
@@ -53,19 +53,19 @@
 					)
 				) {
 					// reassign the context object, so it tracks the new values
+
 					const index = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
 					const verseToAdd = new Verse(searchResult);
 					verseSets.value[index] = new VerseSet(
 						verseSets.value[index].id,
 						verseSets.value[index].name,
-						verseSets.value[index].lastEdited,
+						getDate(),
 						[...verseSets.value[index].verses, new Verse(searchResult)]
 					);
 
 					verseToAdd.saveVerse();
 
-					// we also have to update this array or the initial id's in the database will be incorrect
-					// for any new verses
+					selectedVerseSet.value.saveVerseSet();
 					selectedVerseSet.value.verses.push(verseToAdd);
 				}
 			}}

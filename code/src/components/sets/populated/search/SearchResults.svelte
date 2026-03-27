@@ -20,7 +20,7 @@
 		<div
 			class="flex flex-col justify-center w-full h-8 border border-solid border-transparent rounded-tl rounded-tr bg-form_input"
 		>
-			<p class="pl-2 text-[0.65rem] text-light_grey tracking-light">
+			<p class="pl-4 text-[0.65rem] text-light_grey tracking-light">
 				RESULTS FOR <span class="text-[0.65rem]">"{modifiedQuery.toUpperCase()}"</span>
 			</p>
 		</div>

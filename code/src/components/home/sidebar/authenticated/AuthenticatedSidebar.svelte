@@ -26,7 +26,7 @@
 	<Divider />
 
 	<Title title="VERSE SETS" />
-	<Sets />
+	<Sets bind:showSidebar />
 
 	<SignOut />
 </div>
