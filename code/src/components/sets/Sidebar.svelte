@@ -44,8 +44,8 @@
 		// request to send a new verse will be created here
 		const newSet = new VerseSet(crypto.randomUUID(), 'Untitled', getDate(), []);
 
-		newSet.saveVerseSet();
 		allSets.value.push(newSet);
+		await newSet.saveVerseSet();
 
 		if (sets.length === 1) {
 			// handles the case for selection when the user adds their first verse set

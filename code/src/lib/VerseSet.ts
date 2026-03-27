@@ -22,11 +22,11 @@ export class VerseSet {
 	 *
 	 * @param newName - The new name of the verse set.
 	 */
-	saveVerseSet(newName?: string) {
+	async saveVerseSet(newName?: string) {
 		this.name = newName ?? this.name;
 		this.lastEdited = getDate();
 
-		fetch('api/sets', {
+		await fetch('api/sets', {
 			method: 'POST',
 			body: JSON.stringify({
 				item: {
@@ -43,8 +43,8 @@ export class VerseSet {
 	 * Deletes this verse set.
 	 * Sends a request to the database to persist the deletion.
 	 */
-	delete() {
-		fetch(`api/sets/${this.id}`, {
+	async delete() {
+		await fetch(`api/sets/${this.id}`, {
 			method: 'DELETE',
 			body: JSON.stringify({
 				item: {
@@ -54,20 +54,8 @@ export class VerseSet {
 			})
 		});
 
-		const verseDeleteRequests: Promise<string>[] = [];
-
 		// simultaneously send delete requests for each verse in the set
 
-		this.verses.forEach((verse) => {
-			verseDeleteRequests.push(
-				new Promise((resolve) => {
-					verse.deleteFromSet();
-
-					resolve('Verse deleted.');
-				})
-			);
-		});
-
-		Promise.allSettled(verseDeleteRequests);
+		await Promise.allSettled(this.verses.map(verse => verse.deleteFromSet()));
 	}
 }

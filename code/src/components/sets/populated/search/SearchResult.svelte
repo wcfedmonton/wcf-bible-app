@@ -44,7 +44,7 @@
 		<Button
 			icon={add}
 			prompt="Add"
-			eventHandler={() => {
+			eventHandler={async () => {
 				// duplicates are not allowed
 				if (
 					!verseSets.value[selectedVerseSetIndex]?.verses.find(
@@ -63,9 +63,9 @@
 						[...verseSets.value[index].verses, new Verse(searchResult)]
 					);
 
-					verseToAdd.saveVerse();
+					await verseToAdd.saveVerse();
 
-					selectedVerseSet.value.saveVerseSet();
+					await selectedVerseSet.value.saveVerseSet();
 					selectedVerseSet.value.verses.push(verseToAdd);
 				}
 			}}
