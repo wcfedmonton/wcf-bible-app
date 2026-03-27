@@ -1,7 +1,7 @@
 <script lang="ts">
     import Button from "../Button.svelte";
 
-    let { handleUpload, selectedFile = $bindable(), fileInput = $bindable(), validFile = $bindable() } = $props();
+    let { handleUpload, selectedFile = $bindable(), fileInput = $bindable(), validFile = $bindable(), uploadError = $bindable() } = $props();
 </script>
 
 <p class="w-full h-5 font-sans text-[0.893rem]">
@@ -41,7 +41,12 @@
 </div>
 
 {#if !validFile}
-    <!-- this is where we'll display the error message -->
+    <div class="flex justify-center items-center mt-[-0.2rem] mb-3 bg-[#d3413f2e] border-solid border-1 rounded-[0.2rem] border-action_btn_border">
+        <div class="flex flex-col w-[90%] py-2 gap-1">
+            <p class="h-4 text-[0.8rem] text-accent_btn font-bold font-serif">File could not be read</p>
+            <p class="pt-1 text-[0.7rem] text-accent_btn font-serif font-thin">{uploadError}</p>
+        </div>
+    </div>
 {/if}
 
 <Button action="Import" disabledCondition={true} />

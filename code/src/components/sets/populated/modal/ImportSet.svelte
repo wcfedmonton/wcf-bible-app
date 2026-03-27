@@ -44,6 +44,8 @@
         verseReference: string
     }
 
+    let uploadError = $state("");
+
     /**
      * Fetches the text for each verse in the provided array and attaches it to the verse object.
      * If any verse reference is invalid (i.e. the verse doesn't exist in the specified translation), the function returns `null`.
@@ -58,6 +60,8 @@
             const result = await fetchVerse(verse.verseReference, verse.translation.toUpperCase());
 
             if(!result) {
+                uploadError = "This file contains one or more verse references that could not be found. They may be invalid or unavailable in the selected translation.";
+
                 return {};
             }
 
@@ -101,13 +105,19 @@
         try {
             content  = await JSON.parse(await selectedFile!.text());
         
-        } catch { // an error is thrown if the file is corrupted
+        } catch {
+            uploadError = "This file doesn't appear to be a valid verse set. It may be corrupted or exported from an incompatible version.";
+
             return null; 
         }
 
         const jsonValid = validateJSON(content as object);
 
-        if(!jsonValid) return null;
+        if(!jsonValid) {
+            uploadError = "This file doesn't appear to be a valid verse set. It may be corrupted or exported from an incompatible version.";
+        
+            return null;
+        };
 
         const verseSetId = crypto.randomUUID();
         const verses = await getVerses(content!.verses, verseSetId);
@@ -150,7 +160,7 @@
 
 <Modal modalTitle="Import Verse Set" bind:showModal={showImportModal}>
    {#if !selectedFile || !validFile} 
-        <Select handleUpload={handleUpload} bind:selectedFile bind:fileInput bind:validFile />
+        <Select handleUpload={handleUpload} bind:selectedFile bind:fileInput bind:validFile bind:uploadError />
     {:else if validFile}
         <Selected bind:importedSet bind:selectedFile bind:showImportModal />
     {/if}
