@@ -26,7 +26,7 @@ export class VerseSet {
 		this.name = newName ?? this.name;
 		this.lastEdited = getDate();
 
-		await fetch('api/sets', {
+		fetch('api/sets', {
 			method: 'POST',
 			body: JSON.stringify({
 				item: {
@@ -44,7 +44,7 @@ export class VerseSet {
 	 * Sends a request to the database to persist the deletion.
 	 */
 	async delete() {
-		await fetch(`api/sets/${this.id}`, {
+		fetch(`api/sets/${this.id}`, {
 			method: 'DELETE',
 			body: JSON.stringify({
 				item: {
@@ -56,6 +56,6 @@ export class VerseSet {
 
 		// simultaneously send delete requests for each verse in the set
 
-		await Promise.allSettled(this.verses.map(verse => verse.deleteFromSet()));
+		Promise.allSettled(this.verses.map(verse => verse.deleteFromSet()));
 	}
 }

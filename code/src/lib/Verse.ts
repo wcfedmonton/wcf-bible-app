@@ -29,7 +29,7 @@ export class Verse {
 	async saveVerse(newOrderId?: number) {
 		this.orderId = newOrderId ?? this.orderId;
 
-		await fetch(`api/sets/${this.verseSetId}/verses`, {
+		fetch(`api/sets/${this.verseSetId}/verses`, {
 			method: 'POST',
 			body: JSON.stringify({
 				item: {
@@ -49,7 +49,7 @@ export class Verse {
 	 * Sends a request to the database to persist the deletion.
 	 */
 	async deleteFromSet() {
-		await fetch(`api/sets/${this.verseSetId}/verses`, {
+		fetch(`api/sets/${this.verseSetId}/verses`, {
 			method: 'DELETE',
 			body: JSON.stringify({
 				item: {
