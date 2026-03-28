@@ -133,6 +133,8 @@
         };
     }
 
+    let isReady = $state(false);
+
     /**
      * Handles file upload from both drag-and-drop and file input events.
      * Sets the selected file, processes it via `readFile`, and updates the import state.
@@ -141,6 +143,9 @@
      */
     async function handleUpload(e: Event) {
         e.preventDefault(); // prevents a new tab from opening
+        
+        isReady = false;
+        validFile = true;
 
         if(e instanceof DragEvent) {
             const file = e.dataTransfer?.files?.[0];
@@ -151,17 +156,25 @@
             
             selectedFile = file;
         }
+         
+        const result = await readFile(); 
         
-        validFile = false; // reset so that the 'Selected' state doesn't show when it shouldn't
-        importedSet = await readFile(); 
-        validFile = importedSet ? true : false; // will be used to toggle error state
+        if(!result) {
+            validFile = false;
+            selectedFile = null;
+
+            fileInput!.value = "";
+        } else {
+            isReady = true;
+            importedSet = result;
+        }
     }
 </script>
 
 <Modal modalTitle="Import Verse Set" bind:showModal={showImportModal}>
-   {#if !selectedFile || !validFile} 
+   {#if !isReady || !validFile || !importedSet} 
         <Select handleUpload={handleUpload} bind:selectedFile bind:fileInput bind:validFile bind:uploadError />
-    {:else if validFile}
+    {:else}
         <Selected bind:importedSet bind:selectedFile bind:showImportModal />
     {/if}
 </Modal>
