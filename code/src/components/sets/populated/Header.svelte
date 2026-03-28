@@ -35,7 +35,7 @@
 		</div>
 
 		<div class="flex flex-row justify-end h-[2.6rem]">
-			<Button prompt="Export" icon={arrowUp} eventHandler={() => showExportModal = true} disabledCondition={selectedVerseSet!.verses.length === 0} />
+			<Button prompt="Export" icon={arrowUp} eventHandler={() => showExportModal = true} disabledCondition={selectedVerseSet?.verses.length === 0} />
 		</div>
 	</div>
 </div>
