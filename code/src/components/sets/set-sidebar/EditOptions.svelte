@@ -27,12 +27,12 @@
 	/>
 	<Option
 		title="Delete"
-		eventHandler={() => {
+		eventHandler={async () => {
 			const verseSetId = verseSetReference!.value.id;
 			const deletedVerseIndex = verseSets.value.findIndex((v) => v.id === verseSetId);
 			const isCurrentlySelected = currentlySelectedVerseId.value === verseSetId;
 
-			verseSetReference!.value.delete();
+			await verseSetReference!.value.delete();
 			verseSets.value = verseSets.value.filter((set) => set.id !== verseSetId);
 
 			if (!isCurrentlySelected) return;

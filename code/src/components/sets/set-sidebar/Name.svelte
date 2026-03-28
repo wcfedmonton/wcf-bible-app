@@ -20,23 +20,17 @@
 			minlength={1}
 			maxlength={30}
 			onclick={(e) => e.stopPropagation()}
-			onkeydown={(e) => {
+			onkeydown={async (e) => {
 				e.stopPropagation();
 
 				if (e.key === 'Enter' && newName.trim() !== '') {
-					// verify that the new name is not an empty string
-					// reassign the context object, so it tracks the new values
-					const index = verseSets.value.findIndex((s) => {
-						if (set.id === s.id) {
-							set.saveVerseSet(newName);
+					const index = verseSets.value.findIndex((s) => s.id === set.id);
 
-							return true;
-						}
-					});
-					verseSets.value[index] = new VerseSet(set.id, newName, set.lastEdited, set.verses);
-
-					// we have to reassing the object to trigger a re-render
-					selectedVerseSet.value = new VerseSet(set.id, newName, set.lastEdited, set.verses);
+					if (index !== -1) {
+						await set.saveVerseSet(newName);
+						verseSets.value[index] = new VerseSet(set.id, newName, set.lastEdited, set.verses);
+						selectedVerseSet.value = new VerseSet(set.id, newName, set.lastEdited, set.verses);
+					}
 
 					setNameInputDisabled.value = true;
 				}

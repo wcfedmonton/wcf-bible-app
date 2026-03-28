@@ -3,7 +3,7 @@ import { GATEWAY_ENDPOINT } from '$env/static/private';
 export async function DELETE({ request, fetch }) {
 	const body = await request.json();
 
-	fetch(`${GATEWAY_ENDPOINT}/sets/${body.item.id}`, {
+	await fetch(`${GATEWAY_ENDPOINT}/sets/${body.item.id}`, {
 		method: 'DELETE',
 		body: JSON.stringify(body)
 	});
