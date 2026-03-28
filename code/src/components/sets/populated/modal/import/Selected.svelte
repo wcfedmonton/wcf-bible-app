@@ -64,23 +64,20 @@
 <Button 
     action={"Import"} 
     disabledCondition={false}
-    eventHandler={() => {
-        showImportModal = false;
-
+    eventHandler={async () => {
         const newVerseSet = new VerseSet(
             importedSet.id,
             importedSet.name,
             importedSet.lastEdited,
-            
             importedSet.verses.map((verse: VerseObject) => new Verse(verse))
         );
 
-        newVerseSet.saveVerseSet();
-        newVerseSet.verses.forEach(verse => {
-            verse.saveVerse();
-        });
-    
-        verseSets.value.push(newVerseSet);
+        await newVerseSet.saveVerseSet();
+        await Promise.all(newVerseSet.verses.map(verse => verse.saveVerse()));
+
+        verseSets.value = [...verseSets.value, newVerseSet];
         selectedVerseSetId.value = newVerseSet.id;
-    }}    
+
+        showImportModal = false; // ✅ close only after everything is saved
+    }}
 />

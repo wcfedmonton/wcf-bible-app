@@ -26,7 +26,7 @@ export class Verse {
 	 *
 	 * @param {number} newOrderId - The new order position for this verse.
 	 */
-	saveVerse(newOrderId?: number) {
+	async saveVerse(newOrderId?: number) {
 		this.orderId = newOrderId ?? this.orderId;
 
 		fetch(`api/sets/${this.verseSetId}/verses`, {
@@ -48,7 +48,7 @@ export class Verse {
 	 * Removes this verse from its associated verse set.
 	 * Sends a request to the database to persist the deletion.
 	 */
-	deleteFromSet() {
+	async deleteFromSet() {
 		fetch(`api/sets/${this.verseSetId}/verses`, {
 			method: 'DELETE',
 			body: JSON.stringify({

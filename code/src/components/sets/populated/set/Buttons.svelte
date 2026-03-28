@@ -44,16 +44,21 @@
 	let index = $derived(verses.indexOf(verse));
 
 	/** Reassigns the 'verseSets' context variable to trigger a re-render. */
-	function updateUIVerseOrder() {
+	async function updateUIVerseOrder() {
+		// sort the bindable prop first — this drives the UI update
+		verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
+
+		// then sync verseSets context to stay consistent
 		const i = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
 		const current = verseSets.value[i];
 		verseSets.value[i] = new VerseSet(
 			current.id,
 			current.name,
 			getDate(),
-			[...current.verses].sort((a, b) => (a.orderId < b.orderId ? -1 : 1))
+			[...verses] // use already-sorted verses
 		);
-		verseSets.value[i].saveVerseSet(); // save new 'lastEditedDate'
+
+		await verseSets.value[i].saveVerseSet();
 	}
 
 	/**
@@ -66,17 +71,18 @@
 	 * @function moveVerseUp
 	 * @returns {void}
 	 */
-	function moveVerseUp() {
+	async function moveVerseUp() {
 		if (index > 0) {
 			const currentVerse = verses[index];
 			const nextVerse = verses[index - 1];
 
-			currentVerse.saveVerse(nextVerse.orderId);
-			nextVerse.saveVerse(currentVerse.orderId + 1);
+			// update UI immediately
+        	verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
 
-			verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
+			await currentVerse.saveVerse(nextVerse.orderId);
+			await nextVerse.saveVerse(currentVerse.orderId + 1);
 
-			updateUIVerseOrder();
+			await updateUIVerseOrder();
 		}
 	}
 
@@ -90,15 +96,18 @@
 	 * @function moveVerseDown
 	 * @returns {void}
 	 */
-	function moveVerseDown() {
+	async function moveVerseDown() {
 		if (index < verses.length - 1) {
 			const currentVerse = verses[index];
 			const nextVerse = verses[index + 1];
 
-			currentVerse.saveVerse(nextVerse.orderId);
-			nextVerse.saveVerse(currentVerse.orderId - 1);
+			// update UI immediately
+        	verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
 
-			updateUIVerseOrder();
+			await currentVerse.saveVerse(nextVerse.orderId);
+			await nextVerse.saveVerse(currentVerse.orderId - 1);
+
+			await updateUIVerseOrder();
 		}
 	}
 
@@ -108,8 +117,8 @@
 	 * @function deleteVerse
 	 * @returns {void}
 	 */
-	function deleteVerse() {
-		verse.deleteFromSet();
+	async function deleteVerse() {
+		await verse.deleteFromSet();
 
 		const i = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
 		const current = verseSets.value[i];

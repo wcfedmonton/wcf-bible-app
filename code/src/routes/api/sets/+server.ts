@@ -1,7 +1,7 @@
 import { GATEWAY_ENDPOINT } from '$env/static/private';
 
 export async function POST({ request, fetch }) {
-	fetch(`${GATEWAY_ENDPOINT}/sets`, {
+	await fetch(`${GATEWAY_ENDPOINT}/sets`, {
 		method: 'POST',
 		body: JSON.stringify(await request.json())
 	});
