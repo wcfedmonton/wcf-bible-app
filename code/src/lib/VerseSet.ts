@@ -56,6 +56,6 @@ export class VerseSet {
 
 		// simultaneously send delete requests for each verse in the set
 
-		Promise.allSettled(this.verses.map(verse => verse.deleteFromSet()));
+		Promise.allSettled(this.verses.map((verse) => verse.deleteFromSet()));
 	}
 }

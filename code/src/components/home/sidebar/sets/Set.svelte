@@ -3,7 +3,13 @@
 	import type { ContextValue, Verse } from '$lib/utils';
 	import type { FetchChapterResult } from '$lib/bible/chapterServices';
 
-	let { index, selectedIndex = $bindable(), showSidebar = $bindable(), sortedSetList = $bindable(), set } = $props();
+	let {
+		index,
+		selectedIndex = $bindable(),
+		showSidebar = $bindable(),
+		sortedSetList = $bindable(),
+		set
+	} = $props();
 
 	let selected = $derived(selectedIndex.value === index);
 

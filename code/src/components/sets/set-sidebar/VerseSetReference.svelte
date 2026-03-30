@@ -52,7 +52,7 @@
 	class:bg-verse_set_selected={selected}
 	class={`flex justify-center items-center cursor-pointer border-solid border-border_accent border-b w-full h-[10%] max-h-19 min-h-19 hover:${selected ? 'bg-verse_set_selected' : 'bg-[#333333]'}`}
 >
-	<Name set={set} />
+	<Name {set} />
 
 	<Edit setId={set.id} />
 </div>
