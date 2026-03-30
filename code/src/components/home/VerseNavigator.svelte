@@ -2,7 +2,7 @@
 	import { getContext } from 'svelte';
 	import { type ContextValue, getTranslations } from '$lib/utils';
 	import { fetchVerse, getVerseReference } from '$lib/bible/chapterServices';
-	
+
 	let { dataState = $bindable(), fetchChapterData } = $props();
 
 	const translations = getTranslations();
@@ -16,6 +16,19 @@
 	onclick={(event) => {
 		if (!(event.target instanceof HTMLButtonElement)) {
 			open = false;
+		}
+	}}
+	onkeydown={(event) => {
+		if (event.key === 'ArrowRight' && dataState.selectedVerseIndex < dataState.verseLimit - 1) {
+			dataState.selectedVerseIndex += 1;
+			dataState.verseReference = navigatingSet.value
+				? dataState.verseData[dataState.selectedVerseIndex].verseReference
+				: getVerseReference(dataState.verseData, dataState.osis, dataState.selectedVerseIndex);
+		} else if (event.key === 'ArrowLeft' && dataState.selectedVerseIndex > 0) {
+			dataState.selectedVerseIndex -= 1;
+			dataState.verseReference = navigatingSet.value
+				? dataState.verseData[dataState.selectedVerseIndex].verseReference
+				: getVerseReference(dataState.verseData, dataState.osis, dataState.selectedVerseIndex);
 		}
 	}}
 />
@@ -34,11 +47,7 @@
 				}}
 				disabled={dataState.selectedVerseIndex == 0}
 			>
-				<svg 
-					viewBox="0 0 48 48" 
-					class="w-full h-full"
-					xmlns="http://www.w3.org/2000/svg"
-				>
+				<svg viewBox="0 0 48 48" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
 					<path
 						d="M 30 8 L 14 24 L 30 40"
 						fill="none"
@@ -143,11 +152,7 @@
 				}}
 				disabled={dataState.selectedVerseIndex == dataState.verseLimit - 1}
 			>
-				<svg
-					viewBox="0 0 48 48"
-					class="w-full h-full"
-					xmlns="http://www.w3.org/2000/svg"
-				>
+				<svg viewBox="0 0 48 48" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
 					<path
 						d="M 18 8 L 34 24 L 18 40"
 						fill="none"

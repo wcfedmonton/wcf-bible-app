@@ -46,20 +46,22 @@
 		const resolved = await Promise.all(searchRequests);
 
 		suggestions.forEach((suggestion, index) => {
-			if(resolved[index]) { // this value is falsy if the verse suggestion doesn't exist in the selected translation
-					searchResults.value[index] = {
+			if (resolved[index]) {
+				// this value is falsy if the verse suggestion doesn't exist in the selected translation
+				searchResults.value[index] = {
 					// overwrite the previous result, so the empty state isn't shown unnecessarily
 					verseSetId: selectedVerseSet.value.id, // set to an empty string for now, but once added to the set the value will be set
 					text: resolved[index].text,
 					verseReference: suggestion,
 					translation: selectedTranslation,
-					orderId: selectedVerseSet.value.verses.length > 0 ?
-						selectedVerseSet.value.verses[selectedVerseSet.value.verses.length - 1].orderId + 1 : 1
+					orderId:
+						selectedVerseSet.value.verses.length > 0
+							? selectedVerseSet.value.verses[selectedVerseSet.value.verses.length - 1].orderId + 1
+							: 1
 				};
 			}
 		});
 
-		
 		searchResults.value = searchResults.value.slice(0, suggestions.length); // exclude any old results
 	}
 </script>

@@ -14,7 +14,7 @@
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
 	const viewingSearchResults = $derived(getContext<ContextValue<boolean>>('viewingSearchResults'));
-		
+
 	const selectedVerseSet = $derived(
 		verseSets.value.find((set) => set.id === selectedVerseSetId.value)
 	);

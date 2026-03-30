@@ -77,7 +77,7 @@
 			const nextVerse = verses[index - 1];
 
 			// update UI immediately
-        	verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
+			verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
 
 			await currentVerse.saveVerse(nextVerse.orderId);
 			await nextVerse.saveVerse(currentVerse.orderId + 1);
@@ -102,7 +102,7 @@
 			const nextVerse = verses[index + 1];
 
 			// update UI immediately
-        	verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
+			verses.sort((a, b) => (a.orderId < b.orderId ? -1 : 1));
 
 			await currentVerse.saveVerse(nextVerse.orderId);
 			await nextVerse.saveVerse(currentVerse.orderId - 1);

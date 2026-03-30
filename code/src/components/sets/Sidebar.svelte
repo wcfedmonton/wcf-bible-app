@@ -32,7 +32,7 @@
 	);
 
 	const selectedVerseSetId = $state(getContext<ContextValue<string>>('selectedVerseSetId'));
-	
+
 	if (!selectedVerseSetId.value && sets.length > 0) {
 		selectedVerseSetId.value = sets[0].id;
 	}
@@ -61,7 +61,7 @@
 
 			<div class="flex flex-row justify-between">
 				<Button eventHandler={addVerseSet} prompt="New Set" icon={add} />
-				<Button eventHandler={() => showImportModal = true} prompt="Import Set" icon={download} />
+				<Button eventHandler={() => (showImportModal = true)} prompt="Import Set" icon={download} />
 			</div>
 		</div>
 	</div>
