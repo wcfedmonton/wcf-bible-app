@@ -8,19 +8,6 @@
 	const translations = getTranslations();
 
 	let open = $state(false);
-	const keyBoard = document.addEventListener('keydown', (event) => {
-		if (event.key === 'ArrowRight' && dataState.selectedVerseIndex < dataState.verseLimit - 1) {
-			dataState.selectedVerseIndex += 1;
-			dataState.verseReference = navigatingSet.value
-				? dataState.verseData[dataState.selectedVerseIndex].verseReference
-				: getVerseReference(dataState.verseData, dataState.osis, dataState.selectedVerseIndex);
-		} else if (event.key === 'ArrowLeft' && dataState.selectedVerseIndex > 0) {
-			dataState.selectedVerseIndex -= 1;
-			dataState.verseReference = navigatingSet.value
-				? dataState.verseData[dataState.selectedVerseIndex].verseReference
-				: getVerseReference(dataState.verseData, dataState.osis, dataState.selectedVerseIndex);
-		}
-	});
 
 	const navigatingSet = $derived(getContext<ContextValue<boolean>>('navigatingSet'));
 </script>
