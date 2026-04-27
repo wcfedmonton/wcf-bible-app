@@ -21,10 +21,7 @@ export async function DELETE({ request, fetch }) {
 
 	await fetch(`${GATEWAY_ENDPOINT}/sets/${body.item.verseSetId}/verses`, {
 		method: 'DELETE',
-		body: JSON.stringify({
-			item: { verseSetId: body.item.verseSetId, verseReference: body.item.verseReference },
-			tableName: body.tableName
-		})
+		body: JSON.stringify(body)
 	});
 
 	return new Response(JSON.stringify({ message: 'Verse deleted successfully.' }), {

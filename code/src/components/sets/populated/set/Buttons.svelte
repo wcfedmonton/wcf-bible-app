@@ -121,12 +121,12 @@
 		await verse.deleteFromSet();
 
 		const i = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
-		const current = verseSets.value[i];
+		const currentSet = verseSets.value[i];
 		verseSets.value[i] = new VerseSet(
-			current.id,
-			current.name,
-			current.lastEdited,
-			current.verses.filter((v) => v.text !== verse.text || v.translation !== verse.translation)
+			currentSet.id,
+			currentSet.name,
+			currentSet.lastEdited,
+			currentSet.verses.filter((v) => v.orderId != verse.orderId)
 		);
 	}
 

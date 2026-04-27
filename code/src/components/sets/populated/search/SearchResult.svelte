@@ -11,10 +11,6 @@
 	const verseSets = getContext<ContextValue<VerseSet[]>>('verseSets');
 	const selectedVerseSet = getContext<ContextValue<VerseSet>>('selectedVerseSet');
 	const selectedVerseSetId = getContext<ContextValue<string>>('selectedVerseSetId');
-	let selectedVerseSetIndex = $derived(
-		verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value)
-	);
-
 	const searchResults = getContext<ContextValue<VerseSet[]>>('searchResults');
 	const showBottomBorder = $derived(index < searchResults.value.length - 1);
 
@@ -45,29 +41,20 @@
 			icon={add}
 			prompt="Add"
 			eventHandler={async () => {
-				// duplicates are not allowed
-				if (
-					!verseSets.value[selectedVerseSetIndex]?.verses.find(
-						(verse) =>
-							verse.text === searchResult.text && verse.translation === searchResult.translation
-					)
-				) {
-					// reassign the context object, so it tracks the new values
+				// reassign the context object, so it tracks the new values
 
-					const index = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
-					const verseToAdd = new Verse(searchResult);
-					verseSets.value[index] = new VerseSet(
-						verseSets.value[index].id,
-						verseSets.value[index].name,
-						getDate(),
-						[...verseSets.value[index].verses, new Verse(searchResult)]
-					);
+				const index = verseSets.value.findIndex((set) => set.id === selectedVerseSetId.value);
+				const verseToAdd = new Verse(searchResult);
+				verseSets.value[index] = new VerseSet(
+					verseSets.value[index].id,
+					verseSets.value[index].name,
+					getDate(),
+					[...verseSets.value[index].verses, new Verse(searchResult)]
+				);
 
-					await verseToAdd.saveVerse();
-
-					await selectedVerseSet.value.saveVerseSet();
-					selectedVerseSet.value.verses.push(verseToAdd);
-				}
+				await verseToAdd.saveVerse();
+				await selectedVerseSet.value.saveVerseSet();
+				selectedVerseSet.value.verses.push(verseToAdd);
 			}}
 		/>
 	</div>
