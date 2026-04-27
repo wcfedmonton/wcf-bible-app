@@ -126,7 +126,7 @@
 			currentSet.id,
 			currentSet.name,
 			currentSet.lastEdited,
-			currentSet.verses.filter((v) => (v.orderId != verse.orderId))
+			currentSet.verses.filter((v) => v.orderId != verse.orderId)
 		);
 	}
 

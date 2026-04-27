@@ -131,7 +131,7 @@ export async function refreshTokens(refreshToken: string) {
 		const { AccessToken, RefreshToken, IdToken } = AuthenticationResult!;
 
 		return { AccessToken: AccessToken!, RefreshToken: RefreshToken!, IdToken: IdToken! };
-	} catch(error) {
+	} catch {
 		return null;
 	}
 }

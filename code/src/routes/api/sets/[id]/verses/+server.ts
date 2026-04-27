@@ -18,7 +18,7 @@ export async function POST({ request, fetch }) {
 
 export async function DELETE({ request, fetch }) {
 	const body = await request.json();
-	
+
 	await fetch(`${GATEWAY_ENDPOINT}/sets/${body.item.verseSetId}/verses`, {
 		method: 'DELETE',
 		body: JSON.stringify(body)
