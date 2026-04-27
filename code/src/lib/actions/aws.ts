@@ -120,16 +120,20 @@ export async function getTokens(email: string, password: string) {
  *   - `IdToken` — JWT containing the user's identity claims.
  */
 export async function refreshTokens(refreshToken: string) {
-	const command = new GetTokensFromRefreshTokenCommand({
-		RefreshToken: refreshToken,
-		ClientId: USER_POOL_CLIENT_ID,
-		ClientSecret: USER_POOL_CLIENT_SECRET
-	});
+	try {
+		const command = new GetTokensFromRefreshTokenCommand({
+			RefreshToken: refreshToken,
+			ClientId: USER_POOL_CLIENT_ID,
+			ClientSecret: USER_POOL_CLIENT_SECRET
+		});
 
-	const { AuthenticationResult } = await client.send(command);
-	const { AccessToken, RefreshToken, IdToken } = AuthenticationResult!;
+		const { AuthenticationResult } = await client.send(command);
+		const { AccessToken, RefreshToken, IdToken } = AuthenticationResult!;
 
-	return { AccessToken: AccessToken!, RefreshToken: RefreshToken!, IdToken: IdToken! };
+		return { AccessToken: AccessToken!, RefreshToken: RefreshToken!, IdToken: IdToken! };
+	} catch(error) {
+		return null;
+	}
 }
 
 /**
