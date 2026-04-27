@@ -53,8 +53,8 @@ export class Verse {
 			method: 'DELETE',
 			body: JSON.stringify({
 				item: {
-					verseSetId: this.verseSetId,
-					verseReference: this.verseReference
+					orderId: this.orderId,
+					verseSetId: this.verseSetId
 				},
 				tableName: 'Verses'
 			})
